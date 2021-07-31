@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\ElBayt.Common.Infra\ElBayt.Common.Infra.csproj" />
     <ProjectReference Include="..\..\Common\ElBayt.Common\ElBayt.Common.csproj" />
   </ItemGroup>
 
