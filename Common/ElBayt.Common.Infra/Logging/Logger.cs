@@ -11,11 +11,10 @@ namespace ElBayt.Common.Infra.Logging
 {
     public class Logger : ILogger
     {
-        private readonly ILog _logger;
+        private readonly ILog _logger = LogManager.GetLogger("ElBaytLog");
 
-        public Logger(ILog logger)
+        public Logger()
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void Error(Exception ex)

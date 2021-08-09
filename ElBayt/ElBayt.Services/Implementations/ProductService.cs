@@ -49,7 +49,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProviderPackagesService)}_{nameof(GetAllPackages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

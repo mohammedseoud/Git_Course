@@ -6,27 +6,27 @@ using System.Text;
 
 namespace ElBayt.Common.Security
 {
-    public interface IUserIdentity
+    public class IUserIdentity
     {
-        ClaimsPrincipal User { get; }
+        public ClaimsPrincipal User { get; }
 
-        bool? IsAuthenticated { get; }
+        public bool? IsAuthenticated { get; }
 
-        string UserId { get; }
+        public string UserId { get; }
 
-        string Email { get; }
+        public string Email { get; }
 
-        string Phone { get; }
+        public string Phone { get; }
 
-        string UserName { get; }
+        public string UserName { get; }
 
-        string Name { get; }
+        public string Name { get; }
 
-        string NormalizedName { get; }
+        public string NormalizedName { get; }
 
-        EnumUserCategory? UserCategory { get; }
+        public EnumUserCategory? UserCategory { get; }
 
-        bool IsInRole(string roleName);
+        //  public bool IsInRole(string roleName) { }
 
 
     }

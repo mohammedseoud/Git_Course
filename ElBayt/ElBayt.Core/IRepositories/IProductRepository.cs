@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ElBayt.;
+
 using ElBayt.Core.Entities;
 
 namespace ElBayt.Core.IRepositories
