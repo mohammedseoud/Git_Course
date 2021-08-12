@@ -1,4 +1,5 @@
-﻿using ElBayt.Common.Common;
+﻿using AutoMapper;
+using ElBayt.Common.Common;
 using ElBayt.Common.Logging;
 using ElBayt.Common.Mapping;
 using ElBayt.Common.Security;
@@ -41,7 +42,7 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
-                var Entity = _mapper.Map<ProductEntity>(product);
+                var Entity = _mapper.Map<ProductDTO, ProductEntity>(product);
                 await _unitOfWork.ProductRepository.AddAsync(Entity);
               
             }

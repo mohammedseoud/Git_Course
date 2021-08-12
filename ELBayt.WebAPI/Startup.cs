@@ -1,3 +1,4 @@
+using AutoMapper;
 using ElBayt.Common.Infra.Logging;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Logging;
@@ -5,6 +6,7 @@ using ElBayt.Common.Mapping;
 using ElBayt.Common.Security;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Infra.Context;
+using ElBayt.Infra.Mapping;
 using ElBayt.Infra.UnitOfWork;
 using ElBayt.Services.ElBaytServices;
 using ElBayt.Services.IElBaytServices;
@@ -12,17 +14,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace ELBayt.WebAPI
 {
@@ -51,6 +48,9 @@ namespace ELBayt.WebAPI
                 .AddDefaultTokenProviders()
               .AddEntityFrameworkStores<ElBaytContext>();
 
+
+            services.AddAutoMapper(typeof(TypeMapper));
+        
 
             services.AddScoped<IUserIdentity>();
             services.AddScoped<ITypeMapper, TypeMapper>();

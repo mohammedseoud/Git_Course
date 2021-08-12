@@ -9,6 +9,7 @@ using ElBayt.Services.IElBaytServices;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using AutoMapper;
 
 namespace ElBayt.Services.ElBaytServices
 {

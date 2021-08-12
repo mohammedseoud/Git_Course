@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ElBayt.Common.Core.Services
 {
-    public abstract class BaseDto<T>
+    public class BaseDto<T>
     {
         protected BaseDto()
         {

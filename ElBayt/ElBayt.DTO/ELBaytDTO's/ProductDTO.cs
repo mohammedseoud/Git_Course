@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBaytDTO_s
 {
-    public class ProductDTO : BaseDto<Guid>
+    public class ProductDTO : BaseDto<Guid>, IBaseDTO
     { 
         public string Name { get; set; }
         public string Price { get; set; }

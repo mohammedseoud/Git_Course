@@ -28,9 +28,9 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpPost]
         [Route(nameof(AddNewProduct))]
-        public async Task<IActionResult> AddNewProduct()
+        public async Task<IActionResult> AddNewProduct(ProductDTO Product)
         {
-            ProductDTO Product = new ProductDTO();
+            
             var correlationGuid = Guid.NewGuid();
             try
             {
@@ -45,8 +45,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
 
 
-                return Ok("Success In Adding" +
-                    "");
+                return Ok("Success In Adding");
             }
             catch (NotFoundException ex)
             {

@@ -6,26 +6,21 @@ namespace ElBayt.Common.Infra.Mapping
 {
     public class TypeMapper : ITypeMapper
     {
-        private readonly IMapper _mapper;
-
-        public TypeMapper()
+       public TypeMapper()
         {
-            _mapper = Mapper.Configuration.CreateMapper();
         }
 
-        public TDestination Map<TDestination>(object source)
-        {
-            return _mapper.Map<TDestination>(source);
-        }
-
+       
         public TDestination Map<TSource, TDestination>(TSource source)
         {
-            return _mapper.Map<TSource, TDestination>(source);
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TSource, TDestination>();
+            }).CreateMapper();
+            var mapping = mapper.Map<TDestination>(source);
+            return mapping;
         }
 
-        public TDestination Map<TSource, TDestination>(TSource source, TDestination destination)
-        {
-            return _mapper.Map(source, destination);
-        }
+       
     }
 }

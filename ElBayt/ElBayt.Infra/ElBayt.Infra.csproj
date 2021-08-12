@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\Common\ElBayt.Common.Infra\ElBayt.Common.Infra.csproj" />
     <ProjectReference Include="..\..\Common\ElBayt.Common\ElBayt.Common.csproj" />
     <ProjectReference Include="..\ElBayt.Core\ElBayt.Core.csproj" />
+    <ProjectReference Include="..\ElBayt.DTO\ElBayt.DTO.csproj" />
   </ItemGroup>
 
 </Project>

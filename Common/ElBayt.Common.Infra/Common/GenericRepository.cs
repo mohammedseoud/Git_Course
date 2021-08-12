@@ -1,4 +1,5 @@
-﻿using ElBayt.Common.Common;
+﻿using AutoMapper;
+using ElBayt.Common.Common;
 using ElBayt.Common.Entities;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Infra.Models;
@@ -19,21 +20,21 @@ namespace ElBayt.Common.Infra.Common
         private readonly ITypeMapper _mapper;
         private DbSet<BaseModel<Entity>> _set;
 
-        public GenericRepository(DbContext dbContext)
+        public GenericRepository(DbContext dbContext,ITypeMapper mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _set = _dbContext.Set<BaseModel<Entity>>();
-            _mapper = new TypeMapper();
+            _mapper = mapper;
         }
         public void Add(BaseEntity entity)
         {
-            var model = _mapper.Map<BaseModel<Entity>>(entity);
+            var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
             _set.Add(model);
         }
 
         public async Task AddAsync(BaseEntity entity)
         {
-            var model = _mapper.Map<BaseModel<Entity>>(entity);
+            var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
             await _set.AddAsync(model);
         }
 
@@ -42,7 +43,7 @@ namespace ElBayt.Common.Infra.Common
             var models = new List<BaseModel<Entity>>();
             foreach (var entity in entities)
             {
-                var model = _mapper.Map<BaseModel<Entity>>(entity);
+                var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
                 models.Add(model);
             }
 
@@ -54,7 +55,7 @@ namespace ElBayt.Common.Infra.Common
             var models = new List<BaseModel<Entity>>();
             foreach (var entity in entities)
             {
-                var model = _mapper.Map<BaseModel<Entity>>(entity);
+                var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
                 models.Add(model);
             }
 
@@ -64,14 +65,14 @@ namespace ElBayt.Common.Infra.Common
         public BaseEntity Get(int id)
         {
             var model = _set.Find(id);
-            var entity = _mapper.Map<BaseEntity>(model);
+            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
             return entity;
         }
 
         public async Task<BaseEntity> GetAsync(int id)
         {
             var model = await _set.FindAsync(id);
-            var entity = _mapper.Map<BaseEntity>(model);
+            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
             return entity;
         }
 
@@ -104,7 +105,7 @@ namespace ElBayt.Common.Infra.Common
                 }
             }
             var model = query.FirstOrDefault();
-            var entity = _mapper.Map<BaseEntity>(model);
+            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
             return entity;
         }
 
@@ -122,7 +123,7 @@ namespace ElBayt.Common.Infra.Common
             }
 
             var model = await query.FirstOrDefaultAsync();
-            var entity = _mapper.Map<BaseEntity>(model);
+            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
             return entity;
         }
 
@@ -143,7 +144,7 @@ namespace ElBayt.Common.Infra.Common
             var models = new List<BaseModel<Entity>>();
             foreach (var entity in entities)
             {
-                var model = _mapper.Map<BaseModel<Entity>>(entity);
+                var model = _mapper.Map<BaseEntity,BaseModel<Entity>>(entity);
                 models.Add(model);
             }
 
@@ -153,7 +154,7 @@ namespace ElBayt.Common.Infra.Common
 
         public void ReomveEntity(BaseEntity entity)
         {
-            var model = _mapper.Map<BaseModel<Entity>>(entity);
+            var model = _mapper.Map<BaseEntity,BaseModel<Entity>>(entity);
             _set.Remove(model);
         }
     }

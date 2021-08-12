@@ -1,5 +1,7 @@
-﻿using ElBayt.Common.Common;
+﻿using AutoMapper;
+using ElBayt.Common.Common;
 using ElBayt.Common.Logging;
+using ElBayt.Common.Mapping;
 using ElBayt.Common.Security;
 using ElBayt.Core.IRepositories;
 using ElBayt.Core.IUnitOfWork;
@@ -22,16 +24,20 @@ namespace ElBayt.Infra.UnitOfWork
         private readonly ElBaytContext _context;
         private readonly ILogger _logger;
         private readonly IUserIdentity _userIdentity;
+        private readonly ITypeMapper _mapper;
         private DbContextTransaction _dbContextTransaction;
+        
 
-        public ELBaytUnitOfWork(ElBaytContext context, ILogger logger, IUserIdentity userIdentity)
+        public ELBaytUnitOfWork(ElBaytContext context, ILogger logger, IUserIdentity userIdentity,ITypeMapper mapper)
         {
             Guard.ArgumentIsNull(context, nameof(context));
             Guard.ArgumentIsNull(logger, nameof(logger));
             Guard.ArgumentIsNull(userIdentity, nameof(userIdentity));
+            Guard.ArgumentIsNull(mapper, nameof(mapper));
             _context = context;
             _logger = logger;
             _userIdentity = userIdentity;
+            _mapper = mapper;
         }
 
        
@@ -167,6 +173,8 @@ namespace ElBayt.Infra.UnitOfWork
             }
         }
 
+       
+
 
 
         #region properties
@@ -178,7 +186,7 @@ namespace ElBayt.Infra.UnitOfWork
 
         public IProductRepository ProductRepository =>
              _productRepository ??
-            (_productRepository = new ProductRepository(_context));
+            (_productRepository = new ProductRepository(_context,_mapper));
 
         #endregion
     }
