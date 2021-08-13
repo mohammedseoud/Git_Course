@@ -1,4 +1,5 @@
 ﻿using ElBayt.Common.Common;
+using ElBayt.Common.Enums;
 using ElBayt.Common.Logging;
 using ElBayt.Common.Security;
 using ElBayt.DTO.ELBaytDTO_s;
@@ -44,8 +45,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 await _elBaytServices.ProductService.AddNewProduct(Product);
 
                 #region Result
-                Response.Result = "Sucessed";
-                Response.Data = "Sucess in Adding";
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = "Success in Adding";
                 #endregion
 
                 return Ok(Response);
@@ -60,9 +61,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
 
                 #region Result
-                Response.Result = "Failed";
+                Response.Result = EnumResponseResult.Failed;
                 Response.Data = "Failed in Adding";
-                Response.Errors = new List<string>();
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -77,7 +77,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
 
                 #region Result
-                Response.Result = "Failed";
+                Response.Result = EnumResponseResult.Failed;
                 Response.Data = "Failed in Adding";
                
                 Response.Errors.Add(ex.Message);
