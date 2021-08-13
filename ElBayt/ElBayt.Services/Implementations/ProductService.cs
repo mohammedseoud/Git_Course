@@ -43,8 +43,9 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ProductDTO, ProductEntity>(product);
+                Entity.Id = Guid.NewGuid();
                 await _unitOfWork.ProductRepository.AddAsync(Entity);
-              
+                await _unitOfWork.SaveAsync();
             }
             catch (Exception ex)
             {

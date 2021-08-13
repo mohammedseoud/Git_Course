@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ElBayt.Common.Common;
+﻿using ElBayt.Common.Common;
 using ElBayt.Common.Logging;
 using ElBayt.Common.Mapping;
 using ElBayt.Common.Security;
@@ -8,11 +7,9 @@ using ElBayt.Core.IUnitOfWork;
 using ElBayt.Infra.Context;
 using ElBayt.Infra.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

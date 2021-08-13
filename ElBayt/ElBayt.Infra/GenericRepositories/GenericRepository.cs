@@ -4,6 +4,7 @@ using ElBayt.Common.Entities;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Infra.Models;
 using ElBayt.Common.Mapping;
+using ElBayt.Core.GenericIRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,72 +15,75 @@ using System.Threading.Tasks;
 
 namespace ElBayt.Common.Infra.Common
 {
-    public class GenericRepository<Entity> : IGenericRepository<Entity>
+    public class GenericRepository<TEntity,TModel> : IGenericRepository<TEntity> 
+        where TModel : BaseModel
+        where TEntity:BaseEntity
     {
         private readonly DbContext _dbContext;
         private readonly ITypeMapper _mapper;
-        private DbSet<BaseModel<Entity>> _set;
+        private DbSet<TModel> _set;
 
-        public GenericRepository(DbContext dbContext,ITypeMapper mapper)
+        public GenericRepository(DbContext dbContext, ITypeMapper mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _set = _dbContext.Set<BaseModel<Entity>>();
+            _set = _dbContext.Set<TModel>();
             _mapper = mapper;
         }
-        public void Add(BaseEntity entity)
+        public void Add(TEntity entity)
         {
-            var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
+            
+            var model = _mapper.Map<TEntity, TModel>(entity);
             _set.Add(model);
         }
 
-        public async Task AddAsync(BaseEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
-            var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
+            var model = _mapper.Map<TEntity, TModel>(entity);
             await _set.AddAsync(model);
         }
 
-        public void AddRange(List<BaseEntity> entities)
+        public void AddRange(List<TEntity> entities)
         {
-            var models = new List<BaseModel<Entity>>();
+            var models = new List<TModel>();
             foreach (var entity in entities)
             {
-                var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
+                var model = _mapper.Map<TEntity, TModel>(entity);
                 models.Add(model);
             }
 
             _dbContext.AddRange(models);
         }
 
-        public async Task AddRangeAsync(List<BaseEntity> entities)
+        public async Task AddRangeAsync(List<TEntity> entities)
         {
-            var models = new List<BaseModel<Entity>>();
+            var models = new List<TModel>();
             foreach (var entity in entities)
             {
-                var model = _mapper.Map<BaseEntity, BaseModel<Entity>>(entity);
+                var model = _mapper.Map<TEntity, TModel>(entity);
                 models.Add(model);
             }
 
             await _dbContext.AddRangeAsync(models);
         }
 
-        public BaseEntity Get(int id)
+        public TEntity Get(int id)
         {
             var model = _set.Find(id);
-            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
+            var entity = _mapper.Map<TModel, TEntity>(model);
             return entity;
         }
 
-        public async Task<BaseEntity> GetAsync(int id)
+        public async Task<TEntity> GetAsync(int id)
         {
             var model = await _set.FindAsync(id);
-            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
+            var entity = _mapper.Map<TModel, TEntity>(model);
             return entity;
         }
 
-        public IQueryable<BaseModel<Entity>> GetAll(Expression<Func<BaseModel<Entity>, bool>> filter = null, Func<IQueryable<BaseModel<Entity>>,
-            IOrderedQueryable<BaseModel<Entity>>> orderby = null, string IncludeProperties = null)
+        public IQueryable<BaseModel> GetAll(Expression<Func<BaseModel, bool>> filter = null, Func<IQueryable<BaseModel>,
+            IOrderedQueryable<BaseModel>> orderby = null, string IncludeProperties = null)
         {
-            IQueryable<BaseModel<Entity>> query = _set;
+            IQueryable<BaseModel> query = _set;
             if (filter != null) { query = _set.Where(filter).AsNoTracking(); }
             if (IncludeProperties != null)
             {
@@ -92,9 +96,9 @@ namespace ElBayt.Common.Infra.Common
             if (orderby != null) { query = orderby(query); }
             return query;
         }
-        public BaseEntity GetFirstOrDefault(Expression<Func<BaseModel<Entity>, bool>> filter = null, string IncludeProperties = null)
+        public TEntity GetFirstOrDefault(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null)
         {
-            IQueryable<BaseModel<Entity>> query = _set;
+            IQueryable<BaseModel> query = _set;
             if (filter != null) { query = _set.Where(filter).AsNoTracking(); }
             if (IncludeProperties != null)
             {
@@ -105,13 +109,13 @@ namespace ElBayt.Common.Infra.Common
                 }
             }
             var model = query.FirstOrDefault();
-            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
+            var entity = _mapper.Map<BaseModel, TEntity>(model);
             return entity;
         }
 
-        public async Task<BaseEntity> FirstOrDefaultAsync(Expression<Func<BaseModel<Entity>, bool>> filter = null, string IncludeProperties = null)
+        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null)
         {
-            IQueryable<BaseModel<Entity>> query = _set;
+            IQueryable<BaseModel> query = _set;
             if (filter != null) { query = _set.Where(filter).AsNoTracking(); }
             if (IncludeProperties != null)
             {
@@ -123,7 +127,7 @@ namespace ElBayt.Common.Infra.Common
             }
 
             var model = await query.FirstOrDefaultAsync();
-            var entity = _mapper.Map<BaseModel<Entity>, BaseEntity>(model);
+            var entity = _mapper.Map<BaseModel, TEntity>(model);
             return entity;
         }
 
@@ -139,12 +143,12 @@ namespace ElBayt.Common.Infra.Common
             _set.Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<BaseEntity> entities)
+        public void RemoveRange(IEnumerable<TEntity> entities)
         {
-            var models = new List<BaseModel<Entity>>();
+            var models = new List<TModel>();
             foreach (var entity in entities)
             {
-                var model = _mapper.Map<BaseEntity,BaseModel<Entity>>(entity);
+                var model = _mapper.Map<TEntity, TModel>(entity);
                 models.Add(model);
             }
 
@@ -152,9 +156,9 @@ namespace ElBayt.Common.Infra.Common
             _set.RemoveRange(models);
         }
 
-        public void ReomveEntity(BaseEntity entity)
+        public void ReomveEntity(TEntity entity)
         {
-            var model = _mapper.Map<BaseEntity,BaseModel<Entity>>(entity);
+            var model = _mapper.Map<TEntity, TModel>(entity);
             _set.Remove(model);
         }
     }

@@ -1,9 +1,5 @@
-﻿using ElBayt.Common.Infra.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using ElBayt.Core.Entities;
+﻿using ElBayt.Core.Entities;
+using ElBayt.Core.GenericIRepository;
 
 namespace ElBayt.Core.IRepositories
 {

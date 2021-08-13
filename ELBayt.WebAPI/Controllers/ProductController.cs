@@ -30,7 +30,9 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(AddNewProduct))]
         public async Task<IActionResult> AddNewProduct(ProductDTO Product)
         {
-            
+
+            var Response = new ElBaytResponse<string>();
+            Response.Errors = new List<string>();
             var correlationGuid = Guid.NewGuid();
             try
             {
@@ -39,13 +41,14 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Product, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, _userIdentity.Name);
                 #endregion Logging info
 
-
-
                 await _elBaytServices.ProductService.AddNewProduct(Product);
 
+                #region Result
+                Response.Result = "Sucessed";
+                Response.Data = "Sucess in Adding";
+                #endregion
 
-
-                return Ok("Success In Adding");
+                return Ok(Response);
             }
             catch (NotFoundException ex)
             {
@@ -55,7 +58,15 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #endregion Logging info
 
-                return NotFound(ex);
+
+                #region Result
+                Response.Result = "Failed";
+                Response.Data = "Failed in Adding";
+                Response.Errors = new List<string>();
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
             }
             catch (Exception ex)
             {
@@ -65,7 +76,14 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #endregion Logging info
 
-                return BadRequest(ex);
+                #region Result
+                Response.Result = "Failed";
+                Response.Data = "Failed in Adding";
+               
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
             }
         }
     }

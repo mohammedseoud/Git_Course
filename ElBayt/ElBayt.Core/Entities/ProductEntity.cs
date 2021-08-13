@@ -14,7 +14,10 @@ namespace ElBayt.Core.Entities
         public string Name { get; set; }
 
         [Required]
-        [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
-        public string Price { get; set; }
+         public decimal Price { get; set; }
+
+        [StringLength(General.BIG_LINE_MAX_LENGTH)]
+        [Required]
+        public string Description { get; set; }
     }
 }
