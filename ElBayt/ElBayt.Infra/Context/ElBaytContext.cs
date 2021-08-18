@@ -20,8 +20,12 @@ namespace ElBayt.Infra.Context
         }
 
         public virtual DbSet<ProductModel> Products { get; set; }
+        public virtual DbSet<ProductCategoryModel> ProductCategories { get; set; }
+        public virtual DbSet<ProductTypeModel> ProductTypes { get; set; }
+        public virtual DbSet<AreaModel> Areas { get; set; }
+        public virtual DbSet<CountryModel> Countries { get; set; }
+        public virtual DbSet<GovernorateModel> Governorates { get; set; }
 
-    
 
         public virtual void MarkEntryAsModified(BaseGeneralModel entity, EntityState entityState = EntityState.Modified)
         {

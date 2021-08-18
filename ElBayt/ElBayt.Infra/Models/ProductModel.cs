@@ -21,5 +21,10 @@ namespace ElBayt.Infra.Models
         [StringLength(General.BIG_LINE_MAX_LENGTH)]
         [Required]
         public string Description { get; set; }
+
+        [ForeignKey(nameof(ProductCategories))]
+        public Guid ProductCategoryId { get; set; }
+
+        public virtual ProductCategoryModel ProductCategories { get; set; }
     }
 }

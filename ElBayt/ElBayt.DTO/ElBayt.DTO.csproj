@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ElBayt.Common.Core\ElBayt.Common.Core.csproj" />
+    <ProjectReference Include="..\..\Common\ElBayt.Common.Infra\ElBayt.Common.Infra.csproj" />
+    <ProjectReference Include="..\..\Common\ElBayt.Common\ElBayt.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,5 +19,9 @@ namespace ElBayt.Core.Entities
         [StringLength(General.BIG_LINE_MAX_LENGTH)]
         [Required]
         public string Description { get; set; }
+        
+        public Guid ProductCategoryId { get; set; }
+        
+        public virtual ProductCategoryEntity ProductCategories { get; set; }
     }
 }

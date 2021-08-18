@@ -4,14 +4,16 @@ using ElBayt.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElBayt.Infra.Migrations
 {
     [DbContext(typeof(ElBaytContext))]
-    partial class ElBaytContextModelSnapshot : ModelSnapshot
+    [Migration("20210815203420_AddProductTablesToDb")]
+    partial class AddProductTablesToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,9 +105,6 @@ namespace ElBayt.Infra.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("GovernorateId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -123,8 +122,6 @@ namespace ElBayt.Infra.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GovernorateId");
 
                     b.ToTable("Area", "dbo");
                 });
@@ -170,9 +167,6 @@ namespace ElBayt.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CountryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -198,8 +192,6 @@ namespace ElBayt.Infra.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
 
                     b.ToTable("Governorate", "dbo");
                 });
@@ -234,12 +226,7 @@ namespace ElBayt.Infra.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid>("ProductTypeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductTypeId");
 
                     b.ToTable("ProductCategory", "dbo");
                 });
@@ -282,12 +269,7 @@ namespace ElBayt.Infra.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("ProductCategoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductCategoryId");
 
                     b.ToTable("Product", "dbo");
                 });
@@ -456,50 +438,6 @@ namespace ElBayt.Infra.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("ElBayt.Infra.Models.AreaModel", b =>
-                {
-                    b.HasOne("ElBayt.Infra.Models.GovernorateModel", "Governorates")
-                        .WithMany()
-                        .HasForeignKey("GovernorateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Governorates");
-                });
-
-            modelBuilder.Entity("ElBayt.Infra.Models.GovernorateModel", b =>
-                {
-                    b.HasOne("ElBayt.Infra.Models.CountryModel", "Countries")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Countries");
-                });
-
-            modelBuilder.Entity("ElBayt.Infra.Models.ProductCategoryModel", b =>
-                {
-                    b.HasOne("ElBayt.Infra.Models.ProductTypeModel", "ProductTypes")
-                        .WithMany()
-                        .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductTypes");
-                });
-
-            modelBuilder.Entity("ElBayt.Infra.Models.ProductModel", b =>
-                {
-                    b.HasOne("ElBayt.Infra.Models.ProductCategoryModel", "ProductCategories")
-                        .WithMany()
-                        .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductCategories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
