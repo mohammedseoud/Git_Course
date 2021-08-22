@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace ElBayt.Common.Security
+namespace ElBayt.Common.Core.SecurityModels
 {
     public class IUserIdentity
-    {
+    { 
         public ClaimsPrincipal User { get; }
 
         public bool? IsAuthenticated { get; }
@@ -27,7 +27,6 @@ namespace ElBayt.Common.Security
         public EnumUserCategory? UserCategory { get; }
 
         //  public bool IsInRole(string roleName) { }
-
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ElBayt.Common.Common;
-using ElBayt.Common.Logging;
-using ElBayt.Common.Mapping;
+using ElBayt.Common.Core.Logging;
+using ElBayt.Common.Core.Mapping;
+using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Security;
 using ElBayt.Core.IRepositories;
 using ElBayt.Core.IUnitOfWork;

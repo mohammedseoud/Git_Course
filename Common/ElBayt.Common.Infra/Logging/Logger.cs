@@ -1,5 +1,5 @@
 ﻿using ElBayt.Common.Entities;
-using ElBayt.Common.Logging;
+using ElBayt.Common.Core.Logging;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

@@ -1,4 +1,5 @@
-﻿using ElBayt.Common.Infra.Models;
+﻿using ElBayt.Common.Core.SecurityModels;
+using ElBayt.Common.Infra.Models;
 using ElBayt.Common.Security;
 using ElBayt.Infra.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

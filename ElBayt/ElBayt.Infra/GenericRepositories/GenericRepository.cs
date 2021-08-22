@@ -3,7 +3,7 @@ using ElBayt.Common.Common;
 using ElBayt.Common.Entities;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Infra.Models;
-using ElBayt.Common.Mapping;
+using ElBayt.Common.Core.Mapping;
 using ElBayt.Core.GenericIRepository;
 using Microsoft.EntityFrameworkCore;
 using System;

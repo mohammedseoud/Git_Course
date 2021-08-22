@@ -8,15 +8,12 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ElBayt.Common.Core\ElBayt.Common.Core.csproj" />
     <ProjectReference Include="..\ElBayt.Common\ElBayt.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

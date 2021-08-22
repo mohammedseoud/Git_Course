@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ElBayt.Common ;
-using ElBayt.Common.Mapping;
+using ElBayt.Common.Core.Mapping;
 
 namespace ElBayt.Common.Infra.Mapping
 {

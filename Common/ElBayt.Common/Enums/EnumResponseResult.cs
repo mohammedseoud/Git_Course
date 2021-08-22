@@ -7,6 +7,8 @@ namespace ElBayt.Common.Enums
     public enum EnumResponseResult
     {
         Successed,
-        Failed
+        Failed,
+        UnAuthenicated,
+        SuccessAuthenicated
     }
 }

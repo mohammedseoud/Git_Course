@@ -1,4 +1,4 @@
-﻿namespace ElBayt.Common.Mapping
+﻿namespace ElBayt.Common.Core.Mapping
 {
     public interface ITypeMapper
     {    

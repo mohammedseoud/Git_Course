@@ -1,9 +1,7 @@
 ﻿using ElBayt.Common.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ElBayt.Common.Logging
+namespace ElBayt.Common.Core.Logging
 {
     public interface ILogger
     {

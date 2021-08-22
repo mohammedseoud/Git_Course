@@ -1,12 +1,13 @@
 using AutoMapper;
 using ElBayt.Common.Infra.Logging;
 using ElBayt.Common.Infra.Mapping;
-using ElBayt.Common.Logging;
-using ElBayt.Common.Mapping;
+using ElBayt.Common.Core.Logging;
+using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Security;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Infra.Context;
 using ElBayt.Infra.Mapping;
+using Microsoft.IdentityModel.Tokens;
 using ElBayt.Infra.UnitOfWork;
 using ElBayt.Services.ElBaytServices;
 using ElBayt.Services.IElBaytServices;
@@ -19,7 +20,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using ElBayt.Common.Core.SecurityModels;
+using ElBayt.Common.Core.ISecurity;
+using ElBayt.Common.Infra.Security;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ELBayt.WebAPI
 {
@@ -50,9 +55,26 @@ namespace ELBayt.WebAPI
 
 
             services.AddAutoMapper(typeof(TypeMapper));
-        
+            services.AddAuthentication(cgf =>
+            {
+                cgf.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                cgf.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(option =>
+            {
+                option.RequireHttpsMetadata = true;
+                option.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:Key"])),
+                    ValidIssuer = Configuration["Token:Issuer"],
+                    ValidateIssuer = true,
+                    ValidateAudience = false
+                };
+            });
+
 
             services.AddScoped<IUserIdentity>();
+            services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
             services.AddScoped<ITypeMapper, TypeMapper>();
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();

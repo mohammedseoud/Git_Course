@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Infra.Mapping;
-using ElBayt.Common.Mapping;
+using ElBayt.Common.Core.Mapping;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;

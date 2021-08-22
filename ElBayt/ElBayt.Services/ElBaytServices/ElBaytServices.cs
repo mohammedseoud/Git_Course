@@ -1,6 +1,6 @@
 ﻿using ElBayt.Common.Common;
-using ElBayt.Common.Logging;
-using ElBayt.Common.Mapping;
+using ElBayt.Common.Core.Logging;
+using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Security;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Services.Contracts;
@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
+using ElBayt.Common.Core.SecurityModels;
 
 namespace ElBayt.Services.ElBaytServices
 {
