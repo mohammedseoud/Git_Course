@@ -9,6 +9,6 @@ namespace ElBayt.DTO.ELBaytDTO_s
     { 
         public string Name { get; set; }
         public Guid DepartmentId { get; set; }
-        public virtual DepartmentDTO Departments { get; set; }
+        public virtual ProductDepartmentDTO Departments { get; set; }
     }
 }

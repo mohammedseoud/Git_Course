@@ -8,6 +8,9 @@ namespace ElBayt.Core.IUnitOfWork
 {
     public interface IELBaytUnitOfWork : Common.UnitOfWork.IUnitOfWork
     {
-         IProductRepository ProductRepository { get; }
+        IProductRepository ProductRepository { get; }
+        IProductCategoryRepository ProductCategoryRepository { get; }
+        IProductTypeRepository ProductTypeRepository { get; }
+        IProductDepartmentRepository ProductDepartmentRepository { get; }
     }
 }

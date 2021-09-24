@@ -13,6 +13,6 @@ namespace ElBayt.Core.Entities
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
         public Guid DepartmentId { get; set; }
-        public virtual DepartmentEntity Departments { get; set; }
+        public virtual ProductDepartmentEntity Departments { get; set; }
     }
 }

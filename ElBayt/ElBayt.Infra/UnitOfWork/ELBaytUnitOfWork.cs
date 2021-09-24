@@ -177,14 +177,22 @@ namespace ElBayt.Infra.UnitOfWork
 
         #region properties
         private IProductRepository _productRepository ;
+        private IProductCategoryRepository _productCategoryRepository;
+        private IProductTypeRepository _productTypeRepository;
+        private IProductDepartmentRepository _productDepartmentRepository;
 
         #endregion
 
         #region Getter
 
         public IProductRepository ProductRepository =>
-             _productRepository ??
-            (_productRepository = new ProductRepository(_context,_mapper));
+            _productRepository ??= new ProductRepository(_context,_mapper);
+        public IProductCategoryRepository ProductCategoryRepository =>
+            _productCategoryRepository ??= new ProductCategoryRepository(_context, _mapper);
+        public IProductTypeRepository ProductTypeRepository =>
+           _productTypeRepository ??= new ProductTypeRepository(_context, _mapper);
+        public IProductDepartmentRepository ProductDepartmentRepository =>
+           _productDepartmentRepository ??= new ProductDepartmentRepository(_context, _mapper);
 
         #endregion
     }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ElBayt.Core.Entities
 {
-    public class DepartmentEntity : EnhancedEntity<Guid> , BaseEntity
+    public class ProductDepartmentEntity : EnhancedEntity<Guid> , BaseEntity
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

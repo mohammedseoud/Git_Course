@@ -8,8 +8,8 @@ using System.Text;
 
 namespace ElBayt.Infra.Models
 {
-    [Table("Department", Schema = "dbo")]
-    public class DepartmentModel : BaseModel<Guid>
+    [Table("ProductDepartment", Schema = "dbo")]
+    public class ProductDepartmentModel : BaseModel<Guid>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

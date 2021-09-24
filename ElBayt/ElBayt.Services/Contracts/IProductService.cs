@@ -9,5 +9,8 @@ namespace ElBayt.Services.Contracts
     public interface IProductService
     {
         public Task AddNewProduct(ProductDTO product);
+        public Task AddNewProductCategory(ProductCategoryDTO productCategory);
+        public Task AddNewProductType(ProductTypeDTO productType);
+        public Task AddNewProductDepartment(ProductDepartmentDTO productDepartment);
     }
 }

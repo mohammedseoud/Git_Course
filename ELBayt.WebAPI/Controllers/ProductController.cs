@@ -15,12 +15,12 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/ElBayt/Product")]
-    public class ProductController : Controller
+    public class ServiceController : Controller
     {
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;
       
-        public ProductController(IElBaytServices elBaytServices, ILogger logger, IUserIdentity userIdentity)
+        public ServiceController(IElBaytServices elBaytServices, ILogger logger, IUserIdentity userIdentity)
         {
             _elBaytServices = elBaytServices ?? throw new ArgumentNullException(nameof(elBaytServices));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -38,7 +38,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(Product, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(Product, correlationGuid, nameof(ServiceController), nameof(AddNewProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
                 await _elBaytServices.ProductService.AddNewProduct(Product);
@@ -54,7 +54,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {Product}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {Product}", correlationGuid, $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -72,7 +72,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Logging info
 
                 _logger.ErrorInDetail($"newException {Product}", correlationGuid,
-                    $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                    $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -80,6 +80,128 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = "Failed in Adding";
                
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpPost]
+        [Route(nameof(AddNewProductCategory))]
+        public async Task<IActionResult> AddNewProductCategory(ProductCategoryDTO ProductCategory)
+        {
+
+            var Response = new ElBaytResponse<string>();
+            Response.Errors = new List<string>();
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ServiceController), nameof(AddNewProduct), 1, User.Identity.Name);
+                #endregion Logging info
+
+                await _elBaytServices.ProductService.AddNewProductCategory(ProductCategory);
+
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = "Success in Adding";
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid, $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = "Failed in Adding";
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid,
+                    $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = "Failed in Adding";
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpPost]
+        [Route(nameof(AddNewProductCategory))]
+        public async Task<IActionResult> AddNewProductType(ProductTypeDTO ProductType)
+        {
+
+            var Response = new ElBaytResponse<string>();
+            Response.Errors = new List<string>();
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ServiceController), nameof(AddNewProduct), 1, User.Identity.Name);
+                #endregion Logging info
+
+                await _elBaytServices.ProductService.AddNewProductType(ProductType);
+
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = "Success in Adding";
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductType}", correlationGuid, $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = "Failed in Adding";
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductType}", correlationGuid,
+                    $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = "Failed in Adding";
+
                 Response.Errors.Add(ex.Message);
                 #endregion
 

@@ -12,13 +12,13 @@ using System.Text;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class DepartmentRepository : GenericRepository<DepartmentEntity, DepartmentModel>, IDepartmentRepository
+    public class ProductDepartmentRepository : GenericRepository<ProductDepartmentEntity, ProductDepartmentModel>, IProductDepartmentRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
         
 
-        public DepartmentRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
+        public ProductDepartmentRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;

@@ -14,8 +14,8 @@ namespace ElBayt.Infra.Models
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
-        [ForeignKey(nameof(Departments))]
+        [ForeignKey(nameof(ProductDepartments))]
         public Guid DepartmentId { get; set; }
-        public virtual DepartmentModel Departments { get; set; }
+        public virtual ProductDepartmentModel ProductDepartments { get; set; }
     }
 }

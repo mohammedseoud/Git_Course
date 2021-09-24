@@ -59,5 +59,89 @@ namespace ElBayt.Services.Implementations
                 throw;
             }
         }
+
+        public async Task AddNewProductCategory(ProductCategoryDTO productCategory)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+
+                #endregion Logging info
+                var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
+                Entity.Id = Guid.NewGuid();
+                await _unitOfWork.ProductCategoryRepository.AddAsync(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task AddNewProductDepartment(ProductDepartmentDTO productDepartment)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+
+                #endregion Logging info
+                var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
+                Entity.Id = Guid.NewGuid();
+                await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task AddNewProductType(ProductTypeDTO productType)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+
+                #endregion Logging info
+                var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
+                Entity.Id = Guid.NewGuid();
+                await _unitOfWork.ProductTypeRepository.AddAsync(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
     }
 }
