@@ -40,7 +40,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+                _logger.InfoInDetail(product, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ProductDTO, ProductEntity>(product);
@@ -52,7 +52,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(product, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -68,7 +68,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+                _logger.InfoInDetail(productCategory, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
@@ -80,7 +80,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(productCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -96,7 +96,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+                _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
@@ -108,7 +108,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(productDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -124,7 +124,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+                _logger.InfoInDetail(productType, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
@@ -136,7 +136,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(correlationGuid, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(productType, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

@@ -27,6 +27,8 @@ namespace ElBayt.Infra.Context
         public virtual DbSet<CountryModel> Countries { get; set; }
         public virtual DbSet<GovernorateModel> Governorates { get; set; }
         public virtual DbSet<ProductDepartmentModel> ProductDepartments { get; set; }
+        public virtual DbSet<ServiceModel> Services { get; set; }
+        public virtual DbSet<ServiceDepartmentModel> ServiceDepartments { get; set; }
 
 
         public virtual void MarkEntryAsModified(BaseGeneralModel entity, EntityState entityState = EntityState.Modified)

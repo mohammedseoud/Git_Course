@@ -36,14 +36,17 @@ namespace ElBayt.Services.ElBaytServices
 
         #region properties
         private IProductService _productService;
+        private IService_Service _service_Service;
 
         #endregion
 
         #region Getter
 
         public IProductService ProductService =>
-             _productService ??
-            (_productService = new ProductService(_unitOfWork, _userIdentity, _logger, _mapper));
+            _productService ??= new ProductService(_unitOfWork, _userIdentity, _logger, _mapper);
+
+        public IService_Service Service_Service =>
+            _service_Service ??= new Service_Service(_unitOfWork, _userIdentity, _logger, _mapper);
 
         #endregion
     }

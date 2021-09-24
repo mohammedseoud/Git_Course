@@ -15,12 +15,12 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1.0/ElBayt/Product")]
-    public class ServiceController : Controller
+    public class ProductController : Controller
     {
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;
       
-        public ServiceController(IElBaytServices elBaytServices, ILogger logger, IUserIdentity userIdentity)
+        public ProductController(IElBaytServices elBaytServices, ILogger logger)
         {
             _elBaytServices = elBaytServices ?? throw new ArgumentNullException(nameof(elBaytServices));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -38,7 +38,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(Product, correlationGuid, nameof(ServiceController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(Product, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
                 await _elBaytServices.ProductService.AddNewProduct(Product);
@@ -54,7 +54,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {Product}", correlationGuid, $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {Product}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -72,7 +72,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Logging info
 
                 _logger.ErrorInDetail($"newException {Product}", correlationGuid,
-                    $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                    $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -99,7 +99,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ServiceController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
                 await _elBaytServices.ProductService.AddNewProductCategory(ProductCategory);
@@ -115,7 +115,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid, $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -133,7 +133,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Logging info
 
                 _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid,
-                    $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                    $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -160,7 +160,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ServiceController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
                 await _elBaytServices.ProductService.AddNewProductType(ProductType);
@@ -176,7 +176,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ProductType}", correlationGuid, $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {ProductType}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -194,7 +194,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Logging info
 
                 _logger.ErrorInDetail($"newException {ProductType}", correlationGuid,
-                    $"{nameof(ServiceController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                    $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
