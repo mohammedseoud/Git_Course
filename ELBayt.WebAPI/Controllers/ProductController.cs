@@ -10,9 +10,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElBayt.Common.Core.SecurityModels;
+using Microsoft.AspNetCore.Cors;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
+    [EnableCors("_LocalOrigin")]
     [ApiController]
     [Route("api/v1.0/ElBayt/Product")]
     public class ProductController : Controller
@@ -99,7 +101,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductController), nameof(AddNewProductCategory), 1, User.Identity.Name);
                 #endregion Logging info
 
                 await _elBaytServices.ProductService.AddNewProductCategory(ProductCategory);
@@ -115,7 +117,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProductCategory)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -133,7 +135,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Logging info
 
                 _logger.ErrorInDetail($"newException {ProductCategory}", correlationGuid,
-                    $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                    $"{nameof(ProductController)}_{nameof(AddNewProductCategory)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -149,7 +151,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route(nameof(AddNewProductCategory))]
+        [Route(nameof(AddNewProductType))]
         public async Task<IActionResult> AddNewProductType(ProductTypeDTO ProductType)
         {
 
@@ -160,7 +162,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductController), nameof(AddNewProductType), 1, User.Identity.Name);
                 #endregion Logging info
 
                 await _elBaytServices.ProductService.AddNewProductType(ProductType);
@@ -176,7 +178,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ProductType}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {ProductType}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProductType)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -194,7 +196,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Logging info
 
                 _logger.ErrorInDetail($"newException {ProductType}", correlationGuid,
-                    $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                    $"{nameof(ProductController)}_{nameof(AddNewProductType)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -207,6 +209,74 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 return BadRequest(Response);
             }
+        }
+
+        [HttpPost]
+        [Route(nameof(AddNewProductDepartment))]
+        public async Task<IActionResult> AddNewProductDepartment(ProductDepartmentDTO ProductDepartment)
+        {
+
+            var Response = new ElBaytResponse<string>();
+            Response.Errors = new List<string>();
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(ProductDepartment, correlationGuid, nameof(ProductController), nameof(AddNewProductDepartment), 1, User.Identity.Name);
+                #endregion Logging info
+
+                await _elBaytServices.ProductService.AddNewProductDepartment(ProductDepartment);
+
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = "Success in Adding";
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductDepartment}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProductDepartment)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = "Failed in Adding";
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductDepartment}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(AddNewProductDepartment)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = "Failed in Adding";
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpGet]
+        [Route(nameof(Test))]
+        public IActionResult Test() 
+        {
+            return Ok("Test");
         }
     }
 }

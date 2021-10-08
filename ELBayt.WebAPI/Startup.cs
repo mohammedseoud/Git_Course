@@ -30,6 +30,7 @@ namespace ELBayt.WebAPI
 {
     public class Startup
     {
+        private readonly string _loginOrigin = "_LocalOrigin";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -79,6 +80,14 @@ namespace ELBayt.WebAPI
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();
             services.AddScoped<IElBaytServices, ElBaytServices>();
+            services.AddCors(opt=> {
+                opt.AddPolicy(_loginOrigin, builder =>
+                {
+                    builder.AllowAnyOrigin();
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +101,7 @@ namespace ELBayt.WebAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(_loginOrigin);
 
             app.UseAuthentication();
             app.UseAuthorization();

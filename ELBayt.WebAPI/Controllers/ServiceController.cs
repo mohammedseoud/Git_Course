@@ -4,6 +4,7 @@ using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.DTO.ELBaytDTO_s;
 using ElBayt.Services.IElBaytServices;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ELBayt.WebAPI.Controllers
 {
+    [EnableCors("_LocalOrigin")]
     [ApiController]
     [Route("api/v1.0/Service/Product")]
     public class ServiceController : Controller
