@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\Common\ElBayt.Common\ElBayt.Common.csproj" />
     <ProjectReference Include="..\ElBayt.Core\ElBayt.Core.csproj" />
     <ProjectReference Include="..\ElBayt.DTO\ElBayt.DTO.csproj" />
+    <ProjectReference Include="..\ElBayt.Infra\ElBayt.Infra.csproj" />
   </ItemGroup>
 
 </Project>

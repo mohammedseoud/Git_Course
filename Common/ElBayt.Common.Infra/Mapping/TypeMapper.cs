@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ElBayt.Common ;
 using ElBayt.Common.Core.Mapping;
+using System.Collections.Generic;
 
 namespace ElBayt.Common.Infra.Mapping
 {
@@ -21,6 +22,5 @@ namespace ElBayt.Common.Infra.Mapping
             return mapping;
         }
 
-       
     }
 }

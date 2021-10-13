@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace ElBayt.Common.Infra.Common
 {
-    public class GenericRepository<TEntity,TModel> : IGenericRepository<TEntity> 
+    public class GenericRepository<TEntity,TModel, TId> : IGenericRepository<TEntity, TId> 
         where TModel : BaseModel
         where TEntity:BaseEntity
     {
@@ -66,14 +66,14 @@ namespace ElBayt.Common.Infra.Common
             await _dbContext.AddRangeAsync(models);
         }
 
-        public TEntity Get(int id)
+        public TEntity Get(TId id)
         {
             var model = _set.Find(id);
             var entity = _mapper.Map<TModel, TEntity>(model);
             return entity;
         }
 
-        public async Task<TEntity> GetAsync(int id)
+        public async Task<TEntity> GetAsync(TId id)
         {
             var model = await _set.FindAsync(id);
             var entity = _mapper.Map<TModel, TEntity>(model);
@@ -131,13 +131,13 @@ namespace ElBayt.Common.Infra.Common
             return entity;
         }
 
-        public void Remove(int id)
+        public void Remove(TId id)
         {
             var entity = _set.Find(id);
             _set.Remove(entity);
         }
 
-        public async Task RemoveAsync(int id)
+        public async Task RemoveAsync(TId id)
         {
             var entity = await _set.FindAsync(id);
             _set.Remove(entity);

@@ -12,7 +12,7 @@ using System.Text;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class GovernorateRepository : GenericRepository<GovernorateEntity,GovernorateModel>, IGovernorateRepository
+    public class GovernorateRepository : GenericRepository<GovernorateEntity,GovernorateModel, Guid>, IGovernorateRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;

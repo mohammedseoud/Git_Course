@@ -9,12 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ElBayt.Common.Core.SecurityModels;
 using Microsoft.AspNetCore.Cors;
+using ElBayt.Common.Core.Services;
+
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
-    [EnableCors("_LocalOrigin")]
+    [EnableCors(CorsOrigin.LOCAL_ORIGIN)]
     [ApiController]
     [Route("api/v1.0/ElBayt/Product")]
     public class ProductController : Controller
@@ -273,10 +274,63 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route(nameof(Test))]
-        public IActionResult Test() 
+        [Route(nameof(GetProductDepartments))]
+        public ActionResult GetProductDepartments() 
         {
-            return Ok("Test");
+            var Response = new ElBaytResponse<object>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail("GetAll", correlationGuid, nameof(ProductController), nameof(GetProductDepartments), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var Departments =  _elBaytServices.ProductService.GetProductDepartments();
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = Departments;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException GetProductDepartments", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(GetProductDepartments)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException GetProductDepartments", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(GetProductDepartments)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
         }
     }
 }

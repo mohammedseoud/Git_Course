@@ -12,7 +12,7 @@ using System.Text;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ProductRepository: GenericRepository<ProductEntity,ProductModel>, IProductRepository
+    public class ProductRepository: GenericRepository<ProductEntity,ProductModel, Guid>, IProductRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;

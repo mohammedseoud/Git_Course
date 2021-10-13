@@ -25,12 +25,12 @@ using ElBayt.Common.Core.ISecurity;
 using ElBayt.Common.Infra.Security;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ElBayt.Common.Common;
 
 namespace ELBayt.WebAPI
 {
     public class Startup
     {
-        private readonly string _loginOrigin = "_LocalOrigin";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -43,7 +43,8 @@ namespace ELBayt.WebAPI
         {
             services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
                 .AddAzureADBearer(options => Configuration.Bind("AzureAd", options));
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+               options.JsonSerializerOptions.PropertyNamingPolicy = null); ;
 
 
             services.AddDbContext<ElBaytContext>(options =>
@@ -81,7 +82,7 @@ namespace ELBayt.WebAPI
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();
             services.AddScoped<IElBaytServices, ElBaytServices>();
             services.AddCors(opt=> {
-                opt.AddPolicy(_loginOrigin, builder =>
+                opt.AddPolicy(CorsOrigin.LOCAL_ORIGIN , builder =>
                 {
                     builder.AllowAnyOrigin();
                     builder.AllowAnyHeader();
@@ -101,7 +102,7 @@ namespace ELBayt.WebAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors(_loginOrigin);
+            app.UseCors(CorsOrigin.LOCAL_ORIGIN);
 
             app.UseAuthentication();
             app.UseAuthorization();

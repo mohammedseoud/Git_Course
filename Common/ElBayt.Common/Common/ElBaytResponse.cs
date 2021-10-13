@@ -7,8 +7,8 @@ namespace ElBayt.Common.Common
 {
     public class ElBaytResponse<T>
     {
-        public EnumResponseResult Result;
-        public T Data;
-        public List<string> Errors;
+        public EnumResponseResult Result { set; get; }
+        public T Data { set; get; }
+        public List<string> Errors { set; get; }
     }
 }

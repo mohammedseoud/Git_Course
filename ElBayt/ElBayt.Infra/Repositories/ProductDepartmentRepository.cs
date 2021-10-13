@@ -9,10 +9,15 @@ using ElBayt.Infra.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
+using ElBayt.Common.Common;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ProductDepartmentRepository : GenericRepository<ProductDepartmentEntity, ProductDepartmentModel>, IProductDepartmentRepository
+    public class ProductDepartmentRepository : GenericRepository<ProductDepartmentEntity, ProductDepartmentModel, Guid>, IProductDepartmentRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
@@ -22,6 +27,7 @@ namespace ElBayt.Infra.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
-        }      
+        }
+    
     }
 }

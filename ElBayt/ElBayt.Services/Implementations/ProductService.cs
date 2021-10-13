@@ -1,18 +1,14 @@
-﻿using AutoMapper;
-using ElBayt.Common.Common;
-using ElBayt.Common.Core.Logging;
+﻿using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
-using ElBayt.Common.Security;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBaytDTO_s;
 using ElBayt.Services.Contracts;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Services.Implementations
 {
@@ -137,6 +133,33 @@ namespace ElBayt.Services.Implementations
                 #region Logging info
 
                 _logger.ErrorInDetail(productType, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public object GetProductDepartments()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail("GetProductDepartments", correlationGuid, nameof(ProductService), nameof(GetProductDepartments), 1, _userIdentity.Name);
+
+                #endregion Logging info
+             
+                return _unitOfWork.ProductDepartmentRepository.GetAll();
+
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail("GetProductDepartments", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductDepartments)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
