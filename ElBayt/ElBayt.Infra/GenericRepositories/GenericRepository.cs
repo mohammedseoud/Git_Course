@@ -131,19 +131,32 @@ namespace ElBayt.Common.Infra.Common
             return entity;
         }
 
-        public void Remove(TId id)
+        public bool Remove(TId id)
         {
             var entity = _set.Find(id);
-            _set.Remove(entity);
+            try
+            {
+                _set.Remove(entity);
+                return true;
+            }
+            catch { return false;   }
         }
 
-        public async Task RemoveAsync(TId id)
+        public async Task<bool> RemoveAsync(TId id)
         {
             var entity = await _set.FindAsync(id);
-            _set.Remove(entity);
+            try
+            {
+                _set.Remove(entity);
+                return true;
+            }
+            catch  
+            {
+                return false;
+            }
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public bool RemoveRange(IEnumerable<TEntity> entities)
         {
             var models = new List<TModel>();
             foreach (var entity in entities)
@@ -152,14 +165,29 @@ namespace ElBayt.Common.Infra.Common
                 models.Add(model);
             }
 
-
-            _set.RemoveRange(models);
+            try
+            {
+                _set.RemoveRange(models);
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
-        public void ReomveEntity(TEntity entity)
+        public bool ReomveEntity(TEntity entity)
         {
             var model = _mapper.Map<TEntity, TModel>(entity);
-            _set.Remove(model);
+            try
+            {
+                _set.Remove(model);
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
     }
 }

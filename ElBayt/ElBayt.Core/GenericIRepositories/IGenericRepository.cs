@@ -24,10 +24,10 @@ namespace ElBayt.Core.GenericIRepository
         IOrderedQueryable<BaseModel>> orderby = null, string IncludeProperties = null);
         TEntity GetFirstOrDefault(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null);
         Task<TEntity> FirstOrDefaultAsync(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null);
-        void Remove(TId id);
-        Task RemoveAsync(TId id);
-        void RemoveRange(IEnumerable<TEntity> entities);
-        void ReomveEntity(TEntity entity);
+        bool Remove(TId id);
+        Task<bool> RemoveAsync(TId id);
+        bool RemoveRange(IEnumerable<TEntity> entities);
+        bool ReomveEntity(TEntity entity);
 
     }
 }

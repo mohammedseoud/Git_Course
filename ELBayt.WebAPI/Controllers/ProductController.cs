@@ -332,5 +332,78 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 return BadRequest(Response);
             }
         }
+
+
+        [HttpDelete]
+        [Route(nameof(DeleteProductDepartment))]
+        public async Task< ActionResult> DeleteProductDepartment(Guid Id)
+        {
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductController), nameof(DeleteProductDepartment), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var Res = await _elBaytServices.ProductService.DeleteProductDepartment(Id);
+              
+                #region Result
+                if (Res == "true")
+                {
+                  
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = true;
+                 }
+                else
+                {
+                    Response.Errors.Add(Res);
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = false;
+                  
+                }
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(DeleteProductDepartment)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(DeleteProductDepartment)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
     }
 }

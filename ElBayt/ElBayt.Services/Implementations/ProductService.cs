@@ -140,6 +140,39 @@ namespace ElBayt.Services.Implementations
             }
         }
 
+        public async Task<string> DeleteProductDepartment(Guid id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(id, correlationGuid, nameof(ProductService), nameof(DeleteProductDepartment), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted = await _unitOfWork.ProductDepartmentRepository.RemoveAsync(id);
+                if (IsDeleted)
+                {
+                    var res = await _unitOfWork.SaveAsync();
+                    return "true";
+
+                }
+                return "This Item Not Exist";
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+        }
+
         public object GetProductDepartments()
         {
             var correlationGuid = Guid.NewGuid();

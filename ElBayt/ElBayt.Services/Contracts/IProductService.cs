@@ -14,5 +14,6 @@ namespace ElBayt.Services.Contracts
         public Task AddNewProductType(ProductTypeDTO productType);
         public Task AddNewProductDepartment(ProductDepartmentDTO productDepartment);
         public object GetProductDepartments();
+        public Task<string> DeleteProductDepartment(Guid Id);
     }
 }
