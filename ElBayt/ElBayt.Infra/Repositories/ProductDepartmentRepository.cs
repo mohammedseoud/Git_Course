@@ -28,6 +28,11 @@ namespace ElBayt.Infra.Repositories
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
-    
+
+        public async Task UpdateProductDepartment(ProductDepartmentEntity productDepartment)
+        {
+            var Department = await _dbContext.ProductDepartments.FindAsync(productDepartment.Id);
+            Department.Name = productDepartment.Name;
+        }
     }
 }

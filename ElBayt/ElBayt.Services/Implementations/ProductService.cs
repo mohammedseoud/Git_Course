@@ -84,34 +84,6 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task AddNewProductDepartment(ProductDepartmentDTO productDepartment)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
-
-                #endregion Logging info
-                var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
-                Entity.Id = Guid.NewGuid();
-                await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(productDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
         public async Task AddNewProductType(ProductTypeDTO productType)
         {
             var correlationGuid = Guid.NewGuid();
@@ -133,6 +105,35 @@ namespace ElBayt.Services.Implementations
                 #region Logging info
 
                 _logger.ErrorInDetail(productType, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        #region Department
+        public async Task AddNewProductDepartment(ProductDepartmentDTO productDepartment)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+
+                #endregion Logging info
+                var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
+                Entity.Id = Guid.NewGuid();
+                await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(productDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -199,5 +200,63 @@ namespace ElBayt.Services.Implementations
                 throw;
             }
         }
+
+        public async Task UpdateProductDepartment(ProductDepartmentDTO ProductDepartment)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ProductDepartment, correlationGuid, nameof(ProductService), nameof(UpdateProductDepartment), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+
+                var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(ProductDepartment);
+                await _unitOfWork.ProductDepartmentRepository.UpdateProductDepartment(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ProductDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<ProductDepartmentDTO> GetProductDepartment(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductDepartment), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Model = await _unitOfWork.ProductDepartmentRepository.GetAsync(Id);
+                return _mapper.Map<ProductDepartmentEntity, ProductDepartmentDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        #endregion
     }
 }

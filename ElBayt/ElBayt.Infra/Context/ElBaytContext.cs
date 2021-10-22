@@ -57,7 +57,6 @@ namespace ElBayt.Infra.Context
                     {
                         entity.CreatedBy = entity.ModifiedBy = identityName;
                         entity.CreatedDate = entity.ModifiedDate = dateNow;
-                        entity.IsDeleted = false;
                     }
                     else
                     {
@@ -89,7 +88,6 @@ namespace ElBayt.Infra.Context
                     {
                         entity.CreatedBy = entity.ModifiedBy = identityName;
                         entity.CreatedDate = entity.ModifiedDate = dateNow;
-                        entity.IsDeleted = false;
                     }
                     else
                     {
@@ -121,7 +119,6 @@ namespace ElBayt.Infra.Context
                     {
                         entity.CreatedBy = entity.ModifiedBy = identityName;
                         entity.CreatedDate = entity.ModifiedDate = dateNow;
-                        entity.IsDeleted = false;
                     }
                     else
                     {

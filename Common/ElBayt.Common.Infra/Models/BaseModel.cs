@@ -24,7 +24,5 @@ namespace ElBayt.Common.Infra.Models
         [Required]
         [MaxLength(50)]
         public virtual string ModifiedBy { get; set; }
-        [DefaultValue(false)]
-        public bool IsDeleted { get; set; }
     }
 }

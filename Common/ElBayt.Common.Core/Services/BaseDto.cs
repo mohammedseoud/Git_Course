@@ -15,6 +15,5 @@ namespace ElBayt.Common.Core.Services
         public string CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }
