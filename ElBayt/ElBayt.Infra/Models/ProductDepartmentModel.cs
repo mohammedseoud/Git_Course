@@ -14,6 +14,6 @@ namespace ElBayt.Infra.Models
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
-        
+   
     }
 }

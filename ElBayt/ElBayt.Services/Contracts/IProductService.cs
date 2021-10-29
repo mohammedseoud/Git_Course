@@ -10,8 +10,22 @@ namespace ElBayt.Services.Contracts
     public interface IProductService
     {
         public Task AddNewProduct(ProductDTO product);
+
+        #region Categories
         public Task AddNewProductCategory(ProductCategoryDTO productCategory);
+        public object GetProductCategories();
+        public Task<string> DeleteProductCategory(Guid Id);
+        public Task UpdateProductCategory(ProductCategoryDTO ProductCategory);
+        public Task<ProductCategoryDTO> GetProductCategory(Guid Id);
+        #endregion
+
+        #region Types
         public Task AddNewProductType(ProductTypeDTO productType);
+        public object GetProductTypes();
+        public Task<string> DeleteProductType(Guid Id);
+        public Task UpdateProductType(ProductTypeDTO ProductType);
+        public Task<ProductTypeDTO> GetProductType(Guid Id);
+        #endregion
 
         #region Departments
         public Task AddNewProductDepartment(ProductDepartmentDTO productDepartment);

@@ -15,5 +15,6 @@ namespace ElBayt.Core.Entities
         public Guid ProductTypeId { get; set; }
 
         public virtual ProductTypeEntity ProductTypes { get; set; }
+
     }
 }

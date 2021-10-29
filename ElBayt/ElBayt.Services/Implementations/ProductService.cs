@@ -56,6 +56,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
+        #region Categories
         public async Task AddNewProductCategory(ProductCategoryDTO productCategory)
         {
             var correlationGuid = Guid.NewGuid();
@@ -83,6 +84,126 @@ namespace ElBayt.Services.Implementations
                 throw;
             }
         }
+
+        public object GetProductCategories()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail("GetProductCategories", correlationGuid, nameof(ProductService), nameof(GetProductCategories), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return _unitOfWork.ProductCategoryRepository.GetAll();
+
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail("GetProductCategories", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategories)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteProductCategory(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProductCategory), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted = await _unitOfWork.ProductCategoryRepository.RemoveAsync(Id);
+                if (IsDeleted)
+                {
+                    var res = await _unitOfWork.SaveAsync();
+                    return "true";
+
+                }
+                return "This Item Not Exist";
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+        }
+
+        public async Task UpdateProductCategory(ProductCategoryDTO ProductCategory)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductService), nameof(UpdateProductCategory), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+
+                var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(ProductCategory);
+                await _unitOfWork.ProductCategoryRepository.UpdateProductCategory(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ProductCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<ProductCategoryDTO> GetProductCategory(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductCategory), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Model = await _unitOfWork.ProductCategoryRepository.GetAsync(Id);
+                return _mapper.Map<ProductCategoryEntity, ProductCategoryDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Types
 
         public async Task AddNewProductType(ProductTypeDTO productType)
         {
@@ -112,7 +233,125 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        #region Department
+        public object GetProductTypes()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail("GetProductTypes", correlationGuid, nameof(ProductService), nameof(GetProductTypes), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return _unitOfWork.ProductTypeRepository.GetAll();
+
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail("GetProductTypes", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductTypes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteProductType(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProductType), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted = await _unitOfWork.ProductTypeRepository.RemoveAsync(Id);
+                if (IsDeleted)
+                {
+                    var res = await _unitOfWork.SaveAsync();
+                    return "true";
+
+                }
+                return "This Item Not Exist";
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+        }
+
+        public async Task UpdateProductType(ProductTypeDTO ProductType)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductService), nameof(UpdateProductType), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+
+                var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(ProductType);
+                await _unitOfWork.ProductTypeRepository.UpdateProductType(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ProductType, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<ProductTypeDTO> GetProductType(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductType), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Model = await _unitOfWork.ProductTypeRepository.GetAsync(Id);
+                return _mapper.Map<ProductTypeEntity, ProductTypeDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Departments
         public async Task AddNewProductDepartment(ProductDepartmentDTO productDepartment)
         {
             var correlationGuid = Guid.NewGuid();

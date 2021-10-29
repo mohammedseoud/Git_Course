@@ -14,5 +14,6 @@ namespace ElBayt.Core.Entities
         public string Name { get; set; }
         public Guid DepartmentId { get; set; }
         public virtual ProductDepartmentEntity Departments { get; set; }
+
     }
 }

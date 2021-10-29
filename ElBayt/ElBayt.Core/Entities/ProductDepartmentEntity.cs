@@ -12,5 +12,6 @@ namespace ElBayt.Core.Entities
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
+
     }
 }

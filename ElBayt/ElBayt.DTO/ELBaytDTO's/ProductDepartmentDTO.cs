@@ -8,5 +8,5 @@ namespace ElBayt.DTO.ELBaytDTO_s
     public class ProductDepartmentDTO : BaseDto<Guid>, IBaseDTO
     { 
         public string Name { get; set; }
-    }
+     }
 }
