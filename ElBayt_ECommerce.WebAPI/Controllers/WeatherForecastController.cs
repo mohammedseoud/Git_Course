@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase

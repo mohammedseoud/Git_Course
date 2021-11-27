@@ -2,31 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-ElBayt_ECommerce.WebAPI-2305EDD5-58D4-421E-BD0F-0055ACF336DD</UserSecretsId>
+    <UserSecretsId>aspnet-ElBayt_ECommerce.WebAPI-BA561AB0-3525-4EF5-9593-B29443103B20</UserSecretsId>
     <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.1.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\ElBayt.Common\ElBayt.Common.csproj" />
+    <ProjectReference Include="..\ElBayt\ElBayt.Core\ElBayt.Core.csproj" />
     <ProjectReference Include="..\ElBayt\ElBayt.Infra\ElBayt.Infra.csproj" />
     <ProjectReference Include="..\ElBayt\ElBayt.Services\ElBayt.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Identity.UI">
-      <HintPath>..\ElBayt_ECommerce\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.UI.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
