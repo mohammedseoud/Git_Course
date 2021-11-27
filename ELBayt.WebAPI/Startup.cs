@@ -51,7 +51,7 @@ namespace ELBayt.WebAPI
               options.UseSqlServer(
                   Configuration.GetConnectionString("ElBaytConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultTokenProviders()
               .AddEntityFrameworkStores<ElBaytContext>();
 

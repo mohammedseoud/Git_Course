@@ -9,6 +9,6 @@ namespace ElBayt.Common.Enums
         Successed,
         Failed,
         UnAuthenicated,
-        SuccessAuthenicated
+        Authenicated,
     }
 }
