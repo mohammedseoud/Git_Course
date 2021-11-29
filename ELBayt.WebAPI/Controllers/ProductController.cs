@@ -1,16 +1,13 @@
 ﻿using ElBayt.Common.Common;
 using ElBayt.Common.Enums;
 using ElBayt.Common.Core.Logging;
-using ElBayt.Common.Security;
 using ElBayt.DTO.ELBaytDTO_s;
 using ElBayt.Services.IElBaytServices;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
-using ElBayt.Common.Core.Services;
 
 
 namespace ElBayt_ECommerce.WebAPI.Controllers

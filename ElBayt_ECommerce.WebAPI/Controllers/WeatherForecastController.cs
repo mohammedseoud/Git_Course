@@ -10,7 +10,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 {
     //[Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1.0/ElBaytECommerce/WeatherForecast")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
