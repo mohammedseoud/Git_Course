@@ -497,5 +497,32 @@ namespace ElBayt.Services.Implementations
         }
 
         #endregion
+
+        public async Task<object> Test()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                //#region Logging info
+
+                //_logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductCategory), 1, _userIdentity.Name);
+
+                //#endregion Logging info
+
+                var Model = await _unitOfWork.SP.ListAsnyc<ProductDepartmentEntity>("TestProc");
+                return Model;
+            }
+            catch (Exception ex)
+            {
+                //#region Logging info
+
+                //_logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                //#endregion Logging info
+
+                throw;
+            }
+        }
     }
 }

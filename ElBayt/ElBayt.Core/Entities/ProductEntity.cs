@@ -13,8 +13,10 @@ namespace ElBayt.Core.Entities
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
 
-        [Required]
+         [Required]
          public decimal Price { get; set; }
+
+        public decimal PriceAfterDiscout { get; set; }
 
         [StringLength(General.BIG_LINE_MAX_LENGTH)]
         [Required]

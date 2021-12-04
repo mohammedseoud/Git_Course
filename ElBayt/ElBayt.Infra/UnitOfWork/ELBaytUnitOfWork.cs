@@ -3,6 +3,7 @@ using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Security;
+using ElBayt.Core.GenericIRepository;
 using ElBayt.Core.IRepositories;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Infra.Context;
@@ -182,6 +183,7 @@ namespace ElBayt.Infra.UnitOfWork
         private IProductDepartmentRepository _productDepartmentRepository;
         private IServiceRepository _serviceRepository;
         private IServiceDepartmentRepository _serviceDepartmentRepository;
+        private ISPRepository _SPRepository;
 
         #endregion
 
@@ -199,6 +201,8 @@ namespace ElBayt.Infra.UnitOfWork
            _serviceRepository ??= new ServiceRepository(_context, _mapper);
         public IServiceDepartmentRepository ServiceDepartmentRepository =>
            _serviceDepartmentRepository ??= new ServiceDepartmentRepository(_context, _mapper);
+
+        public ISPRepository SP => _SPRepository ??= new SPRepository(_context);
         #endregion
     }
 }

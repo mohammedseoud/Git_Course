@@ -35,5 +35,6 @@ namespace ElBayt.Services.Contracts
         public Task<ProductDepartmentDTO> GetProductDepartment(Guid Id);
         #endregion
 
+        public Task<object> Test();
     }
 }

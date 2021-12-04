@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Common\ElBayt.Common.Infra\ElBayt.Common.Infra.csproj" />
     <ProjectReference Include="..\..\Common\ElBayt.Common\ElBayt.Common.csproj" />
   </ItemGroup>

@@ -18,6 +18,8 @@ namespace ElBayt.Infra.Models
         [Required]
         public decimal Price { get; set; }
 
+        public decimal PriceAfterDiscout { get; set; }
+
         [StringLength(General.BIG_LINE_MAX_LENGTH)]
         [Required]
         public string Description { get; set; }

@@ -1,4 +1,5 @@
-﻿using ElBayt.Core.IRepositories;
+﻿using ElBayt.Core.GenericIRepository;
+using ElBayt.Core.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,5 +15,7 @@ namespace ElBayt.Core.IUnitOfWork
         IProductDepartmentRepository ProductDepartmentRepository { get; }
         IServiceRepository ServiceRepository { get; }
         IServiceDepartmentRepository ServiceDepartmentRepository { get; }
+        ISPRepository SP { get; }
+        
     }
 }
