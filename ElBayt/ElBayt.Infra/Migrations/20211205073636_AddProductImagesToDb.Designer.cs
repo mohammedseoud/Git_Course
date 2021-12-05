@@ -4,14 +4,16 @@ using ElBayt.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElBayt.Infra.Migrations
 {
     [DbContext(typeof(ElBaytContext))]
-    partial class ElBaytContextModelSnapshot : ModelSnapshot
+    [Migration("20211205073636_AddProductImagesToDb")]
+    partial class AddProductImagesToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,7 +338,7 @@ namespace ElBayt.Infra.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("PriceAfterDiscount")
+                    b.Property<decimal>("PriceAfterDiscout")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ProductCategoryId")

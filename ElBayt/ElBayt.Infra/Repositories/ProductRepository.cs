@@ -9,6 +9,7 @@ using ElBayt.Infra.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ElBayt.Infra.Repositories
 {
@@ -22,6 +23,16 @@ namespace ElBayt.Infra.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
-        }      
+        }
+
+        public async Task UpdateProduct(ProductEntity product)
+        {
+            var Product = await _dbContext.Products.FindAsync(product.Id);
+            Product.Name = product.Name;
+            Product.Description = product.Description;
+            Product.Price = product.Price;
+            Product.PriceAfterDiscount = product.PriceAfterDiscount;
+            Product.ProductCategoryId = product.ProductCategoryId;
+        }
     }
 }
