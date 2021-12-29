@@ -348,6 +348,72 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [HttpPut]
+        [Route(nameof(UploadProductImage))]
+        public async Task<ActionResult> UploadProductImage(ProductDTO product)
+        {
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(product, correlationGuid, nameof(ProductController), nameof(UploadProductImage), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var File = Request.Form.Files[0];
+
+                await _elBaytServices.ProductService.UpdateProduct(product);
+
+                #region Result
+
+
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = true;
+
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {product}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(UpdateProduct)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {product}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(UpdateProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
         #endregion
 
         #region Categories

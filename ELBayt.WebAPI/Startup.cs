@@ -26,6 +26,9 @@ using ElBayt.Common.Infra.Security;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ElBayt.Common.Common;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace ELBayt.WebAPI
 {
@@ -103,6 +106,12 @@ namespace ELBayt.WebAPI
 
             app.UseRouting();
             app.UseCors(CorsOrigin.LOCAL_ORIGIN);
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

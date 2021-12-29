@@ -471,6 +471,7 @@ namespace ElBayt.Services.Implementations
         #endregion
 
         #region Product
+
         public async Task AddNewProduct(ProductDTO product)
         {
             var correlationGuid = Guid.NewGuid();

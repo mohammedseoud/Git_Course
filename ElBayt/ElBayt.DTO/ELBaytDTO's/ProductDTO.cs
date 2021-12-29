@@ -8,8 +8,8 @@ namespace ElBayt.DTO.ELBaytDTO_s
     public class ProductDTO : BaseDto<Guid>, IBaseDTO
     { 
         public string Name { get; set; }
-        public decimal Price { get; set; }
-        public decimal PriceAfterDiscount { get; set; }
+        public string Price { get; set; }
+        public string PriceAfterDiscount { get; set; }
         public string Description { get; set; }
         public Guid ProductCategoryId { get; set; }
 
