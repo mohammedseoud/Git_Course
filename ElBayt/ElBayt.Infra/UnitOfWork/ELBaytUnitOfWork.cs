@@ -178,6 +178,7 @@ namespace ElBayt.Infra.UnitOfWork
 
         #region properties
         private IProductRepository _productRepository ;
+        private IProductImageRepository _productImageRepository;
         private IProductCategoryRepository _productCategoryRepository;
         private IProductTypeRepository _productTypeRepository;
         private IProductDepartmentRepository _productDepartmentRepository;
@@ -191,6 +192,8 @@ namespace ElBayt.Infra.UnitOfWork
 
         public IProductRepository ProductRepository =>
             _productRepository ??= new ProductRepository(_context,_mapper);
+        public IProductImageRepository ProductImageRepository =>
+           _productImageRepository ??= new ProductImageRepository(_context, _mapper);
         public IProductCategoryRepository ProductCategoryRepository =>
             _productCategoryRepository ??= new ProductCategoryRepository(_context, _mapper);
         public IProductTypeRepository ProductTypeRepository =>

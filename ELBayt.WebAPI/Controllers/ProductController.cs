@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
-
+using System.IO;
+using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -19,11 +21,13 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
     {
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;
-      
-        public ProductController(IElBaytServices elBaytServices, ILogger logger)
+        private readonly IConfiguration _config;
+
+        public ProductController(IElBaytServices elBaytServices, ILogger logger, IConfiguration config)
         {
             _elBaytServices = elBaytServices ?? throw new ArgumentNullException(nameof(elBaytServices));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _config= config ?? throw new ArgumentNullException(nameof(config));
         }
 
         #region Products
@@ -348,31 +352,59 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route(nameof(UploadProductImage))]
-        public async Task<ActionResult> UploadProductImage(ProductDTO product)
+        public async Task<ActionResult> UploadProductImage()
         {
-            var Response = new ElBaytResponse<bool>
+            
+            var Response = new ElBaytResponse<ProductImageDTO>
             {
                 Errors = new List<string>()
             };
+
+
             var correlationGuid = Guid.NewGuid();
             try
             {
-
+                
                 #region Logging info
-                _logger.InfoInDetail(product, correlationGuid, nameof(ProductController), nameof(UploadProductImage), 1, User.Identity.Name);
+                _logger.InfoInDetail(Request.Form.Files[0], correlationGuid, nameof(ProductController), nameof(UploadProductImage), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var File = Request.Form.Files[0];
+                var file = Request.Form.Files[0];
 
-                await _elBaytServices.ProductService.UpdateProduct(product);
+                if (file.Length > 0)
+                {
+                    var ProductId = Request.Form["ProductId"].ToString();
+                    var ProductImageId = Guid.NewGuid();
+                    var filename = ProductImageId.ToString() + Path.GetExtension(file.FileName);
+                    var fullpath = Path.Combine(_config["FilesInfo:Path"], filename);
+             
+                    using var stream = new FileStream(fullpath, FileMode.Create);
+                    file.CopyTo(stream);
+
+
+                    var image = new ProductImageDTO
+                    {
+                        Id = ProductImageId,
+                        ProductId = Guid.Parse(ProductId),
+                        URL = fullpath
+                    };
+
+
+                    await _elBaytServices.ProductService.SaveProductImage(image);
+            
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = await _elBaytServices.ProductService.GetProductImage(image.Id);
+                }
+
+
 
                 #region Result
 
-
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = true;
+                Response.Errors.Add("File Size Is Zero");
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
 
                 #endregion
 
@@ -382,14 +414,14 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {product}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form.Files[0]}", correlationGuid,
                     $"{nameof(ProductController)}_{nameof(UpdateProduct)}_{nameof(NotFoundException)}",
                     ex, 1, User.Identity.Name);
 
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = null;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -399,13 +431,73 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {product}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form.Files[0]}", correlationGuid,
                     $"{nameof(ProductController)}_{nameof(UpdateProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpGet]
+        [Route(nameof(GetProductImages))]
+        public  ActionResult GetProductImages(Guid ProductId)
+        {
+            var Response = new ElBaytResponse<object>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductController), nameof(GetProductImages), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var Images = _elBaytServices.ProductService.GetProductImages(ProductId);
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = Images;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException GetProducts", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(GetProductImages)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductId}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(GetProductImages)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
 
                 Response.Errors.Add(ex.Message);
                 #endregion

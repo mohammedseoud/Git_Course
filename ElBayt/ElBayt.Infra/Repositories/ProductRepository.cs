@@ -25,6 +25,12 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
+        public async Task AddProductImage(ProductImageEntity Image)
+        {
+            var model = _mapper.Map<ProductImageEntity, ProductImageModel>(Image);
+            await _dbContext.ProductImages.AddAsync(model);
+        }
+
         public async Task UpdateProduct(ProductEntity product)
         {
             var Product = await _dbContext.Products.FindAsync(product.Id);

@@ -109,8 +109,8 @@ namespace ELBayt.WebAPI
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-                RequestPath = new PathString("/Resources")
+                FileProvider = new PhysicalFileProvider(Configuration["FilesInfo:Path"]),
+                RequestPath = new PathString(Configuration["FilesInfo:Folder"])
             });
 
             app.UseAuthentication();

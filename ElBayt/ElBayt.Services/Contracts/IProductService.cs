@@ -15,6 +15,9 @@ namespace ElBayt.Services.Contracts
         public Task<string> DeleteProduct(Guid Id);
         public Task UpdateProduct(ProductDTO Product);
         public Task<ProductDTO> GetProduct(Guid Id);
+        public Task SaveProductImage(ProductImageDTO Image);
+        public Task<ProductImageDTO> GetProductImage(Guid Id);
+        public object GetProductImages(Guid ProductId);
         #endregion
 
         #region Categories

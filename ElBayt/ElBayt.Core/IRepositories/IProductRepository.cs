@@ -8,5 +8,6 @@ namespace ElBayt.Core.IRepositories
     public interface IProductRepository : IGenericRepository<ProductEntity, Guid>
     {
         public Task UpdateProduct(ProductEntity product);
+        public Task AddProductImage(ProductImageEntity Image);
     }
 }

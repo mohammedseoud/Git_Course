@@ -12,7 +12,7 @@ namespace ElBayt.Infra.Models
     public class ProductImageModel : BaseModel<Guid>
     {
         [Required]
-        [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
+        [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]
         public string URL { get; set; }
         
         [ForeignKey(nameof(Products))]

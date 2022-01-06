@@ -615,6 +615,89 @@ namespace ElBayt.Services.Implementations
                 throw;
             }
         }
+
+        public async Task SaveProductImage(ProductImageDTO Image)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Image, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+
+                var Entity = _mapper.Map<ProductImageDTO, ProductImageEntity>(Image);
+                await _unitOfWork.ProductRepository.AddProductImage(Entity);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Image, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<ProductImageDTO> GetProductImage(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+
+                var entity = await _unitOfWork.ProductImageRepository.GetAsync(Id);
+                return _mapper.Map<ProductImageEntity, ProductImageDTO>(entity);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public object GetProductImages(Guid ProductId)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductService), nameof(GetProductImages), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return  _unitOfWork.ProductImageRepository.GetProductImages(ProductId);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
         #endregion
     }
 }
