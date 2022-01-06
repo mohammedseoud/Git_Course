@@ -1,14 +1,14 @@
-﻿using ElBayt.Common.Core.Logging;
+﻿using Dapper;
+using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBaytDTO_s;
+using ElBayt.Infra.SPs;
 using ElBayt.Services.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Services.Implementations
 {
@@ -692,6 +692,35 @@ namespace ElBayt.Services.Implementations
                 #region Logging info
 
                 _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<string> GetProductImageDirectory(Guid ProductId)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductService), nameof(GetProductImageDirectory), 1, _userIdentity.Name);
+
+                #endregion Logging info
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ProductId", ProductId);
+
+                var Directory = await _unitOfWork.SP.SingleAsnyc<string>(StoredProcedure.GETPRODUCTIMAGEDIRECTOY, SPParameters);
+                return Directory;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImageDirectory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

@@ -1,8 +1,5 @@
-﻿using ElBayt.Common.Core.Services;
-using ElBayt.DTO.ELBaytDTO_s;
+﻿using ElBayt.DTO.ELBaytDTO_s;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ElBayt.Services.Contracts
@@ -18,6 +15,7 @@ namespace ElBayt.Services.Contracts
         public Task SaveProductImage(ProductImageDTO Image);
         public Task<ProductImageDTO> GetProductImage(Guid Id);
         public object GetProductImages(Guid ProductId);
+        public Task<string> GetProductImageDirectory(Guid ProductId);
         #endregion
 
         #region Categories

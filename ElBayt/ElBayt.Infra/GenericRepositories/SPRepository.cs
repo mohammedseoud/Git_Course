@@ -1,12 +1,7 @@
-﻿using ElBayt.Common.Entities;
-using ElBayt.Common.Infra.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using ElBayt.Common.Common;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;

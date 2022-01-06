@@ -192,10 +192,6 @@ namespace ELBayt.WebAPI.Controllers
                 return BadRequest(Response);
             }
 
-
-
-
-            return View();
         }
     }
 }

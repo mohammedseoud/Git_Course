@@ -377,7 +377,11 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 {
                     var ProductId = Request.Form["ProductId"].ToString();
                     var ProductImageId = Guid.NewGuid();
-                    var filename = ProductImageId.ToString() + Path.GetExtension(file.FileName);
+                    var ProductDirectory = await _elBaytServices.ProductService.GetProductImageDirectory(Guid.Parse(ProductId));
+                    if (!Directory.Exists(Path.Combine(_config["FilesInfo:Path"], ProductDirectory)))
+                        Directory.CreateDirectory(Path.Combine(_config["FilesInfo:Path"], ProductDirectory));
+                   
+                    var filename = ProductDirectory + ProductImageId.ToString() + Path.GetExtension(file.FileName);
                     var fullpath = Path.Combine(_config["FilesInfo:Path"], filename);
              
                     using var stream = new FileStream(fullpath, FileMode.Create);
@@ -388,7 +392,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                     {
                         Id = ProductImageId,
                         ProductId = Guid.Parse(ProductId),
-                        URL = fullpath
+                        URL = Path.Combine(_config["FilesInfo:WebFolder"], filename)
                     };
 
 
