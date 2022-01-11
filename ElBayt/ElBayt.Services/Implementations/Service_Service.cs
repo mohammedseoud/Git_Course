@@ -6,7 +6,7 @@ using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Security;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IUnitOfWork;
-using ElBayt.DTO.ELBaytDTO_s;
+using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.Contracts;
 using Microsoft.AspNetCore.Identity;
 using System;

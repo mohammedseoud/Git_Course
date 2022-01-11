@@ -1,4 +1,4 @@
-﻿using ElBayt.DTO.ELBaytDTO_s;
+﻿using ElBayt.DTO.ELBayt.DBDTOs;
 using System;
 using System.Threading.Tasks;
 
@@ -16,6 +16,7 @@ namespace ElBayt.Services.Contracts
         public Task<ProductImageDTO> GetProductImage(Guid Id);
         public object GetProductImages(Guid ProductId);
         public Task<string> GetProductImageDirectory(Guid ProductId);
+        public Task<string> DeleteProductImage(Guid ImageId);
         #endregion
 
         #region Categories

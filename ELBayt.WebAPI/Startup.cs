@@ -1,4 +1,3 @@
-using AutoMapper;
 using ElBayt.Common.Infra.Logging;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Core.Logging;
@@ -6,7 +5,6 @@ using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Security;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Infra.Context;
-using ElBayt.Infra.Mapping;
 using Microsoft.IdentityModel.Tokens;
 using ElBayt.Infra.UnitOfWork;
 using ElBayt.Services.ElBaytServices;
@@ -27,7 +25,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ElBayt.Common.Common;
 using Microsoft.Extensions.FileProviders;
-using System.IO;
 using Microsoft.AspNetCore.Http;
 
 namespace ELBayt.WebAPI
@@ -113,6 +110,7 @@ namespace ELBayt.WebAPI
                 RequestPath = new PathString(Configuration["FilesInfo:Folder"])
             });
 
+            app.UseDeveloperExceptionPage();
             app.UseAuthentication();
             app.UseAuthorization();
 

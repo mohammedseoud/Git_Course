@@ -1,7 +1,7 @@
 ﻿using ElBayt.Common.Common;
 using ElBayt.Common.Enums;
 using ElBayt.Common.Core.Logging;
-using ElBayt.DTO.ELBaytDTO_s;
+using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.IElBaytServices;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -400,6 +400,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             
                     Response.Result = EnumResponseResult.Successed;
                     Response.Data = await _elBaytServices.ProductService.GetProductImage(image.Id);
+                    return Ok(Response);
                 }
 
 
@@ -502,6 +503,87 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpDelete]
+        [Route(nameof(DeleteProductImage))]
+        public async Task<ActionResult> DeleteProductImage(Guid ImageId)
+        {
+
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+
+
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(ImageId, correlationGuid, nameof(ProductController), nameof(DeleteProductImage), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var Image = await _elBaytServices.ProductService.GetProductImage(ImageId);
+                if (Image != null)
+                {
+                    var Res = await _elBaytServices.ProductService.DeleteProductImage(ImageId);
+                    if (Res == "true")
+                    {
+                        var fullpath = Path.Combine(_config["FilesInfo:Directory"], Image.URL);
+                        if (System.IO.File.Exists(fullpath))
+                            System.IO.File.Delete(fullpath);
+
+                        Response.Result = EnumResponseResult.Successed;
+                        Response.Data = true;
+                        return Ok(Response);
+
+                    }
+
+                    Response.Errors.Add(Res);
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = false;
+                    return Ok(Response);
+                }
+                Response.Errors.Add("The Image Does not Exists !!");
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ImageId}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(DeleteProductImage)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ImageId}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -1221,8 +1303,9 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpGet]
         [Route(nameof(GetProductDepartments))]
-        public ActionResult GetProductDepartments() 
+        public ActionResult GetProductDepartments()
         {
+          
             var Response = new ElBaytResponse<object>
             {
                 Errors = new List<string>()
@@ -1232,10 +1315,12 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
+
                 _logger.InfoInDetail("GetAll", correlationGuid, nameof(ProductController), nameof(GetProductDepartments), 1, User.Identity.Name);
                 #endregion Logging info
-
-                var Departments =  _elBaytServices.ProductService.GetProductDepartments();
+              
+                var Departments = _elBaytServices.ProductService.GetProductDepartments();
+            
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Departments;

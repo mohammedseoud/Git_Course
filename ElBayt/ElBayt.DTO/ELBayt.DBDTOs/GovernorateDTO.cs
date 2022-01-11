@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace ElBayt.DTO.ELBaytDTO_s
+namespace ElBayt.DTO.ELBayt.DBDTOs
 {
     public class GovernorateDTO : BaseDto<Guid>, IBaseDTO
     {

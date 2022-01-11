@@ -4,7 +4,7 @@ using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IUnitOfWork;
-using ElBayt.DTO.ELBaytDTO_s;
+using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Infra.SPs;
 using ElBayt.Services.Contracts;
 using System;
@@ -552,7 +552,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -725,6 +725,39 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 throw;
+            }
+        }
+
+        public async Task<string> DeleteProductImage(Guid ImageId)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ImageId, correlationGuid, nameof(ProductService), nameof(DeleteProductImage), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted = await _unitOfWork.ProductImageRepository.RemoveAsync(ImageId);
+                if (IsDeleted)
+                {
+                    var res = await _unitOfWork.SaveAsync();
+                    return "true";
+
+                }
+                return "This Image Not Exist";
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ImageId, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
             }
         }
         #endregion

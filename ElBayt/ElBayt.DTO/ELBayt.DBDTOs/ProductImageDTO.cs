@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ElBayt.DTO.ELBaytDTO_s
+namespace ElBayt.DTO.ELBayt.DBDTOs
 {
     public class ProductImageDTO : BaseDto<Guid>, IBaseDTO
     {
