@@ -8,6 +8,6 @@ namespace ElBayt.Services.IElBaytServices
     public interface IElBaytServices
     {
         IProductService ProductService { get; }
-        IService_Service Service_Service { get; }
+        IShopService ShopService { get; }
     }
 }

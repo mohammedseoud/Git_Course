@@ -2,12 +2,19 @@
 using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
+using ElBayt.Common.Utilities;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBayt.DBDTOs;
+using ElBayt.DTO.ELBayt.DTOs;
 using ElBayt.Infra.SPs;
 using ElBayt.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElBayt.Services.Implementations
@@ -616,7 +623,8 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task SaveProductImage(ProductImageDTO Image)
+        public async Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file
+            ,string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -624,26 +632,55 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(Image, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
+                _logger.InfoInDetail(file, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
 
                 #endregion Logging info
 
+                var ProductImageId = Guid.NewGuid();           
+                var identityName = _userIdentity?.Name ?? "Unknown";
 
-                var Entity = _mapper.Map<ProductImageDTO, ProductImageEntity>(Image);
-                await _unitOfWork.ProductRepository.AddProductImage(Entity);
-                await _unitOfWork.SaveAsync();
+                var image = new ProductImageDTO
+                {
+                    Id = ProductImageId,
+                    ProductId = Guid.Parse(ProductId),
+                    CreatedBy = identityName,
+                    CreatedDate = DateTime.Now,
+                    ModifiedBy = identityName,
+                    ModifiedDate = DateTime.Now
+                };
+
+
+                var Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image);
+                var Images = new List<UTDProductImageDTO>
+                {
+                    Entity
+                };
+                var table = ObjectDatatableConverter.ToDataTable(Images);
+
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@UDTProductImage", table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+                SPParameters.Add("@Extension", Path.GetExtension(file.FileName));
+                SPParameters.Add("@DiskDirectory", DiskDirectory);
+                
+                var Imglist = await _unitOfWork.SP.ListAsnyc<UTDProductImageDTO>(StoredProcedure.ADDPRODUCTIMAGE, SPParameters);
+                var imageDTO = _mapper.Map<UTDProductImageDTO,ProductImageDTO>(Imglist.FirstOrDefault());
+                return imageDTO;
+
+
             }
             catch (Exception ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(Image, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(file, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
                 throw;
             }
         }
+
+
 
         public async Task<ProductImageDTO> GetProductImage(Guid Id)
         {

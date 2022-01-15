@@ -1,4 +1,5 @@
 ﻿using ElBayt.DTO.ELBayt.DBDTOs;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace ElBayt.Services.Contracts
         public Task<string> DeleteProduct(Guid Id);
         public Task UpdateProduct(ProductDTO Product);
         public Task<ProductDTO> GetProduct(Guid Id);
-        public Task SaveProductImage(ProductImageDTO Image);
+        public Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file, string DiskDirectory);
         public Task<ProductImageDTO> GetProductImage(Guid Id);
         public object GetProductImages(Guid ProductId);
         public Task<string> GetProductImageDirectory(Guid ProductId);

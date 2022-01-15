@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Cors;
 using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using ElBayt.Common.Core.SecurityModels;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -22,12 +23,15 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;
         private readonly IConfiguration _config;
+        private readonly IUserIdentity _userIdentity;
 
-        public ProductController(IElBaytServices elBaytServices, ILogger logger, IConfiguration config)
+        public ProductController(IElBaytServices elBaytServices, ILogger logger, IConfiguration config
+            , IUserIdentity userIdentity)
         {
             _elBaytServices = elBaytServices ?? throw new ArgumentNullException(nameof(elBaytServices));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _config= config ?? throw new ArgumentNullException(nameof(config));
+            _userIdentity = userIdentity ?? throw new ArgumentNullException(nameof(userIdentity));
         }
 
         #region Products
@@ -375,31 +379,20 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 if (file.Length > 0)
                 {
-                    var ProductId = Request.Form["ProductId"].ToString();
-                    var ProductImageId = Guid.NewGuid();
-                    var ProductDirectory = await _elBaytServices.ProductService.GetProductImageDirectory(Guid.Parse(ProductId));
-                    if (!Directory.Exists(Path.Combine(_config["FilesInfo:Path"], ProductDirectory)))
-                        Directory.CreateDirectory(Path.Combine(_config["FilesInfo:Path"], ProductDirectory));
-                   
-                    var filename = ProductDirectory + ProductImageId.ToString() + Path.GetExtension(file.FileName);
-                    var fullpath = Path.Combine(_config["FilesInfo:Path"], filename);
-             
-                    using var stream = new FileStream(fullpath, FileMode.Create);
+   
+                    var DisImage = await _elBaytServices.ProductService.SaveProductImage(Request.Form["ProductId"].ToString(), file, _config["FilesInfo:WebFolder"]);
+                    var path = Path.Combine(_config["FilesInfo:Directory"], DisImage.URL);
+                    var files = path.Split("\\");
+                    var PicDirectory = path.Remove(path.IndexOf(files[^1]));
+
+                     if (!Directory.Exists(PicDirectory))
+                        Directory.CreateDirectory(PicDirectory);
+
+                    using var stream = new FileStream(path, FileMode.Create);
                     file.CopyTo(stream);
 
-
-                    var image = new ProductImageDTO
-                    {
-                        Id = ProductImageId,
-                        ProductId = Guid.Parse(ProductId),
-                        URL = Path.Combine(_config["FilesInfo:WebFolder"], filename)
-                    };
-
-
-                    await _elBaytServices.ProductService.SaveProductImage(image);
-            
                     Response.Result = EnumResponseResult.Successed;
-                    Response.Data = await _elBaytServices.ProductService.GetProductImage(image.Id);
+                    Response.Data = DisImage;
                     return Ok(Response);
                 }
 

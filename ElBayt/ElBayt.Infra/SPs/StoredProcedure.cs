@@ -6,7 +6,8 @@ namespace ElBayt.Infra.SPs
 {
     public struct StoredProcedure
     {
-        public const string GETPRODUCTIMAGEDIRECTOY = "GetProductImageDirectory";
         public const string GETSHOPDATA = "GetShopData";
+        public const string ADDPRODUCTIMAGE = "AddProductImage";
+        public const string GETPRODUCTIMAGEDIRECTOY = "GetProductImageDirectory";
     }
 }

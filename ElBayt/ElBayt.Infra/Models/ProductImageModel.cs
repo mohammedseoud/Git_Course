@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ElBayt.Infra.Models
 {
-    [Table("ProducImage", Schema = "dbo")]
+    [Table("ProductImage", Schema = "dbo")]
     public class ProductImageModel : BaseModel<Guid>
     {
         [Required]

@@ -4,14 +4,16 @@ using ElBayt.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElBayt.Infra.Migrations
 {
     [DbContext(typeof(ElBaytContext))]
-    partial class ElBaytContextModelSnapshot : ModelSnapshot
+    [Migration("20220112132339_AddMainProductImagesToDB")]
+    partial class AddMainProductImagesToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,7 +300,7 @@ namespace ElBayt.Infra.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage", "dbo");
+                    b.ToTable("ProducImage", "dbo");
                 });
 
             modelBuilder.Entity("ElBayt.Infra.Models.ProductModel", b =>

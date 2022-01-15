@@ -24,6 +24,14 @@ namespace ElBayt.Infra.Models
         [Required]
         public string Description { get; set; }
 
+        [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]
+        [Required]
+        public string ProductImageURL1 { get; set; }
+
+        [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]
+        public string ProductImageURL2 { get; set; }
+
+
         [ForeignKey(nameof(ProductCategories))]
         public Guid ProductCategoryId { get; set; }
 

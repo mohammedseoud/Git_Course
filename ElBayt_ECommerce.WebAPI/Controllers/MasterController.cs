@@ -3,12 +3,9 @@ using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Enums;
 using ElBayt.Services.IElBaytServices;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {

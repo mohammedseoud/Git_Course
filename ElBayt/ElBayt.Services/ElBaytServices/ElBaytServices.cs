@@ -36,8 +36,8 @@ namespace ElBayt.Services.ElBaytServices
 
         #region properties
         private IProductService _productService;
-        private IService_Service _service_Service;
 
+        private IShopService _shopService;
         #endregion
 
         #region Getter
@@ -45,8 +45,8 @@ namespace ElBayt.Services.ElBaytServices
         public IProductService ProductService =>
             _productService ??= new ProductService(_unitOfWork, _userIdentity, _logger, _mapper);
 
-        public IService_Service Service_Service =>
-            _service_Service ??= new Service_Service(_unitOfWork, _userIdentity, _logger, _mapper);
+        public IShopService ShopService =>
+            _shopService ??= new ShopService(_unitOfWork, _userIdentity, _logger, _mapper);
 
         #endregion
     }
