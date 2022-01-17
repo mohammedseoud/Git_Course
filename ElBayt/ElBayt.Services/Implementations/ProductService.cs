@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ElBayt.Common.Common;
 using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
@@ -12,7 +13,6 @@ using ElBayt.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -479,27 +479,98 @@ namespace ElBayt.Services.Implementations
 
         #region Product
 
-        public async Task AddNewProduct(ProductDTO product)
+        public async Task<ProductDTO> AddNewProduct(IFormCollection Form, string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
             try
             {
                 #region Logging info
-
-                _logger.InfoInDetail(product, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
-
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
                 #endregion Logging info
-                var Entity = _mapper.Map<ProductDTO, ProductEntity>(product);
-                Entity.Id = Guid.NewGuid();
-                await _unitOfWork.ProductRepository.AddAsync(Entity);
-                await _unitOfWork.SaveAsync();
+
+                var identityName = _userIdentity?.Name ?? "Unknown";
+
+                var product = new ProductDTO
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedBy = identityName,
+                    CreatedDate = DateTime.Now,
+                    ModifiedBy = identityName,
+                    ModifiedDate = DateTime.Now,
+                    Price = Form["Price"].ToString(),
+                    PriceAfterDiscount = Form["PriceAfterDiscount"].ToString(),
+                    Name = Form["Name"].ToString(),
+                    Description = Form["Description"].ToString(),
+                    ProductCategoryId =  Guid.Parse(Form["ProductCategoryId"].ToString())
+                };
+                var ProductEntity = _mapper.Map<ProductDTO, UTDProductDTO>(product);
+                var Products = new List<UTDProductDTO>
+                {
+                    ProductEntity
+                };
+                var image1 = new ProductImageDTO
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = product.Id,
+                    CreatedBy = identityName,
+                    CreatedDate = DateTime.Now,
+                    ModifiedBy = identityName,
+                    ModifiedDate = DateTime.Now
+                };
+
+                
+
+                var Image1Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image1);
+              
+                var Images1 = new List<UTDProductImageDTO>
+                {
+                    Image1Entity
+                };
+                var Images2 = new List<UTDProductImageDTO>();
+                if (Form.Files.Count > 1)
+                {
+                    var image2 = new ProductImageDTO
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = product.Id,
+                        CreatedBy = identityName,
+                        CreatedDate = DateTime.Now,
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now
+                    };
+                    var Image2Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image2);
+
+                    Images2 = new List<UTDProductImageDTO>
+                {
+                    Image2Entity
+                };
+                }
+                var image1table = ObjectDatatableConverter.ToDataTable(Images1);
+                var image2table = ObjectDatatableConverter.ToDataTable(Images2);
+                var Producttable = ObjectDatatableConverter.ToDataTable(Products);
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
+                SPParameters.Add("@UDTProductImage", image1table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+                SPParameters.Add("@UDTProductImage2", image2table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+                SPParameters.Add("@Extension1", Path.GetExtension(Form.Files[0].FileName));
+                if (Form.Files.Count > 1)
+                    SPParameters.Add("@Extension2", Path.GetExtension(Form.Files[1].FileName));
+                else
+                    SPParameters.Add("@Extension2", General.NOEXTENSION);
+
+                SPParameters.Add("@DiskDirectory", DiskDirectory);
+
+
+                
+                var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
+                return List.FirstOrDefault();
             }
             catch (Exception ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(product, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -636,12 +707,11 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var ProductImageId = Guid.NewGuid();           
                 var identityName = _userIdentity?.Name ?? "Unknown";
 
                 var image = new ProductImageDTO
                 {
-                    Id = ProductImageId,
+                    Id = Guid.NewGuid(),
                     ProductId = Guid.Parse(ProductId),
                     CreatedBy = identityName,
                     CreatedDate = DateTime.Now,
@@ -729,35 +799,6 @@ namespace ElBayt.Services.Implementations
                 #region Logging info
 
                 _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<string> GetProductImageDirectory(Guid ProductId)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductService), nameof(GetProductImageDirectory), 1, _userIdentity.Name);
-
-                #endregion Logging info
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@ProductId", ProductId);
-
-                var Directory = await _unitOfWork.SP.SingleAsnyc<string>(StoredProcedure.GETPRODUCTIMAGEDIRECTOY, SPParameters);
-                return Directory;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImageDirectory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

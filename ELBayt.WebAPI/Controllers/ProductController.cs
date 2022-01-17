@@ -12,6 +12,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using ElBayt.Common.Core.SecurityModels;
+using ElBayt.DTO.ELBayt.DTOs;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -39,7 +40,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpPost]
         [Route(nameof(AddNewProduct))]
-        public async Task<IActionResult> AddNewProduct(ProductDTO Product)
+        public async Task<IActionResult> AddNewProduct()
         {
 
             var Response = new ElBaytResponse<string>();
@@ -49,14 +50,46 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(Product, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ProductController), nameof(AddNewProduct), 1, User.Identity.Name);
                 #endregion Logging info
+                if (Request.Form.Files[0].Length > 0)
+                {
+                    var product = await _elBaytServices.ProductService.AddNewProduct(Request.Form, _config["FilesInfo:WebFolder"]);
 
-                await _elBaytServices.ProductService.AddNewProduct(Product);
+                    var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL1);
+                    var files = path.Split("\\");
+                    var PicDirectory = path.Remove(path.IndexOf(files[^1]));
+
+                    if (!Directory.Exists(PicDirectory))
+                        Directory.CreateDirectory(PicDirectory);
+
+                    using var stream = new FileStream(path, FileMode.Create);
+                    Request.Form.Files[0].CopyTo(stream);
+
+                    if (product.ProductImageURL2 != null) 
+                    {
+                        path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL2);
+                        files = path.Split("\\");
+                        PicDirectory = path.Remove(path.IndexOf(files[^1]));
+                        
+                        using var stream2 = new FileStream(path, FileMode.Create);
+                        Request.Form.Files[1].CopyTo(stream2);
+                    }
+
+                    #region Result
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = "Success in Adding";
+                    #endregion
+
+                    return Ok(Response);
+                }
 
                 #region Result
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = "Success in Adding";
+
+                Response.Errors.Add("File Size Is Zero");
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+
                 #endregion
 
                 return Ok(Response);
@@ -65,7 +98,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {Product}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid, $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -82,7 +115,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {Product}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ProductController)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
@@ -90,7 +123,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = "Failed in Adding";
-               
+
                 Response.Errors.Add(ex.Message);
                 #endregion
 

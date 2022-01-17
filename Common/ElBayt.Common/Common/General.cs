@@ -13,5 +13,6 @@ namespace ElBayt.Common.Common
         public const int PASSWORD_MIN_LENGTH = 6;
         public const int PASSWORD_MAX_LENGTH = 20;
         public const int DEFAULT_PAGE_SIZE = 10;
+        public const string NOEXTENSION = "NoExtension";
     }
 }

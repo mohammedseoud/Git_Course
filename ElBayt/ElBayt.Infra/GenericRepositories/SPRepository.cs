@@ -108,7 +108,7 @@ namespace ElBayt.Core.GenericIRepository
             using (var SqlCon = new SqlConnection(ConnectionString))
             {
                 SqlCon.Open();
-                return await SqlCon.QueryAsync<TEntity>(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                return await SqlCon.QueryAsync<TEntity>(ProcName, parameters ,commandType: System.Data.CommandType.StoredProcedure);
             }
         }
 

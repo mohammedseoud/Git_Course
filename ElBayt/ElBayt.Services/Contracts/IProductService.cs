@@ -8,7 +8,7 @@ namespace ElBayt.Services.Contracts
     public interface IProductService
     {
         #region Products
-        public Task AddNewProduct(ProductDTO product);
+        public Task<ProductDTO> AddNewProduct(IFormCollection form, string DiskDirectory);
         public object GetProducts();
         public Task<string> DeleteProduct(Guid Id);
         public Task UpdateProduct(ProductDTO Product);
@@ -16,7 +16,6 @@ namespace ElBayt.Services.Contracts
         public Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file, string DiskDirectory);
         public Task<ProductImageDTO> GetProductImage(Guid Id);
         public object GetProductImages(Guid ProductId);
-        public Task<string> GetProductImageDirectory(Guid ProductId);
         public Task<string> DeleteProductImage(Guid ImageId);
         #endregion
 
