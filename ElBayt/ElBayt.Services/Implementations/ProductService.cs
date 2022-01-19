@@ -3,6 +3,7 @@ using ElBayt.Common.Common;
 using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
+using ElBayt.Common.Enums;
 using ElBayt.Common.Utilities;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IUnitOfWork;
@@ -36,7 +37,7 @@ namespace ElBayt.Services.Implementations
         }
 
         #region Categories
-        public async Task AddNewProductCategory(ProductCategoryDTO productCategory)
+        public async Task<EnumInsertingResult> AddNewProductCategory(ProductCategoryDTO productCategory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -47,10 +48,17 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(productCategory, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
-                var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
-                Entity.Id = Guid.NewGuid();
-                await _unitOfWork.ProductCategoryRepository.AddAsync(Entity);
-                await _unitOfWork.SaveAsync();
+
+                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(productCategory.Name.Trim());
+                if (Category == null)
+                {
+                    var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
+                    Entity.Id = Guid.NewGuid();
+                    await _unitOfWork.ProductCategoryRepository.AddAsync(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return EnumInsertingResult.Successed;
+                }
+                return EnumInsertingResult.Failed;
             }
             catch (Exception ex)
             {
@@ -124,7 +132,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task UpdateProductCategory(ProductCategoryDTO ProductCategory)
+        public async Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -136,10 +144,18 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
+                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(ProductCategory.Name.Trim());
 
-                var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(ProductCategory);
-                await _unitOfWork.ProductCategoryRepository.UpdateProductCategory(Entity);
-                await _unitOfWork.SaveAsync();
+                if (Category == null)
+                {
+                    var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(ProductCategory);
+                    await _unitOfWork.ProductCategoryRepository.UpdateProductCategory(Entity);
+                    await _unitOfWork.SaveAsync();
+
+                    return EnumUpdatingResult.Successed;
+                }
+
+                return EnumUpdatingResult.Failed;
             }
             catch (Exception ex)
             {
@@ -184,7 +200,7 @@ namespace ElBayt.Services.Implementations
 
         #region Types
 
-        public async Task AddNewProductType(ProductTypeDTO productType)
+        public async Task<EnumInsertingResult> AddNewProductType(ProductTypeDTO productType)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -195,10 +211,17 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(productType, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
-                var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
-                Entity.Id = Guid.NewGuid();
-                await _unitOfWork.ProductTypeRepository.AddAsync(Entity);
-                await _unitOfWork.SaveAsync();
+             
+                var Type= await _unitOfWork.ProductTypeRepository.GetProductTypeByName(productType.Name.Trim());
+                if (Type == null)
+                {
+                    var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
+                    Entity.Id = Guid.NewGuid();
+                    await _unitOfWork.ProductTypeRepository.AddAsync(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return EnumInsertingResult.Successed;
+                }
+                return EnumInsertingResult.Failed;
             }
             catch (Exception ex)
             {
@@ -272,7 +295,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task UpdateProductType(ProductTypeDTO ProductType)
+        public async Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -284,10 +307,16 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
+                var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(ProductType.Name.Trim());
+                if (Type == null)
+                {
+                    var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(ProductType);
+                    await _unitOfWork.ProductTypeRepository.UpdateProductType(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return EnumUpdatingResult.Successed;
+                }
 
-                var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(ProductType);
-                await _unitOfWork.ProductTypeRepository.UpdateProductType(Entity);
-                await _unitOfWork.SaveAsync();
+                return EnumUpdatingResult.Failed;
             }
             catch (Exception ex)
             {
@@ -331,7 +360,7 @@ namespace ElBayt.Services.Implementations
         #endregion
 
         #region Departments
-        public async Task AddNewProductDepartment(ProductDepartmentDTO productDepartment)
+        public async Task<EnumInsertingResult> AddNewProductDepartment(ProductDepartmentDTO productDepartment)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -342,10 +371,18 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
-                var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
-                Entity.Id = Guid.NewGuid();
-                await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
-                await _unitOfWork.SaveAsync();
+               
+                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(productDepartment.Name.Trim());
+                if (Department == null)
+                {
+                    var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
+                    Entity.Id = Guid.NewGuid();
+                    await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return EnumInsertingResult.Successed ;
+                }
+
+                return EnumInsertingResult.Failed;
             }
             catch (Exception ex)
             {
@@ -419,7 +456,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task UpdateProductDepartment(ProductDepartmentDTO ProductDepartment)
+        public async Task<EnumUpdatingResult> UpdateProductDepartment(ProductDepartmentDTO ProductDepartment)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -431,10 +468,15 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-
-                var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(ProductDepartment);
-                await _unitOfWork.ProductDepartmentRepository.UpdateProductDepartment(Entity);
-                await _unitOfWork.SaveAsync();
+                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(ProductDepartment.Name.Trim());
+                if (Department == null)
+                {
+                    var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(ProductDepartment);
+                    await _unitOfWork.ProductDepartmentRepository.UpdateProductDepartment(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return EnumUpdatingResult.Successed;
+                }
+                return EnumUpdatingResult.Failed;
             }
             catch (Exception ex)
             {

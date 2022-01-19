@@ -78,7 +78,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                     #region Result
                     Response.Result = EnumResponseResult.Successed;
-                    Response.Data = "Success in Adding";
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING ;
                     #endregion
 
                     return Ok(Response);
@@ -105,7 +105,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -122,7 +122,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -636,11 +636,19 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductController), nameof(AddNewProductCategory), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.AddNewProductCategory(ProductCategory);
+                var res = await _elBaytServices.ProductService.AddNewProductCategory(ProductCategory);
 
                 #region Result
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = "Success in Adding";
+                if (res == EnumInsertingResult.Successed)
+                {
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = "Success in Adding";
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = "Name Is Already Exists";
+                }
                 #endregion
 
                 return Ok(Response);
@@ -880,7 +888,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(UpdateProductCategory))]
         public async Task<ActionResult> UpdateProductCategory(ProductCategoryDTO productCategory)
         {
-            var Response = new ElBaytResponse<bool>
+            var Response = new ElBaytResponse<string>
             {
                 Errors = new List<string>()
             };
@@ -892,16 +900,23 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(productCategory, correlationGuid, nameof(ProductController), nameof(UpdateProductCategory), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.UpdateProductCategory(productCategory);
+                var res = await _elBaytServices.ProductService.UpdateProductCategory(productCategory);
 
                 #region Result
+                if (res == EnumUpdatingResult.Successed)
+                {
 
-
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = true;
-
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
                 #endregion
 
+       
                 return Ok(Response);
             }
             catch (NotFoundException ex)
@@ -915,7 +930,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -931,7 +946,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -959,11 +974,19 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductController), nameof(AddNewProductType), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.AddNewProductType(ProductType);
+                var res = await _elBaytServices.ProductService.AddNewProductType(ProductType);
 
                 #region Result
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = "Success in Adding";
+                if (res == EnumInsertingResult.Successed)
+                {
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;               
+                }
                 #endregion
 
                 return Ok(Response);
@@ -979,7 +1002,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -996,7 +1019,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -1203,7 +1226,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(UpdateProductType))]
         public async Task<ActionResult> UpdateProductType(ProductTypeDTO productType)
         {
-            var Response = new ElBaytResponse<bool>
+            var Response = new ElBaytResponse<string>
             {
                 Errors = new List<string>()
             };
@@ -1215,16 +1238,21 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(productType, correlationGuid, nameof(ProductController), nameof(UpdateProductType), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.UpdateProductType(productType);
+                var res = await _elBaytServices.ProductService.UpdateProductType(productType);
 
                 #region Result
+                if (res == EnumUpdatingResult.Successed)
+                {
 
-
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = true;
-
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
                 #endregion
-
                 return Ok(Response);
             }
             catch (NotFoundException ex)
@@ -1238,7 +1266,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -1254,7 +1282,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -1281,11 +1309,20 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(ProductDepartment, correlationGuid, nameof(ProductController), nameof(AddNewProductDepartment), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.AddNewProductDepartment(ProductDepartment);
-
+                var res = await _elBaytServices.ProductService.AddNewProductDepartment(ProductDepartment);
+            
                 #region Result
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = "Success in Adding";
+                if (res == EnumInsertingResult.Successed)
+                {
+                   
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
                 #endregion
 
                 return Ok(Response);
@@ -1301,7 +1338,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -1318,7 +1355,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -1528,7 +1565,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(UpdateProductDepartment))]
         public async Task<ActionResult> UpdateProductDepartment(ProductDepartmentDTO productDepartment)
         {
-            var Response = new ElBaytResponse<bool>
+            var Response = new ElBaytResponse<string>
             {
                 Errors = new List<string>()
             };
@@ -1540,14 +1577,20 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductController), nameof(UpdateProductDepartment), 1, User.Identity.Name);
                 #endregion Logging info
 
-                 await _elBaytServices.ProductService.UpdateProductDepartment(productDepartment);
-
+                var res = await _elBaytServices.ProductService.UpdateProductDepartment(productDepartment);
+              
                 #region Result
+                if (res == EnumUpdatingResult.Successed)
+                {
 
-
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = true;
-               
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
                 #endregion
 
                 return Ok(Response);
@@ -1563,7 +1606,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -1579,7 +1622,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion

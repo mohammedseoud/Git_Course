@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
@@ -23,6 +25,14 @@ namespace ElBayt.Infra.Repositories
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
+        }
+
+        public async Task<ProductCategoryEntity> GetProductCategoryByName(string Name)
+        {
+            var category = await _dbContext.ProductCategories
+               .Where(c => c.Name.Trim() == Name).
+               AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<ProductCategoryModel, ProductCategoryEntity>(category);
         }
 
         public async Task UpdateProductCategory(ProductCategoryEntity productCategory)
