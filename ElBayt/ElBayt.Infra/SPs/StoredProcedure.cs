@@ -9,5 +9,7 @@ namespace ElBayt.Infra.SPs
         public const string GETSHOPDATA = "GetShopData";
         public const string ADDPRODUCTIMAGE = "AddProductImage";
         public const string ADDPRODUCT = "AddProduct";
+        public const string UPDATEPRODUCT = "UpdateProduct";
+        
     }
 }

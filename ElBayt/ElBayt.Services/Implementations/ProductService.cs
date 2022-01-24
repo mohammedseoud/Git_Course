@@ -700,7 +700,7 @@ namespace ElBayt.Services.Implementations
 
 
 
-                var product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Name"].ToString()));
+                var product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
 
                 if (product == null)
                 {
@@ -748,7 +748,7 @@ namespace ElBayt.Services.Implementations
               
 
 
-                    var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
+                    var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.UPDATEPRODUCT, SPParameters);
                     return List.FirstOrDefault();
                 }
                 return null;
