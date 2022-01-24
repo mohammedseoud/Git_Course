@@ -1,15 +1,13 @@
-﻿using AutoMapper;
-using ElBayt.Common.Infra.Common;
-using ElBayt.Common.Infra.Mapping;
+﻿using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Core.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;
 using ElBayt.Infra.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
@@ -39,6 +37,14 @@ namespace ElBayt.Infra.Repositories
             Product.Price = product.Price;
             Product.PriceAfterDiscount = product.PriceAfterDiscount;
             Product.ProductCategoryId = product.ProductCategoryId;
+        }
+
+        public async Task<ProductEntity> GetProductByName(string Name,Guid Id)
+        {
+            var product = await _dbContext.Products
+                .Where(c => c.Name.Trim() == Name && c.Id != Id).
+                AsNoTracking().FirstOrDefaultAsync();
+            return _mapper.Map<ProductModel, ProductEntity>(product);
         }
     }
 }

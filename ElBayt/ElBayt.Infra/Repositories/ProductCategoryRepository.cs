@@ -27,10 +27,10 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<ProductCategoryEntity> GetProductCategoryByName(string Name)
+        public async Task<ProductCategoryEntity> GetProductCategoryByName(string Name,Guid Id)
         {
             var category = await _dbContext.ProductCategories
-               .Where(c => c.Name.Trim() == Name).
+               .Where(c => c.Name.Trim() == Name && c.Id == Id).
                AsNoTracking().FirstOrDefaultAsync();
             return _mapper.Map<ProductCategoryModel, ProductCategoryEntity>(category);
         }

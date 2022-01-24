@@ -49,7 +49,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(productCategory.Name.Trim());
+                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(productCategory.Name.Trim(), productCategory.Id);
                 if (Category == null)
                 {
                     var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
@@ -144,7 +144,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(ProductCategory.Name.Trim());
+                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(ProductCategory.Name.Trim(), ProductCategory.Id);
 
                 if (Category == null)
                 {
@@ -211,8 +211,8 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(productType, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
-             
-                var Type= await _unitOfWork.ProductTypeRepository.GetProductTypeByName(productType.Name.Trim());
+
+                var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(productType.Name.Trim(), productType.Id);
                 if (Type == null)
                 {
                     var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
@@ -307,7 +307,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(ProductType.Name.Trim());
+                var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(ProductType.Name.Trim(), ProductType.Id);
                 if (Type == null)
                 {
                     var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(ProductType);
@@ -372,7 +372,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
                
-                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(productDepartment.Name.Trim());
+                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(productDepartment.Name.Trim(), productDepartment.Id);
                 if (Department == null)
                 {
                     var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
@@ -468,7 +468,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(ProductDepartment.Name.Trim());
+                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(ProductDepartment.Name.Trim(), ProductDepartment.Id);
                 if (Department == null)
                 {
                     var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(ProductDepartment);
@@ -531,48 +531,31 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
                 #endregion Logging info
 
-                var identityName = _userIdentity?.Name ?? "Unknown";
+                var Product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                if (Product == null)
+                {
 
-                var product = new ProductDTO
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedBy = identityName,
-                    CreatedDate = DateTime.Now,
-                    ModifiedBy = identityName,
-                    ModifiedDate = DateTime.Now,
-                    Price = Form["Price"].ToString(),
-                    PriceAfterDiscount = Form["PriceAfterDiscount"].ToString(),
-                    Name = Form["Name"].ToString(),
-                    Description = Form["Description"].ToString(),
-                    ProductCategoryId =  Guid.Parse(Form["ProductCategoryId"].ToString())
-                };
-                var ProductEntity = _mapper.Map<ProductDTO, UTDProductDTO>(product);
-                var Products = new List<UTDProductDTO>
-                {
-                    ProductEntity
-                };
-                var image1 = new ProductImageDTO
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = product.Id,
-                    CreatedBy = identityName,
-                    CreatedDate = DateTime.Now,
-                    ModifiedBy = identityName,
-                    ModifiedDate = DateTime.Now
-                };
+                    var identityName = _userIdentity?.Name ?? "Unknown";
 
-                
-
-                var Image1Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image1);
-              
-                var Images1 = new List<UTDProductImageDTO>
-                {
-                    Image1Entity
-                };
-                var Images2 = new List<UTDProductImageDTO>();
-                if (Form.Files.Count > 1)
-                {
-                    var image2 = new ProductImageDTO
+                    var product = new ProductDTO
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedBy = identityName,
+                        CreatedDate = DateTime.Now,
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Price = Form["Price"].ToString(),
+                        PriceAfterDiscount = Form["PriceAfterDiscount"].ToString(),
+                        Name = Form["Name"].ToString(),
+                        Description = Form["Description"].ToString(),
+                        ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString())
+                    };
+                    var ProductEntity = _mapper.Map<ProductDTO, UTDProductDTO>(product);
+                    var Products = new List<UTDProductDTO>
+                    {
+                       ProductEntity
+                    };
+                    var image1 = new ProductImageDTO
                     {
                         Id = Guid.NewGuid(),
                         ProductId = product.Id,
@@ -581,32 +564,55 @@ namespace ElBayt.Services.Implementations
                         ModifiedBy = identityName,
                         ModifiedDate = DateTime.Now
                     };
-                    var Image2Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image2);
 
-                    Images2 = new List<UTDProductImageDTO>
+
+
+                    var Image1Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image1);
+
+                    var Images1 = new List<UTDProductImageDTO>
+                {
+                    Image1Entity
+                };
+                    var Images2 = new List<UTDProductImageDTO>();
+                    if (Form.Files.Count > 1)
+                    {
+                        var image2 = new ProductImageDTO
+                        {
+                            Id = Guid.NewGuid(),
+                            ProductId = product.Id,
+                            CreatedBy = identityName,
+                            CreatedDate = DateTime.Now,
+                            ModifiedBy = identityName,
+                            ModifiedDate = DateTime.Now
+                        };
+                        var Image2Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image2);
+
+                        Images2 = new List<UTDProductImageDTO>
                 {
                     Image2Entity
                 };
+                    }
+                    var image1table = ObjectDatatableConverter.ToDataTable(Images1);
+                    var image2table = ObjectDatatableConverter.ToDataTable(Images2);
+                    var Producttable = ObjectDatatableConverter.ToDataTable(Products);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
+                    SPParameters.Add("@UDTProductImage", image1table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+                    SPParameters.Add("@UDTProductImage2", image2table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+                    SPParameters.Add("@Extension1", Path.GetExtension(Form.Files[0].FileName));
+                    if (Form.Files.Count > 1)
+                        SPParameters.Add("@Extension2", Path.GetExtension(Form.Files[1].FileName));
+                    else
+                        SPParameters.Add("@Extension2", General.NOEXTENSION);
+
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+
+
+
+                    var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
+                    return List.FirstOrDefault();
                 }
-                var image1table = ObjectDatatableConverter.ToDataTable(Images1);
-                var image2table = ObjectDatatableConverter.ToDataTable(Images2);
-                var Producttable = ObjectDatatableConverter.ToDataTable(Products);
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
-                SPParameters.Add("@UDTProductImage", image1table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
-                SPParameters.Add("@UDTProductImage2", image2table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
-                SPParameters.Add("@Extension1", Path.GetExtension(Form.Files[0].FileName));
-                if (Form.Files.Count > 1)
-                    SPParameters.Add("@Extension2", Path.GetExtension(Form.Files[1].FileName));
-                else
-                    SPParameters.Add("@Extension2", General.NOEXTENSION);
-
-                SPParameters.Add("@DiskDirectory", DiskDirectory);
-
-
-                
-                var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
-                return List.FirstOrDefault();
+                return null;
             }
             catch (Exception ex)
             {
@@ -680,7 +686,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task UpdateProduct(ProductDTO Product)
+        public async Task<ProductDTO> UpdateProduct(IFormCollection Form)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -688,20 +694,70 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(Product, correlationGuid, nameof(ProductService), nameof(UpdateProduct), 1, _userIdentity.Name);
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(UpdateProduct), 1, _userIdentity.Name);
 
                 #endregion Logging info
 
 
-                var Entity = _mapper.Map<ProductDTO, ProductEntity>(Product);
-                await _unitOfWork.ProductRepository.UpdateProduct(Entity);
-                await _unitOfWork.SaveAsync();
+
+                var product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Name"].ToString()));
+
+                if (product == null)
+                {
+                    var identityName = _userIdentity?.Name ?? "Unknown";
+
+                    var Newproduct = new ProductDTO
+                    {
+                        Id = Guid.Parse(Form["Id"].ToString()),
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Price = Form["Price"].ToString(),
+                        PriceAfterDiscount = Form["PriceAfterDiscount"].ToString(),
+                        Name = Form["Name"].ToString(),
+                        Description = Form["Description"].ToString(),
+                        ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString()),
+                    };
+
+                    if (!string.IsNullOrEmpty(Form["Img1"]))
+                    {
+                        var url = product.ProductImageURL1.Split(".")[0] + Path.GetExtension(Form.Files[0].FileName);
+                        Newproduct.ProductImageURL1 = url;
+                    }
+                    if (!string.IsNullOrEmpty(Form["Img2"]))
+                    {
+                        var i = Form.Files.Count == 1 ? 0 : 1;
+                        var url = product.ProductImageURL2.Split(".")[0] + Path.GetExtension(Form.Files[i].FileName);
+                        Newproduct.ProductImageURL2 = url;
+                    }
+
+
+                    var UTDProduct = _mapper.Map<ProductDTO, UTDProductDTO>(Newproduct);
+                    var Products = new List<UTDProductDTO>
+                    {
+                       UTDProduct
+                    };
+
+                    var Producttable = ObjectDatatableConverter.ToDataTable(Products);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
+                    if (!string.IsNullOrEmpty(Form["Img2"]))
+                        SPParameters.Add("@Img2Id", Guid.NewGuid());
+                    else
+                        SPParameters.Add("@Img2Id", null);
+
+              
+
+
+                    var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
+                    return List.FirstOrDefault();
+                }
+                return null;
             }
             catch (Exception ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(Product, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

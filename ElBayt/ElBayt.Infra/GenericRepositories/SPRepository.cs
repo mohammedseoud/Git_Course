@@ -124,5 +124,19 @@ namespace ElBayt.Core.GenericIRepository
                 return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>>(item1, item2);
             }
         }
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>>> MultiListAsnyc<TEntity1, TEntity2, TEntity3>(string ProcName, DynamicParameters parameters = null)
+        {
+            using (var SqlCon = new SqlConnection(ConnectionString))
+            {
+                SqlCon.Open();
+                var result = await SqlCon.QueryMultipleAsync(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var item1 = result.Read<TEntity1>().ToList();
+                var item2 = result.Read<TEntity2>().ToList();
+                var item3 = result.Read<TEntity3>().ToList();
+
+                return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>>(item1, item2, item3);
+            }
+        }
+
     }
 }

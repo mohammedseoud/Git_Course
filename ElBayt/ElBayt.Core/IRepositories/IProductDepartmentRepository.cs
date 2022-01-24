@@ -12,6 +12,6 @@ namespace ElBayt.Core.IRepositories
     public interface IProductDepartmentRepository : IGenericRepository<ProductDepartmentEntity, Guid>
     {
         Task UpdateProductDepartment(ProductDepartmentEntity productDepartment);
-        Task<ProductDepartmentEntity> GetProductDepartmentByName(string Name);
+        Task<ProductDepartmentEntity> GetProductDepartmentByName(string Name, Guid Id);
     }
 }

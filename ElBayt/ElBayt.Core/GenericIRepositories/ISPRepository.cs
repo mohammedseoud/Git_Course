@@ -23,5 +23,6 @@ namespace ElBayt.Core.GenericIRepository
         Task<IEnumerable<TEntity>> ListAsnyc<TEntity>(string ProcName, DynamicParameters parameters = null);
         Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>> List<TEntity1, TEntity2>(string ProcName, DynamicParameters parameters = null);
         Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>>> ListAsnyc<TEntity1, TEntity2>(string ProcName, DynamicParameters parameters = null);
+        Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>>> MultiListAsnyc<TEntity1, TEntity2, TEntity3>(string ProcName, DynamicParameters parameters = null);
     }
 }

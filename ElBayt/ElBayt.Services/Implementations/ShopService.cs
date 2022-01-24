@@ -46,9 +46,10 @@ namespace ElBayt.Services.Implementations
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ProductDepartmentId", DepartmentId);
 
-                var AllShopData = await _unitOfWork.SP.ListAsnyc<ProductTypesDataDTO, ShopCategoryDTO>(StoredProcedure.GETSHOPDATA, SPParameters);
+                var AllShopData = await _unitOfWork.SP.MultiListAsnyc<ProductTypesDataDTO, ShopCategoryDTO, ProductDataDTO>(StoredProcedure.GETSHOPDATA, SPParameters);
                 ShopData.ProductTypes = AllShopData.Item1.ToList();
                 ShopData.ProductCategories = AllShopData.Item2.ToList();
+                ShopData.Products = AllShopData.Item3.ToList();
                 return ShopData;
             }
             catch (Exception ex)

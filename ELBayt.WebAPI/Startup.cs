@@ -103,7 +103,6 @@ namespace ELBayt.WebAPI
 
             app.UseRouting();
             app.UseCors(CorsOrigin.LOCAL_ORIGIN);
-            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Configuration["FilesInfo:Path"]),

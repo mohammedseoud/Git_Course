@@ -8,6 +8,6 @@ namespace ElBayt.Core.IRepositories
     public interface IProductCategoryRepository : IGenericRepository<ProductCategoryEntity, Guid>
     {
         Task UpdateProductCategory(ProductCategoryEntity productCategory);
-        Task<ProductCategoryEntity> GetProductCategoryByName(string Name);
+        Task<ProductCategoryEntity> GetProductCategoryByName(string Name, Guid Id);
     }
 }

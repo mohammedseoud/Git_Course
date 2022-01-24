@@ -1,4 +1,3 @@
-using AutoMapper;
 using ElBayt.Common.Common;
 using ElBayt.Common.Core.ISecurity;
 using ElBayt.Common.Core.Logging;
@@ -19,18 +18,14 @@ using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
 
 namespace ElBayt_ECommerce.WebAPI
 {
@@ -108,6 +103,11 @@ namespace ElBayt_ECommerce.WebAPI
 
             app.UseRouting();
             app.UseCors(CorsOrigin.LOCAL_ORIGIN);
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Configuration["FilesInfo:Path"]),
+                RequestPath = new PathString(Configuration["FilesInfo:Folder"])
+            });
 
 
             app.UseAuthentication();

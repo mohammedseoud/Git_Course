@@ -12,7 +12,7 @@ namespace ElBayt.Services.Contracts
         public Task<ProductDTO> AddNewProduct(IFormCollection form, string DiskDirectory);
         public object GetProducts();
         public Task<string> DeleteProduct(Guid Id);
-        public Task UpdateProduct(ProductDTO Product);
+        public Task<ProductDTO> UpdateProduct(IFormCollection Form);
         public Task<ProductDTO> GetProduct(Guid Id);
         public Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file, string DiskDirectory);
         public Task<ProductImageDTO> GetProductImage(Guid Id);

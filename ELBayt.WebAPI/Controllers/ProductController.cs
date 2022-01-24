@@ -56,31 +56,37 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 {
                     var product = await _elBaytServices.ProductService.AddNewProduct(Request.Form, _config["FilesInfo:WebFolder"]);
 
-                    var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL1);
-                    var files = path.Split("\\");
-                    var PicDirectory = path.Remove(path.IndexOf(files[^1]));
-
-                    if (!Directory.Exists(PicDirectory))
-                        Directory.CreateDirectory(PicDirectory);
-
-                    using var stream = new FileStream(path, FileMode.Create);
-                    Request.Form.Files[0].CopyTo(stream);
-
-                    if (product.ProductImageURL2 != null) 
+                    if (product == null)
                     {
-                        path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL2);
-                        files = path.Split("\\");
-                        PicDirectory = path.Remove(path.IndexOf(files[^1]));
-                        
-                        using var stream2 = new FileStream(path, FileMode.Create);
-                        Request.Form.Files[1].CopyTo(stream2);
+                        var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL1);
+                        var files = path.Split("\\");
+                        var PicDirectory = path.Remove(path.IndexOf(files[^1]));
+
+                        if (!Directory.Exists(PicDirectory))
+                            Directory.CreateDirectory(PicDirectory);
+
+                        using var stream = new FileStream(path, FileMode.Create);
+                        Request.Form.Files[0].CopyTo(stream);
+
+                        if (product.ProductImageURL2 != null)
+                        {
+                            path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL2);
+                            files = path.Split("\\");
+                            PicDirectory = path.Remove(path.IndexOf(files[^1]));
+
+                            using var stream2 = new FileStream(path, FileMode.Create);
+                            Request.Form.Files[1].CopyTo(stream2);
+                        }
+
+                        #region Result
+                        Response.Result = EnumResponseResult.Successed;
+                        Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                        #endregion
+
+                        return Ok(Response);
                     }
-
-                    #region Result
-                    Response.Result = EnumResponseResult.Successed;
-                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING ;
-                    #endregion
-
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
                     return Ok(Response);
                 }
 
@@ -327,9 +333,9 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpPut]
         [Route(nameof(UpdateProduct))]
-        public async Task<ActionResult> UpdateProduct(ProductDTO product)
+        public async Task<ActionResult> UpdateProduct()
         {
-            var Response = new ElBaytResponse<bool>
+            var Response = new ElBaytResponse<string>
             {
                 Errors = new List<string>()
             };
@@ -338,16 +344,16 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(product, correlationGuid, nameof(ProductController), nameof(UpdateProduct), 1, User.Identity.Name);
+                _logger.InfoInDetail(Request.Form , correlationGuid, nameof(ProductController), nameof(UpdateProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.UpdateProduct(product);
+                await _elBaytServices.ProductService.UpdateProduct(Request.Form);
 
                 #region Result
 
 
                 Response.Result = EnumResponseResult.Successed;
-                Response.Data = true;
+                Response.Data = null;
 
                 #endregion
 
@@ -357,14 +363,14 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {product}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ProductController)}_{nameof(UpdateProduct)}_{nameof(NotFoundException)}",
                     ex, 1, User.Identity.Name);
 
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -374,13 +380,13 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {product}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ProductController)}_{nameof(UpdateProduct)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = false;
+                Response.Data = CommonMessages.FAILED_UPDATING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion
@@ -642,12 +648,12 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 if (res == EnumInsertingResult.Successed)
                 {
                     Response.Result = EnumResponseResult.Successed;
-                    Response.Data = "Success in Adding";
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
                 }
                 else
                 {
                     Response.Result = EnumResponseResult.Failed;
-                    Response.Data = "Name Is Already Exists";
+                    Response.Data = CommonMessages.NAME_EXISTS;
                 }
                 #endregion
 
@@ -664,7 +670,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
                 Response.Errors.Add(ex.Message);
                 #endregion
 
@@ -681,7 +687,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
-                Response.Data = "Failed in Adding";
+                Response.Data = CommonMessages.FAILED_ADDING;
 
                 Response.Errors.Add(ex.Message);
                 #endregion

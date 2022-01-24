@@ -590,6 +590,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(GetShopData))]
         public async Task<ActionResult> GetShopData(Guid DepartmentId)
         {
+            
             var Response = new ElBaytResponse<ShopDataDTO>
             {
                 Errors = new List<string>()
