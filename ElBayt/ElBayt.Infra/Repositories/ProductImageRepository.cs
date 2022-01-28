@@ -38,5 +38,21 @@ namespace ElBayt.Infra.Repositories
             return models;
 
         }
+
+        public bool DeleteByURL(string URL)
+        {
+            var image = _dbContext.ProductImages
+               .Where(c => c.URL == URL).
+               AsNoTracking().ToList().FirstOrDefault();
+            try
+            {
+                _dbContext.ProductImages.Remove(image);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

@@ -46,5 +46,6 @@ namespace ElBayt.Infra.Repositories
                 AsNoTracking().FirstOrDefaultAsync();
             return _mapper.Map<ProductModel, ProductEntity>(product);
         }
+       
     }
 }

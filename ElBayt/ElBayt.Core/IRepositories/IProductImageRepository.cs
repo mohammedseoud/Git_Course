@@ -9,5 +9,6 @@ namespace ElBayt.Core.IRepositories
     public interface IProductImageRepository : IGenericRepository<ProductImageEntity, Guid>
     {
         object GetProductImages(Guid ProductId);
+        bool DeleteByURL(string URL);
     }
 }

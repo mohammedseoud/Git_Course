@@ -10,5 +10,6 @@ namespace ElBayt.Core.IRepositories
         public Task UpdateProduct(ProductEntity product);
         public Task AddProductImage(ProductImageEntity Image);
         public Task<ProductEntity> GetProductByName(string Name, Guid Id);
+
     }
 }

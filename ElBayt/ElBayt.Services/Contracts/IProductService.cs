@@ -18,6 +18,7 @@ namespace ElBayt.Services.Contracts
         public Task<ProductImageDTO> GetProductImage(Guid Id);
         public object GetProductImages(Guid ProductId);
         public Task<string> DeleteProductImage(Guid ImageId);
+        public Task<string> DeleteProductImageByURL(string URL);
         #endregion
 
         #region Categories

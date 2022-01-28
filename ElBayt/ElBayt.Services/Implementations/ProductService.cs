@@ -537,6 +537,7 @@ namespace ElBayt.Services.Implementations
 
                     var identityName = _userIdentity?.Name ?? "Unknown";
 
+                    decimal PriceAfterDiscount ;
                     var product = new ProductDTO
                     {
                         Id = Guid.NewGuid(),
@@ -545,7 +546,7 @@ namespace ElBayt.Services.Implementations
                         ModifiedBy = identityName,
                         ModifiedDate = DateTime.Now,
                         Price = Form["Price"].ToString(),
-                        PriceAfterDiscount = Form["PriceAfterDiscount"].ToString(),
+                        PriceAfterDiscount = decimal.TryParse(Form["PriceAfterDiscount"].ToString(), out PriceAfterDiscount) ? PriceAfterDiscount.ToString() : null,
                         Name = Form["Name"].ToString(),
                         Description = Form["Description"].ToString(),
                         ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString())
@@ -848,8 +849,6 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-
-
         public async Task<ProductImageDTO> GetProductImage(Guid Id)
         {
             var correlationGuid = Guid.NewGuid();
@@ -935,6 +934,40 @@ namespace ElBayt.Services.Implementations
 
                 return ex.Message;
             }
+        }
+
+        public async Task<string> DeleteProductImageByURL(string URL)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(URL, correlationGuid, nameof(ProductService), nameof(DeleteProductImageByURL), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted =  _unitOfWork.ProductImageRepository.DeleteByURL(URL);
+                if (IsDeleted)
+                {
+                    var res = await _unitOfWork.SaveAsync();
+                    return "true";
+
+                }
+                return "This Image Not Exist";
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(URL, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+
         }
         #endregion
     }

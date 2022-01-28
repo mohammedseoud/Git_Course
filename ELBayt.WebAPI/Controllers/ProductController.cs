@@ -56,7 +56,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 {
                     var product = await _elBaytServices.ProductService.AddNewProduct(Request.Form, _config["FilesInfo:WebFolder"]);
 
-                    if (product == null)
+                    if (product != null)
                     {
                         var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL1);
                         var files = path.Split("\\");
@@ -347,14 +347,43 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Request.Form , correlationGuid, nameof(ProductController), nameof(UpdateProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
-                await _elBaytServices.ProductService.UpdateProduct(Request.Form);
+                var product = await _elBaytServices.ProductService.UpdateProduct(Request.Form);
 
                 #region Result
+                if (product != null)
+                {
+                    if (!string.IsNullOrEmpty(Request.Form["Img1"]))
+                    {
+                        var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL1);
+                        var files = path.Split("\\");
+                    
+                        if (System.IO.File.Exists(path))
+                            System.IO.File.Delete(path);
 
+                        using var stream = new FileStream(path, FileMode.Create);
+                        Request.Form.Files[0].CopyTo(stream);
+                    }
 
-                Response.Result = EnumResponseResult.Successed;
-                Response.Data = null;
+                    if (!string.IsNullOrEmpty(Request.Form["Img2"]))
+                    {
+                        var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL2);
+                        var files = path.Split("\\");
+                       
+                        if (System.IO.File.Exists(path))
+                            System.IO.File.Delete(path);
 
+                        using var stream = new FileStream(path, FileMode.Create);
+                        Request.Form.Files[1].CopyTo(stream);
+                    }
+
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
                 #endregion
 
                 return Ok(Response);
@@ -611,6 +640,77 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 _logger.ErrorInDetail($"newException {ImageId}", correlationGuid,
                     $"{nameof(ProductController)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpDelete]
+        [Route(nameof(DeleteProductImageByURL))]
+        public async Task<ActionResult> DeleteProductImageByURL(string URL)
+        {
+
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+
+
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(URL, correlationGuid, nameof(ProductController), nameof(DeleteProductImageByURL), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var res = await _elBaytServices.ProductService.DeleteProductImageByURL(URL);
+                if (res == "true")
+                {
+                    var fullpath = Path.Combine(_config["FilesInfo:Directory"], URL);
+                    if (System.IO.File.Exists(fullpath))
+                        System.IO.File.Delete(fullpath);
+
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = true;
+                    return Ok(Response);
+                }
+                Response.Errors.Add("The Image Does not Exists !!");
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {URL}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(DeleteProductImageByURL)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {URL}", correlationGuid,
+                    $"{nameof(ProductController)}_{nameof(DeleteProductImageByURL)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
                 #region Result
