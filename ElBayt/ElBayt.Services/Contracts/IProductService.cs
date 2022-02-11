@@ -1,7 +1,9 @@
 ﻿using ElBayt.Common.Enums;
 using ElBayt.DTO.ELBayt.DBDTOs;
+using ElBayt.DTO.ELBayt.DTOs;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ElBayt.Services.Contracts
@@ -12,11 +14,11 @@ namespace ElBayt.Services.Contracts
         public Task<ProductDTO> AddNewProduct(IFormCollection form, string DiskDirectory);
         public object GetProducts();
         public Task<string> DeleteProduct(Guid Id);
-        public Task<ProductDTO> UpdateProduct(IFormCollection Form);
+        public Task<ProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory);
         public Task<ProductDTO> GetProduct(Guid Id);
         public Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file, string DiskDirectory);
         public Task<ProductImageDTO> GetProductImage(Guid Id);
-        public object GetProductImages(Guid ProductId);
+        public Task<List<ProductImageDataDTO>> GetProductImages(Guid ProductId);
         public Task<string> DeleteProductImage(Guid ImageId);
         public Task<string> DeleteProductImageByURL(string URL);
         #endregion
@@ -25,7 +27,7 @@ namespace ElBayt.Services.Contracts
         public Task<EnumInsertingResult> AddNewProductCategory(ProductCategoryDTO productCategory);
         public object GetProductCategories();
         public Task<string> DeleteProductCategory(Guid Id);
-        public Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory);
+        public Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory, string DiskDirectory);
         public Task<ProductCategoryDTO> GetProductCategory(Guid Id);
         #endregion
 
@@ -33,7 +35,7 @@ namespace ElBayt.Services.Contracts
         public Task<EnumInsertingResult> AddNewProductType(ProductTypeDTO productType);
         public object GetProductTypes();
         public Task<string> DeleteProductType(Guid Id);
-        public Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType);
+        public Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType, string DiskDirectory);
         public Task<ProductTypeDTO> GetProductType(Guid Id);
         #endregion
 

@@ -111,14 +111,9 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var IsDeleted = await _unitOfWork.ProductCategoryRepository.RemoveAsync(Id);
-                if (IsDeleted)
-                {
-                    var res = await _unitOfWork.SaveAsync();
-                    return "true";
-
-                }
-                return "This Item Not Exist";
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@CategoryId", Id);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTCATEGORY, SPParameters);
             }
             catch (Exception ex)
             {
@@ -132,7 +127,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory)
+        public async Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory,string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -148,9 +143,32 @@ namespace ElBayt.Services.Implementations
 
                 if (Category == null)
                 {
-                    var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(ProductCategory);
-                    await _unitOfWork.ProductCategoryRepository.UpdateProductCategory(Entity);
-                    await _unitOfWork.SaveAsync();
+                    var UTDProductCategory = _mapper.Map<ProductCategoryDTO, UTDProductCategoryDTO>(ProductCategory);
+                    var ProductCategories = new List<UTDProductCategoryDTO>
+                    {
+                       UTDProductCategory
+                    };
+                    var ProductCategorytable = ObjectDatatableConverter.ToDataTable(ProductCategories);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTProductCategory", ProductCategorytable.AsTableValuedParameter(UDT.UDTPRODUCTCATEGORY));
+                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTCATEGORY, SPParameters);
+                    var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
+                    var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
+                    if (URL1 != URL2)
+                    {
+                        if (Directory.Exists(URL1))
+                        {
+                            if (!Directory.Exists(URL2))
+                            {
+                                Directory.CreateDirectory(URL2);
+                                var Directories = Directory.GetDirectories(URL2);
+                                Directory.Delete(URL2);
+                                if (Directories.Length > 0)
+                                    Directory.CreateDirectory(Directories[^1]);
+                            }
+                            Directory.Move(URL1, URL2);
+                        }
+                    }
 
                     return EnumUpdatingResult.Successed;
                 }
@@ -274,14 +292,9 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var IsDeleted = await _unitOfWork.ProductTypeRepository.RemoveAsync(Id);
-                if (IsDeleted)
-                {
-                    var res = await _unitOfWork.SaveAsync();
-                    return "true";
-
-                }
-                return "This Item Not Exist";
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@TypeId", Id);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTTYPE, SPParameters);
             }
             catch (Exception ex)
             {
@@ -295,7 +308,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType)
+        public async Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType, string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -310,9 +323,34 @@ namespace ElBayt.Services.Implementations
                 var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(ProductType.Name.Trim(), ProductType.Id);
                 if (Type == null)
                 {
-                    var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(ProductType);
-                    await _unitOfWork.ProductTypeRepository.UpdateProductType(Entity);
-                    await _unitOfWork.SaveAsync();
+                    var UTDProductType = _mapper.Map<ProductTypeDTO, UTDProductTypeDTO>(ProductType);
+                    var ProductTypes = new List<UTDProductTypeDTO>
+                    {
+                       UTDProductType
+                    };
+
+                    var Producttypetable = ObjectDatatableConverter.ToDataTable(ProductTypes);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTProductType", Producttypetable.AsTableValuedParameter(UDT.UDTPRODUCTTYPE));
+                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTTYPE, SPParameters);
+                    var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
+                    var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
+                    if (URL1 != URL2)
+                    {
+                        if (Directory.Exists(URL1))
+                        {
+                            if (!Directory.Exists(URL2))
+                            {
+                                Directory.CreateDirectory(URL2);
+                                var Directories = Directory.GetDirectories(URL2);
+                                Directory.Delete(URL2);
+                                if (Directories.Length > 0)
+                                    Directory.CreateDirectory(Directories[^1]);
+                            }
+                            Directory.Move(URL1, URL2);
+                        }
+                    }
+
                     return EnumUpdatingResult.Successed;
                 }
 
@@ -408,14 +446,9 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var IsDeleted = await _unitOfWork.ProductDepartmentRepository.RemoveAsync(id);
-                if (IsDeleted)
-                {
-                    var res = await _unitOfWork.SaveAsync();
-                    return "true";
-
-                }
-                return "This Item Not Exist";
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@DepartmentId", id);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTDEPARTMENT, SPParameters);
             }
             catch (Exception ex)
             {
@@ -666,14 +699,9 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var IsDeleted = await _unitOfWork.ProductRepository.RemoveAsync(Id);
-                if (IsDeleted)
-                {
-                    var res = await _unitOfWork.SaveAsync();
-                    return "true";
-
-                }
-                return "This Item Not Exist";
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ProductId", Id);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCT, SPParameters);
             }
             catch (Exception ex)
             {
@@ -687,7 +715,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<ProductDTO> UpdateProduct(IFormCollection Form)
+        public async Task<ProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -713,7 +741,7 @@ namespace ElBayt.Services.Implementations
                         ModifiedBy = identityName,
                         ModifiedDate = DateTime.Now,
                         Price = Form["Price"].ToString(),
-                        PriceAfterDiscount = Form["PriceAfterDiscount"].ToString(),
+                        PriceAfterDiscount = !string.IsNullOrEmpty(Form["PriceAfterDiscount"].ToString()) && Form["PriceAfterDiscount"].ToString() != "null" ? Form["PriceAfterDiscount"].ToString() : null,
                         Name = Form["Name"].ToString(),
                         Description = Form["Description"].ToString(),
                         ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString()),
@@ -721,16 +749,28 @@ namespace ElBayt.Services.Implementations
 
                     if (!string.IsNullOrEmpty(Form["Img1"]))
                     {
-                        var url = product.ProductImageURL1.Split(".")[0] + Path.GetExtension(Form.Files[0].FileName);
+                        var url = Form["Img1"].ToString().Split(".")[0] + Path.GetExtension(Form.Files[0].FileName);
                         Newproduct.ProductImageURL1 = url;
                     }
-                    if (!string.IsNullOrEmpty(Form["Img2"]))
+                    string Extention2 = null;
+                    if (Form.Files.Count > 0)
                     {
-                        var i = Form.Files.Count == 1 ? 0 : 1;
-                        var url = product.ProductImageURL2.Split(".")[0] + Path.GetExtension(Form.Files[i].FileName);
-                        Newproduct.ProductImageURL2 = url;
+                        if (Form.Files[0].Name == "ImgFile2")
+                            Extention2 = Path.GetExtension(Form.Files[0].FileName);
+                        if (Form.Files.Count > 1)
+                        {
+                            if (Form.Files[1].Name == "ImgFile2")
+                                Extention2 = Path.GetExtension(Form.Files[1].FileName);
+                        }
+                        if (Extention2 == null)
+                        {
+                            if (!string.IsNullOrEmpty(Newproduct.ProductImageURL2))
+                            {
+                                var url = Newproduct.ProductImageURL2.Split(".")[0] + Extention2;
+                                Newproduct.ProductImageURL2 = url;
+                            }
+                        }
                     }
-
 
                     var UTDProduct = _mapper.Map<ProductDTO, UTDProductDTO>(Newproduct);
                     var Products = new List<UTDProductDTO>
@@ -741,16 +781,34 @@ namespace ElBayt.Services.Implementations
                     var Producttable = ObjectDatatableConverter.ToDataTable(Products);
                     var SPParameters = new DynamicParameters();
                     SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
-                    if (!string.IsNullOrEmpty(Form["Img2"]))
+                    if (!string.IsNullOrEmpty(Extention2))
                         SPParameters.Add("@Img2Id", Guid.NewGuid());
                     else
-                        SPParameters.Add("@Img2Id", null);
+                        SPParameters.Add("@Img2Id", Guid.Empty);
+                    SPParameters.Add("@Extention2", Extention2);
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
 
-              
 
+                    var List = await _unitOfWork.SP.MultiListAsnyc<ProductDTO, string, string>(StoredProcedure.UPDATEPRODUCT, SPParameters);
+                    var URL1 = Path.Combine(DiskDirectory, List.Item2.FirstOrDefault());
+                    var URL2 = Path.Combine(DiskDirectory, List.Item3.FirstOrDefault());
+                    if (URL1 != URL2)
+                    {
+                        if (Directory.Exists(URL1))
+                        {
+                            if (!Directory.Exists(URL2))
+                            {
+                                Directory.CreateDirectory(URL2);
+                                var Directories = Directory.GetDirectories(URL2);
+                                Directory.Delete(URL2);
+                                if (Directories.Length > 0)
+                                    Directory.CreateDirectory(Directories[^1]);
+                            }
+                            Directory.Move(URL1, URL2);
+                        }
+                    }
 
-                    var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.UPDATEPRODUCT, SPParameters);
-                    return List.FirstOrDefault();
+                    return List.Item1.FirstOrDefault();
                 }
                 return null;
             }
@@ -877,7 +935,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetProductImages(Guid ProductId)
+        public async Task<List<ProductImageDataDTO>> GetProductImages(Guid ProductId)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -889,7 +947,11 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                return  _unitOfWork.ProductImageRepository.GetProductImages(ProductId);
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ProductId", ProductId);
+
+
+                return (await _unitOfWork.SP.ListAsnyc<ProductImageDataDTO>(StoredProcedure.GETPRODUCTIMAGES, SPParameters)).ToList();
             }
             catch (Exception ex)
             {
@@ -961,7 +1023,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(URL, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(URL, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImageByURL)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

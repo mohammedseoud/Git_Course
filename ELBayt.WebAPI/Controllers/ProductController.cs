@@ -274,18 +274,20 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Id, correlationGuid, nameof(ProductController), nameof(DeleteProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Res = await _elBaytServices.ProductService.DeleteProduct(Id);
+                var URL = await _elBaytServices.ProductService.DeleteProduct(Id);
 
                 #region Result
-                if (Res == "true")
+                if (!string.IsNullOrEmpty(URL))
                 {
-
+                    var fullpath = Path.Combine(_config["FilesInfo:Path"], URL);
+                    if (Directory.Exists(fullpath))
+                        Directory.Delete(fullpath, true);
                     Response.Result = EnumResponseResult.Successed;
                     Response.Data = true;
                 }
                 else
                 {
-                    Response.Errors.Add(Res);
+                    Response.Errors.Add(CommonMessages.ITEM_NOT_EXISTS);
                     Response.Result = EnumResponseResult.Failed;
                     Response.Data = false;
 
@@ -347,7 +349,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Request.Form , correlationGuid, nameof(ProductController), nameof(UpdateProduct), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var product = await _elBaytServices.ProductService.UpdateProduct(Request.Form);
+                var product = await _elBaytServices.ProductService.UpdateProduct(Request.Form, _config["FilesInfo:WebFolder"]);
 
                 #region Result
                 if (product != null)
@@ -366,6 +368,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                     if (!string.IsNullOrEmpty(Request.Form["Img2"]))
                     {
+                        var fileindex = Request.Form.Files.Count == 1 ? 0 : 1;
+                       
                         var path = Path.Combine(_config["FilesInfo:Directory"], product.ProductImageURL2);
                         var files = path.Split("\\");
                        
@@ -373,11 +377,11 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                             System.IO.File.Delete(path);
 
                         using var stream = new FileStream(path, FileMode.Create);
-                        Request.Form.Files[1].CopyTo(stream);
+                        Request.Form.Files[fileindex].CopyTo(stream);
                     }
 
                     Response.Result = EnumResponseResult.Successed;
-                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                    Response.Data = CommonMessages.SUCCESSFULLY_UPDATING;
                 }
                 else
                 {
@@ -514,9 +518,9 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpGet]
         [Route(nameof(GetProductImages))]
-        public  ActionResult GetProductImages(Guid ProductId)
+        public async Task<ActionResult> GetProductImages(Guid ProductId)
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<ProductImageDataDTO>>
             {
                 Errors = new List<string>()
             };
@@ -528,7 +532,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductController), nameof(GetProductImages), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Images = _elBaytServices.ProductService.GetProductImages(ProductId);
+                var Images = await _elBaytServices.ProductService.GetProductImages(ProductId);
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Images;
@@ -933,23 +937,26 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Id, correlationGuid, nameof(ProductController), nameof(DeleteProductCategory), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Res = await _elBaytServices.ProductService.DeleteProductCategory(Id);
+                var URL = await _elBaytServices.ProductService.DeleteProductCategory(Id);
 
                 #region Result
-                if (Res == "true")
+                if (!string.IsNullOrEmpty(URL))
                 {
-
+                    var fullpath = Path.Combine(_config["FilesInfo:Path"], URL);
+                    if (Directory.Exists(fullpath))
+                        Directory.Delete(fullpath, true);
                     Response.Result = EnumResponseResult.Successed;
                     Response.Data = true;
                 }
                 else
                 {
-                    Response.Errors.Add(Res);
+                    Response.Errors.Add(CommonMessages.ITEM_NOT_EXISTS);
                     Response.Result = EnumResponseResult.Failed;
                     Response.Data = false;
 
                 }
                 #endregion
+
 
                 return Ok(Response);
             }
@@ -1006,7 +1013,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(productCategory, correlationGuid, nameof(ProductController), nameof(UpdateProductCategory), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var res = await _elBaytServices.ProductService.UpdateProductCategory(productCategory);
+                var res = await _elBaytServices.ProductService.UpdateProductCategory(productCategory, _config["FilesInfo:Path"]);
 
                 #region Result
                 if (res == EnumUpdatingResult.Successed)
@@ -1271,23 +1278,26 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Id, correlationGuid, nameof(ProductController), nameof(DeleteProductType), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Res = await _elBaytServices.ProductService.DeleteProductType(Id);
+                var URL = await _elBaytServices.ProductService.DeleteProductType(Id);
 
                 #region Result
-                if (Res == "true")
+                if (!string.IsNullOrEmpty(URL))
                 {
-
+                    var fullpath = Path.Combine(_config["FilesInfo:Path"], URL);
+                    if (Directory.Exists(fullpath))
+                        Directory.Delete(fullpath);
                     Response.Result = EnumResponseResult.Successed;
                     Response.Data = true;
                 }
                 else
                 {
-                    Response.Errors.Add(Res);
+                    Response.Errors.Add(CommonMessages.ITEM_NOT_EXISTS);
                     Response.Result = EnumResponseResult.Failed;
                     Response.Data = false;
 
                 }
                 #endregion
+
 
                 return Ok(Response);
             }
@@ -1344,7 +1354,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(productType, correlationGuid, nameof(ProductController), nameof(UpdateProductType), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var res = await _elBaytServices.ProductService.UpdateProductType(productType);
+                var res = await _elBaytServices.ProductService.UpdateProductType(productType, _config["FilesInfo:Path"]);
 
                 #region Result
                 if (res == EnumUpdatingResult.Successed)
@@ -1610,21 +1620,23 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail(Id, correlationGuid, nameof(ProductController), nameof(DeleteProductDepartment), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Res = await _elBaytServices.ProductService.DeleteProductDepartment(Id);
-              
+                var URL = await _elBaytServices.ProductService.DeleteProductDepartment(Id);
+
                 #region Result
-                if (Res == "true")
+                if (!string.IsNullOrEmpty(URL))
                 {
-                  
+                    var fullpath = Path.Combine(_config["FilesInfo:Path"], URL);
+                    if (Directory.Exists(fullpath))
+                        Directory.Delete(fullpath, true);
                     Response.Result = EnumResponseResult.Successed;
                     Response.Data = true;
-                 }
+                }
                 else
                 {
-                    Response.Errors.Add(Res);
+                    Response.Errors.Add(CommonMessages.ITEM_NOT_EXISTS);
                     Response.Result = EnumResponseResult.Failed;
                     Response.Data = false;
-                  
+
                 }
                 #endregion
 

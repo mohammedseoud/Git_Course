@@ -30,7 +30,7 @@ namespace ElBayt.Infra.Repositories
         public async Task<ProductTypeEntity> GetProductTypeByName(string Name,Guid Id)
         {
             var department = await _dbContext.ProductTypes
-               .Where(c => c.Name.Trim() == Name&&c.Id==Id).
+               .Where(c => c.Name.Trim() == Name && c.Id != Id).
                AsNoTracking().FirstOrDefaultAsync();
             return _mapper.Map<ProductTypeModel, ProductTypeEntity>(department);
         }
