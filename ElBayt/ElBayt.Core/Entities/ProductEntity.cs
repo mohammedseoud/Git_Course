@@ -28,9 +28,16 @@ namespace ElBayt.Core.Entities
 
         [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]
         public string ProductImageURL2 { get; set; }
-
+       
         public Guid ProductCategoryId { get; set; }
-        
+
+        [Required]
+        public int Quantity { get; set; }
+
+        public int Reviews { get; set; }
+
+        public decimal Ratings { get; set; }
+
         public virtual ProductCategoryEntity ProductCategories { get; set; }
     }
 }

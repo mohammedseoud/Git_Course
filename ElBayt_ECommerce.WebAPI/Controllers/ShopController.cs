@@ -588,7 +588,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpGet]
         [Route(nameof(GetShopData))]
-        public async Task<ActionResult> GetShopData(Guid DepartmentId)
+        public async Task<ActionResult> GetShopData(string DepartmentName)
         {
             
             var Response = new ElBaytResponse<ShopDataDTO>
@@ -600,10 +600,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(DepartmentId, correlationGuid, nameof(ShopController), nameof(GetShopData), 1, User.Identity.Name);
+                _logger.InfoInDetail(DepartmentName, correlationGuid, nameof(ShopController), nameof(GetShopData), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var ShopData = await _elBaytServices.ShopService.GetShopData(DepartmentId);
+                var ShopData = await _elBaytServices.ShopService.GetShopData(DepartmentName);
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = ShopData;
@@ -615,7 +615,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {DepartmentId}", correlationGuid,
+                _logger.ErrorInDetail($"newException {DepartmentName}", correlationGuid,
                     $"{nameof(ShopController)}_{nameof(GetShopData)}_{nameof(NotFoundException)}",
                     ex, 1, User.Identity.Name);
 
@@ -632,7 +632,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {DepartmentId}", correlationGuid,
+                _logger.ErrorInDetail($"newException {DepartmentName}", correlationGuid,
                     $"{nameof(ShopController)}_{nameof(GetShopData)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info

@@ -8,6 +8,6 @@ namespace ElBayt.DTO.ELBayt.DTOs
     {
         public List<ProductTypesDataDTO> ProductTypes { set; get; }
         public List<ShopCategoryDTO> ProductCategories { set; get; }
-        public List<ProductDataDTO> Products { set; get; }
+        public List<ShopProductDTO> Products { set; get; }
     }
 }
