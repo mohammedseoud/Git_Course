@@ -31,10 +31,6 @@ namespace ElBayt.Services.Implementations
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<ProductDataDTO> GetProductData(string ProductName)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<ShopDataDTO> GetShopData(string DepartmentName)
         {

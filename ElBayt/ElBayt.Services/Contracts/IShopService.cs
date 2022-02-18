@@ -8,6 +8,5 @@ namespace ElBayt.Services.Contracts
     public interface IShopService
     {
         public Task<ShopDataDTO> GetShopData(string DepartmentName);
-        public Task<ProductDataDTO> GetProductData(string ProductName);
     }
 }
