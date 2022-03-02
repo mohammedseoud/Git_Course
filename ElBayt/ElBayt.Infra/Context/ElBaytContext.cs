@@ -30,6 +30,10 @@ namespace ElBayt.Infra.Context
         public virtual DbSet<ServiceModel> Services { get; set; }
         public virtual DbSet<ServiceDepartmentModel> ServiceDepartments { get; set; }
         public virtual DbSet<ProductImageModel> ProductImages { get; set; }
+        public virtual DbSet<SizeModel> Sizes { get; set; }
+        public virtual DbSet<ProductSizeModel> ProductSizes { get; set; }
+        public virtual DbSet<ColorModel> Colors { get; set; }
+        public virtual DbSet<ProductColorModel> ProductColors { get; set; }
 
 
         public virtual void MarkEntryAsModified(BaseGeneralModel entity, EntityState entityState = EntityState.Modified)
