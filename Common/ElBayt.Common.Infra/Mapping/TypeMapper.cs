@@ -7,7 +7,7 @@ namespace ElBayt.Common.Infra.Mapping
 {
     public class TypeMapper : ITypeMapper
     {
-       public TypeMapper()
+        public TypeMapper()
         {
         }
 

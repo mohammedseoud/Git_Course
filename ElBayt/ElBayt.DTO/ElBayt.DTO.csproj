@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Common\ElBayt.Common.Core\ElBayt.Common.Core.csproj" />
     <ProjectReference Include="..\..\Common\ElBayt.Common.Infra\ElBayt.Common.Infra.csproj" />
     <ProjectReference Include="..\..\Common\ElBayt.Common\ElBayt.Common.csproj" />

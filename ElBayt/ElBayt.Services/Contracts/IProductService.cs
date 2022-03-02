@@ -11,11 +11,11 @@ namespace ElBayt.Services.Contracts
     public interface IProductService
     {
         #region Products
-        public Task<ProductDTO> AddNewProduct(IFormCollection form, string DiskDirectory);
+        public Task<NumberProductDTO> AddNewProduct(IFormCollection form, string DiskDirectory);
         public object GetProducts();
         public Task<string> DeleteProduct(Guid Id);
-        public Task<ProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory);
-        public Task<ProductDTO> GetProduct(Guid Id);
+        public Task<NumberProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory);
+        public Task<NumberProductDTO> GetProduct(Guid Id);
         public Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file, string DiskDirectory);
         public Task<ProductImageDTO> GetProductImage(Guid Id);
         public Task<List<ProductImageDataDTO>> GetProductImages(Guid ProductId);

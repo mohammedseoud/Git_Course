@@ -1,11 +1,13 @@
-﻿using System;
+﻿using ElBayt.Common.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DTOs
 {
-    public class ProductDataDTO
-    {
+    public class NumberProductDTO 
+    { 
+        public int RowNum { get; set; }
         public Guid Id { set; get; }
         public string Name { set; get; }
         public string Price { set; get; }
@@ -18,5 +20,6 @@ namespace ElBayt.DTO.ELBayt.DTOs
         public int Reviews { get; set; }
         public decimal Ratings { get; set; }
         public string ProductCategoryName { get; set; }
+
     }
 }

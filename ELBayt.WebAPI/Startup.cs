@@ -26,6 +26,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ElBayt.Common.Common;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
+using ElBayt.Infra.Mapping;
+using ElBayt.Core.Mapping;
 
 namespace ELBayt.WebAPI
 {
@@ -78,6 +80,7 @@ namespace ELBayt.WebAPI
             services.AddScoped<IUserIdentity>();
             services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
             services.AddScoped<ITypeMapper, TypeMapper>();
+            services.AddScoped<IShopMapper, ShopMapper>();
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();
             services.AddScoped<IElBaytServices, ElBaytServices>();

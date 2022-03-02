@@ -26,6 +26,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
+using ElBayt.Core.Mapping;
+using ElBayt.Infra.Mapping;
 
 namespace ElBayt_ECommerce.WebAPI
 {
@@ -77,6 +79,7 @@ namespace ElBayt_ECommerce.WebAPI
 
             services.AddScoped<IUserIdentity>();
             services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
+            services.AddScoped<IShopMapper, ShopMapper>();
             services.AddScoped<ITypeMapper, TypeMapper>();
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();

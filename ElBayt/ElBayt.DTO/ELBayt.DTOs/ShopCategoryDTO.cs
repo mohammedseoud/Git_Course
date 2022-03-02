@@ -6,7 +6,9 @@ namespace ElBayt.DTO.ELBayt.DTOs
 {
     public class ShopCategoryDTO
     {
-        public Guid Id { set; get; }
-        public string Name { set; get; }
+        public int count { set; get; }
+        public string name { set; get; }
+        public string slug { set; get; }
+
     }
 }

@@ -201,7 +201,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(GetProduct))]
         public async Task<ActionResult> GetProduct(Guid Id)
         {
-            var Response = new ElBaytResponse<ProductDTO>
+            var Response = new ElBaytResponse<NumberProductDTO>
             {
                 Errors = new List<string>()
             };

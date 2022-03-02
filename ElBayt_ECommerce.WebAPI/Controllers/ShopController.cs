@@ -646,5 +646,66 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 return BadRequest(Response);
             }
         }
+
+        [HttpGet]
+        [Route(nameof(GetProductData))]
+        public async Task<ActionResult> GetProductData(string ProductName)
+        {
+
+            var Response = new ElBaytResponse<ShopProductInfoDTO>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(ProductName, correlationGuid, nameof(ShopController), nameof(GetProductData), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var ProductData = await _elBaytServices.ShopService.GetProductData(ProductName);
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = ProductData;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductName}", correlationGuid,
+                    $"{nameof(ShopController)}_{nameof(GetProductData)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {ProductName}", correlationGuid,
+                    $"{nameof(ShopController)}_{nameof(GetProductData)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
     }
 }

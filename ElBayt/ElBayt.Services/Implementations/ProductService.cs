@@ -554,7 +554,7 @@ namespace ElBayt.Services.Implementations
 
         #region Product
 
-        public async Task<ProductDTO> AddNewProduct(IFormCollection Form, string DiskDirectory)
+        public async Task<NumberProductDTO> AddNewProduct(IFormCollection Form, string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -643,7 +643,7 @@ namespace ElBayt.Services.Implementations
 
 
 
-                    var List = await _unitOfWork.SP.ListAsnyc<ProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
+                    var List = await _unitOfWork.SP.ListAsnyc<NumberProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
                     return List.FirstOrDefault();
                 }
                 return null;
@@ -715,7 +715,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<ProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory)
+        public async Task<NumberProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -789,7 +789,7 @@ namespace ElBayt.Services.Implementations
                     SPParameters.Add("@DiskDirectory", DiskDirectory);
 
 
-                    var List = await _unitOfWork.SP.MultiListAsnyc<ProductDTO, string, string>(StoredProcedure.UPDATEPRODUCT, SPParameters);
+                    var List = await _unitOfWork.SP.ThreeListAsnyc<NumberProductDTO, string, string>(StoredProcedure.UPDATEPRODUCT, SPParameters);
                     var URL1 = Path.Combine(DiskDirectory, List.Item2.FirstOrDefault());
                     var URL2 = Path.Combine(DiskDirectory, List.Item3.FirstOrDefault());
                     if (URL1 != URL2)
@@ -824,7 +824,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<ProductDTO> GetProduct(Guid Id)
+        public async Task<NumberProductDTO> GetProduct(Guid Id)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -837,7 +837,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ProductRepository.GetAsync(Id);
-                return _mapper.Map<ProductEntity, ProductDTO>(Model);
+                return _mapper.Map<ProductEntity, NumberProductDTO>(Model);
             }
             catch (Exception ex)
             {

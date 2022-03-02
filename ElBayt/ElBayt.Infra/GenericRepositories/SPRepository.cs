@@ -124,7 +124,7 @@ namespace ElBayt.Core.GenericIRepository
                 return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>>(item1, item2);
             }
         }
-        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>>> MultiListAsnyc<TEntity1, TEntity2, TEntity3>(string ProcName, DynamicParameters parameters = null)
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>>> ThreeListAsnyc<TEntity1, TEntity2, TEntity3>(string ProcName, DynamicParameters parameters = null)
         {
             using (var SqlCon = new SqlConnection(ConnectionString))
             {
@@ -138,5 +138,89 @@ namespace ElBayt.Core.GenericIRepository
             }
         }
 
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>>> FourListAsnyc<TEntity1, TEntity2, TEntity3, TEntity4>(string ProcName, DynamicParameters parameters = null)
+        {
+            using (var SqlCon = new SqlConnection(ConnectionString))
+            {
+                SqlCon.Open();
+                var result = await SqlCon.QueryMultipleAsync(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var item1 = result.Read<TEntity1>().ToList();
+                var item2 = result.Read<TEntity2>().ToList();
+                var item3 = result.Read<TEntity3>().ToList();
+                var item4 = result.Read<TEntity4>().ToList();
+
+                return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>>(item1, item2, item3, item4);
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>>> FiveListAsnyc<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5>(string ProcName, DynamicParameters parameters = null)
+        {
+            using (var SqlCon = new SqlConnection(ConnectionString))
+            {
+                SqlCon.Open();
+                var result = await SqlCon.QueryMultipleAsync(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var item1 = result.Read<TEntity1>().ToList();
+                var item2 = result.Read<TEntity2>().ToList();
+                var item3 = result.Read<TEntity3>().ToList();
+                var item4 = result.Read<TEntity4>().ToList();
+                var item5 = result.Read<TEntity5>().ToList();
+
+                return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>>(item1, item2, item3, item4, item5);
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>, IEnumerable<TEntity6>>> SixListAsnyc<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6>(string ProcName, DynamicParameters parameters = null)
+        {
+            using (var SqlCon = new SqlConnection(ConnectionString))
+            {
+                SqlCon.Open();
+                var result = await SqlCon.QueryMultipleAsync(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var item1 = result.Read<TEntity1>().ToList();
+                var item2 = result.Read<TEntity2>().ToList();
+                var item3 = result.Read<TEntity3>().ToList();
+                var item4 = result.Read<TEntity4>().ToList();
+                var item5 = result.Read<TEntity5>().ToList();
+                var item6 = result.Read<TEntity6>().ToList();
+
+                return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>, IEnumerable<TEntity6>>(item1, item2, item3, item4, item5, item6);
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>, IEnumerable<TEntity6>, IEnumerable<TEntity7>>> SevenListAsnyc<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, TEntity7>(string ProcName, DynamicParameters parameters = null)
+        {
+            using (var SqlCon = new SqlConnection(ConnectionString))
+            {
+                SqlCon.Open();
+                var result = await SqlCon.QueryMultipleAsync(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var item1 = result.Read<TEntity1>().ToList();
+                var item2 = result.Read<TEntity2>().ToList();
+                var item3 = result.Read<TEntity3>().ToList();
+                var item4 = result.Read<TEntity4>().ToList();
+                var item5 = result.Read<TEntity5>().ToList();
+                var item6 = result.Read<TEntity6>().ToList();
+                var item7 = result.Read<TEntity7>().ToList();
+
+                return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>, IEnumerable<TEntity6>, IEnumerable<TEntity7>>(item1, item2, item3, item4, item5, item6, item7);
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>, IEnumerable<TEntity6>, IEnumerable<TEntity7>, IEnumerable<TEntity8>>> EightListAsnyc<TEntity1, TEntity2, TEntity3, TEntity4, TEntity5, TEntity6, TEntity7, TEntity8>(string ProcName, DynamicParameters parameters = null)
+        {
+            using (var SqlCon = new SqlConnection(ConnectionString))
+            {
+                SqlCon.Open();
+                var result = await SqlCon.QueryMultipleAsync(ProcName, parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var item1 = result.Read<TEntity1>().ToList();
+                var item2 = result.Read<TEntity2>().ToList();
+                var item3 = result.Read<TEntity3>().ToList();
+                var item4 = result.Read<TEntity4>().ToList();
+                var item5 = result.Read<TEntity5>().ToList();
+                var item6 = result.Read<TEntity6>().ToList();
+                var item7 = result.Read<TEntity7>().ToList();
+                var item8 = result.Read<TEntity8>().ToList();
+
+                return new Tuple<IEnumerable<TEntity1>, IEnumerable<TEntity2>, IEnumerable<TEntity3>, IEnumerable<TEntity4>, IEnumerable<TEntity5>, IEnumerable<TEntity6>, IEnumerable<TEntity7>, IEnumerable<TEntity8>>(item1, item2, item3, item4, item5, item6, item7, item8);
+            }
+        }
     }
 }
