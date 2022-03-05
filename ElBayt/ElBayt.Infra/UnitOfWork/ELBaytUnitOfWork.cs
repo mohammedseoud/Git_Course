@@ -181,7 +181,6 @@ namespace ElBayt.Infra.UnitOfWork
         private IProductImageRepository _productImageRepository;
         private IProductCategoryRepository _productCategoryRepository;
         private IProductTypeRepository _productTypeRepository;
-        private IProductDepartmentRepository _productDepartmentRepository;
         private IServiceRepository _serviceRepository;
         private IServiceDepartmentRepository _serviceDepartmentRepository;
         private ISPRepository _SPRepository;
@@ -198,8 +197,6 @@ namespace ElBayt.Infra.UnitOfWork
             _productCategoryRepository ??= new ProductCategoryRepository(_context, _mapper);
         public IProductTypeRepository ProductTypeRepository =>
            _productTypeRepository ??= new ProductTypeRepository(_context, _mapper);
-        public IProductDepartmentRepository ProductDepartmentRepository =>
-           _productDepartmentRepository ??= new ProductDepartmentRepository(_context, _mapper);
         public IServiceRepository ServiceRepository =>
            _serviceRepository ??= new ServiceRepository(_context, _mapper);
         public IServiceDepartmentRepository ServiceDepartmentRepository =>

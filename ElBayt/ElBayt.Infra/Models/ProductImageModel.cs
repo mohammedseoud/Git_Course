@@ -8,16 +8,11 @@ using System.Text;
 
 namespace ElBayt.Infra.Models
 {
-    [Table("ProductImage", Schema = "dbo")]
     public class ProductImageModel : BaseModel<Guid>
     {
         [Required]
         [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]
         public string URL { get; set; }
-        
-        [ForeignKey(nameof(Products))]
-        public Guid ProductId { get; set; }
-
-        public virtual ProductModel Products { get; set; }
+     
     }
 }

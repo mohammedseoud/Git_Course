@@ -83,7 +83,8 @@ namespace ELBayt.WebAPI
             services.AddScoped<IShopMapper, ShopMapper>();
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();
-            services.AddScoped<IElBaytServices, ElBaytServices>();
+            //services.AddScoped<IElBaytServices, ElBaytServices>();
+            services.AddScoped<IDepartmentsServices, DepartmentsServices>();
             services.AddCors(opt=> {
                 opt.AddPolicy(CorsOrigin.LOCAL_ORIGIN , builder =>
                 {

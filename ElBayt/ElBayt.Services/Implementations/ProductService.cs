@@ -36,1001 +36,1001 @@ namespace ElBayt.Services.Implementations
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        #region Categories
-        public async Task<EnumInsertingResult> AddNewProductCategory(ProductCategoryDTO productCategory)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //#region Categories
+        //public async Task<EnumInsertingResult> AddNewProductCategory(ProductCategoryDTO productCategory)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(productCategory, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(productCategory, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(productCategory.Name.Trim(), productCategory.Id);
-                if (Category == null)
-                {
-                    var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
-                    Entity.Id = Guid.NewGuid();
-                    await _unitOfWork.ProductCategoryRepository.AddAsync(Entity);
-                    await _unitOfWork.SaveAsync();
-                    return EnumInsertingResult.Successed;
-                }
-                return EnumInsertingResult.Failed;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(productCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public object GetProductCategories()
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail("GetProductCategories", correlationGuid, nameof(ProductService), nameof(GetProductCategories), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                return _unitOfWork.ProductCategoryRepository.GetAll();
-
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetProductCategories", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategories)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<string> DeleteProductCategory(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProductCategory), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@CategoryId", Id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTCATEGORY, SPParameters);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //        var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(productCategory.Name.Trim(), productCategory.Id);
+        //        if (Category == null)
+        //        {
+        //            var Entity = _mapper.Map<ProductCategoryDTO, ProductCategoryEntity>(productCategory);
+        //            Entity.Id = Guid.NewGuid();
+        //            await _unitOfWork.ProductCategoryRepository.AddAsync(Entity);
+        //            await _unitOfWork.SaveAsync();
+        //            return EnumInsertingResult.Successed;
+        //        }
+        //        return EnumInsertingResult.Failed;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(productCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public object GetProductCategories()
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail("GetProductCategories", correlationGuid, nameof(ProductService), nameof(GetProductCategories), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        return _unitOfWork.ProductCategoryRepository.GetAll();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail("GetProductCategories", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategories)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<string> DeleteProductCategory(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProductCategory), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var SPParameters = new DynamicParameters();
+        //        SPParameters.Add("@CategoryId", Id);
+        //        return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTCATEGORY, SPParameters);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                return ex.Message;
-            }
-        }
+        //        return ex.Message;
+        //    }
+        //}
 
-        public async Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory,string DiskDirectory)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //public async Task<EnumUpdatingResult> UpdateProductCategory(ProductCategoryDTO ProductCategory,string DiskDirectory)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductService), nameof(UpdateProductCategory), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(ProductCategory, correlationGuid, nameof(ProductService), nameof(UpdateProductCategory), 1, _userIdentity.Name);
 
-                #endregion Logging info
-
-                var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(ProductCategory.Name.Trim(), ProductCategory.Id);
-
-                if (Category == null)
-                {
-                    var UTDProductCategory = _mapper.Map<ProductCategoryDTO, UTDProductCategoryDTO>(ProductCategory);
-                    var ProductCategories = new List<UTDProductCategoryDTO>
-                    {
-                       UTDProductCategory
-                    };
-                    var ProductCategorytable = ObjectDatatableConverter.ToDataTable(ProductCategories);
-                    var SPParameters = new DynamicParameters();
-                    SPParameters.Add("@UDTProductCategory", ProductCategorytable.AsTableValuedParameter(UDT.UDTPRODUCTCATEGORY));
-                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTCATEGORY, SPParameters);
-                    var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
-                    var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
-                    if (URL1 != URL2)
-                    {
-                        if (Directory.Exists(URL1))
-                        {
-                            if (!Directory.Exists(URL2))
-                            {
-                                Directory.CreateDirectory(URL2);
-                                var Directories = Directory.GetDirectories(URL2);
-                                Directory.Delete(URL2);
-                                if (Directories.Length > 0)
-                                    Directory.CreateDirectory(Directories[^1]);
-                            }
-                            Directory.Move(URL1, URL2);
-                        }
-                    }
-
-                    return EnumUpdatingResult.Successed;
-                }
-
-                return EnumUpdatingResult.Failed;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(ProductCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        #endregion Logging info
+
+        //        var Category = await _unitOfWork.ProductCategoryRepository.GetProductCategoryByName(ProductCategory.Name.Trim(), ProductCategory.Id);
+
+        //        if (Category == null)
+        //        {
+        //            var UTDProductCategory = _mapper.Map<ProductCategoryDTO, UTDProductCategoryDTO>(ProductCategory);
+        //            var ProductCategories = new List<UTDProductCategoryDTO>
+        //            {
+        //               UTDProductCategory
+        //            };
+        //            var ProductCategorytable = ObjectDatatableConverter.ToDataTable(ProductCategories);
+        //            var SPParameters = new DynamicParameters();
+        //            SPParameters.Add("@UDTProductCategory", ProductCategorytable.AsTableValuedParameter(UDT.UDTPRODUCTCATEGORY));
+        //            var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTCATEGORY, SPParameters);
+        //            var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
+        //            var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
+        //            if (URL1 != URL2)
+        //            {
+        //                if (Directory.Exists(URL1))
+        //                {
+        //                    if (!Directory.Exists(URL2))
+        //                    {
+        //                        Directory.CreateDirectory(URL2);
+        //                        var Directories = Directory.GetDirectories(URL2);
+        //                        Directory.Delete(URL2);
+        //                        if (Directories.Length > 0)
+        //                            Directory.CreateDirectory(Directories[^1]);
+        //                    }
+        //                    Directory.Move(URL1, URL2);
+        //                }
+        //            }
+
+        //            return EnumUpdatingResult.Successed;
+        //        }
+
+        //        return EnumUpdatingResult.Failed;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(ProductCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<ProductCategoryDTO> GetProductCategory(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<ProductCategoryDTO> GetProductCategory(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductCategory), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductCategory), 1, _userIdentity.Name);
 
-                #endregion Logging info
-
-                var Model = await _unitOfWork.ProductCategoryRepository.GetAsync(Id);
-                return _mapper.Map<ProductCategoryEntity, ProductCategoryDTO>(Model);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //        #endregion Logging info
+
+        //        var Model = await _unitOfWork.ProductCategoryRepository.GetAsync(Id);
+        //        return _mapper.Map<ProductCategoryEntity, ProductCategoryDTO>(Model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
-        #endregion
+        //#endregion
 
-        #region Types
+        //#region Types
 
-        public async Task<EnumInsertingResult> AddNewProductType(ProductTypeDTO productType)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //public async Task<EnumInsertingResult> AddNewProductType(ProductTypeDTO productType)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(productType, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(productType, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(productType.Name.Trim(), productType.Id);
-                if (Type == null)
-                {
-                    var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
-                    Entity.Id = Guid.NewGuid();
-                    await _unitOfWork.ProductTypeRepository.AddAsync(Entity);
-                    await _unitOfWork.SaveAsync();
-                    return EnumInsertingResult.Successed;
-                }
-                return EnumInsertingResult.Failed;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(productType, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public object GetProductTypes()
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail("GetProductTypes", correlationGuid, nameof(ProductService), nameof(GetProductTypes), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                return _unitOfWork.ProductTypeRepository.GetAll();
-
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetProductTypes", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductTypes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<string> DeleteProductType(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProductType), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@TypeId", Id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTTYPE, SPParameters);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                return ex.Message;
-            }
-        }
-
-        public async Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType, string DiskDirectory)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductService), nameof(UpdateProductType), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(ProductType.Name.Trim(), ProductType.Id);
-                if (Type == null)
-                {
-                    var UTDProductType = _mapper.Map<ProductTypeDTO, UTDProductTypeDTO>(ProductType);
-                    var ProductTypes = new List<UTDProductTypeDTO>
-                    {
-                       UTDProductType
-                    };
-
-                    var Producttypetable = ObjectDatatableConverter.ToDataTable(ProductTypes);
-                    var SPParameters = new DynamicParameters();
-                    SPParameters.Add("@UDTProductType", Producttypetable.AsTableValuedParameter(UDT.UDTPRODUCTTYPE));
-                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTTYPE, SPParameters);
-                    var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
-                    var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
-                    if (URL1 != URL2)
-                    {
-                        if (Directory.Exists(URL1))
-                        {
-                            if (!Directory.Exists(URL2))
-                            {
-                                Directory.CreateDirectory(URL2);
-                                var Directories = Directory.GetDirectories(URL2);
-                                Directory.Delete(URL2);
-                                if (Directories.Length > 0)
-                                    Directory.CreateDirectory(Directories[^1]);
-                            }
-                            Directory.Move(URL1, URL2);
-                        }
-                    }
-
-                    return EnumUpdatingResult.Successed;
-                }
-
-                return EnumUpdatingResult.Failed;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(ProductType, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<ProductTypeDTO> GetProductType(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductType), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var Model = await _unitOfWork.ProductTypeRepository.GetAsync(Id);
-                return _mapper.Map<ProductTypeEntity, ProductTypeDTO>(Model);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        #endregion
-
-        #region Departments
-        public async Task<EnumInsertingResult> AddNewProductDepartment(ProductDepartmentDTO productDepartment)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
-
-                #endregion Logging info
+        //        var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(productType.Name.Trim(), productType.Id);
+        //        if (Type == null)
+        //        {
+        //            var Entity = _mapper.Map<ProductTypeDTO, ProductTypeEntity>(productType);
+        //            Entity.Id = Guid.NewGuid();
+        //            await _unitOfWork.ProductTypeRepository.AddAsync(Entity);
+        //            await _unitOfWork.SaveAsync();
+        //            return EnumInsertingResult.Successed;
+        //        }
+        //        return EnumInsertingResult.Failed;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(productType, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public object GetProductTypes()
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail("GetProductTypes", correlationGuid, nameof(ProductService), nameof(GetProductTypes), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        return _unitOfWork.ProductTypeRepository.GetAll();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail("GetProductTypes", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductTypes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<string> DeleteProductType(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProductType), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var SPParameters = new DynamicParameters();
+        //        SPParameters.Add("@TypeId", Id);
+        //        return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTTYPE, SPParameters);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        return ex.Message;
+        //    }
+        //}
+
+        //public async Task<EnumUpdatingResult> UpdateProductType(ProductTypeDTO ProductType, string DiskDirectory)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(ProductType, correlationGuid, nameof(ProductService), nameof(UpdateProductType), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var Type = await _unitOfWork.ProductTypeRepository.GetProductTypeByName(ProductType.Name.Trim(), ProductType.Id);
+        //        if (Type == null)
+        //        {
+        //            var UTDProductType = _mapper.Map<ProductTypeDTO, UTDProductTypeDTO>(ProductType);
+        //            var ProductTypes = new List<UTDProductTypeDTO>
+        //            {
+        //               UTDProductType
+        //            };
+
+        //            var Producttypetable = ObjectDatatableConverter.ToDataTable(ProductTypes);
+        //            var SPParameters = new DynamicParameters();
+        //            SPParameters.Add("@UDTProductType", Producttypetable.AsTableValuedParameter(UDT.UDTPRODUCTTYPE));
+        //            var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTTYPE, SPParameters);
+        //            var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
+        //            var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
+        //            if (URL1 != URL2)
+        //            {
+        //                if (Directory.Exists(URL1))
+        //                {
+        //                    if (!Directory.Exists(URL2))
+        //                    {
+        //                        Directory.CreateDirectory(URL2);
+        //                        var Directories = Directory.GetDirectories(URL2);
+        //                        Directory.Delete(URL2);
+        //                        if (Directories.Length > 0)
+        //                            Directory.CreateDirectory(Directories[^1]);
+        //                    }
+        //                    Directory.Move(URL1, URL2);
+        //                }
+        //            }
+
+        //            return EnumUpdatingResult.Successed;
+        //        }
+
+        //        return EnumUpdatingResult.Failed;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(ProductType, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<ProductTypeDTO> GetProductType(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductType), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var Model = await _unitOfWork.ProductTypeRepository.GetAsync(Id);
+        //        return _mapper.Map<ProductTypeEntity, ProductTypeDTO>(Model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //#endregion
+
+        //#region Departments
+        //public async Task<EnumInsertingResult> AddNewProductDepartment(ProductDepartmentDTO productDepartment)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(productDepartment, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
                
-                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(productDepartment.Name.Trim(), productDepartment.Id);
-                if (Department == null)
-                {
-                    var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
-                    Entity.Id = Guid.NewGuid();
-                    await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
-                    await _unitOfWork.SaveAsync();
-                    return EnumInsertingResult.Successed ;
-                }
+        //        var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(productDepartment.Name.Trim(), productDepartment.Id);
+        //        if (Department == null)
+        //        {
+        //            var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(productDepartment);
+        //            Entity.Id = Guid.NewGuid();
+        //            await _unitOfWork.ProductDepartmentRepository.AddAsync(Entity);
+        //            await _unitOfWork.SaveAsync();
+        //            return EnumInsertingResult.Successed ;
+        //        }
 
-                return EnumInsertingResult.Failed;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //        return EnumInsertingResult.Failed;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail(productDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail(productDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
-        public async Task<string> DeleteProductDepartment(Guid id)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //public async Task<string> DeleteProductDepartment(Guid id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(id, correlationGuid, nameof(ProductService), nameof(DeleteProductDepartment), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(id, correlationGuid, nameof(ProductService), nameof(DeleteProductDepartment), 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@DepartmentId", id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTDEPARTMENT, SPParameters);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //        var SPParameters = new DynamicParameters();
+        //        SPParameters.Add("@DepartmentId", id);
+        //        return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTDEPARTMENT, SPParameters);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail(id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail(id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                return ex.Message;
-            }
-        }
+        //        return ex.Message;
+        //    }
+        //}
 
-        public object GetProductDepartments()
-        {
-            var correlationGuid = Guid.NewGuid();
+        //public object GetProductDepartments()
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail("GetProductDepartments", correlationGuid, nameof(ProductService), nameof(GetProductDepartments), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail("GetProductDepartments", correlationGuid, nameof(ProductService), nameof(GetProductDepartments), 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
              
-                return _unitOfWork.ProductDepartmentRepository.GetAll();
+        //        return _unitOfWork.ProductDepartmentRepository.GetAll();
 
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail("GetProductDepartments", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductDepartments)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail("GetProductDepartments", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductDepartments)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<EnumUpdatingResult> UpdateProductDepartment(ProductDepartmentDTO ProductDepartment)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(ProductDepartment, correlationGuid, nameof(ProductService), nameof(UpdateProductDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(ProductDepartment.Name.Trim(), ProductDepartment.Id);
-                if (Department == null)
-                {
-                    var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(ProductDepartment);
-                    await _unitOfWork.ProductDepartmentRepository.UpdateProductDepartment(Entity);
-                    await _unitOfWork.SaveAsync();
-                    return EnumUpdatingResult.Successed;
-                }
-                return EnumUpdatingResult.Failed;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(ProductDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<ProductDepartmentDTO> GetProductDepartment(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var Model = await _unitOfWork.ProductDepartmentRepository.GetAsync(Id);
-                return _mapper.Map<ProductDepartmentEntity, ProductDepartmentDTO>(Model);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        #endregion
-
-        #region Product
-
-        public async Task<NumberProductDTO> AddNewProduct(IFormCollection Form, string DiskDirectory)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
-                #endregion Logging info
-
-                var Product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
-                if (Product == null)
-                {
-
-                    var identityName = _userIdentity?.Name ?? "Unknown";
-
-                    decimal PriceAfterDiscount ;
-                    var product = new ProductDTO
-                    {
-                        Id = Guid.NewGuid(),
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
-                        Price = Form["Price"].ToString(),
-                        PriceAfterDiscount = decimal.TryParse(Form["PriceAfterDiscount"].ToString(), out PriceAfterDiscount) ? PriceAfterDiscount.ToString() : null,
-                        Name = Form["Name"].ToString(),
-                        Description = Form["Description"].ToString(),
-                        ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString())
-                    };
-                    var ProductEntity = _mapper.Map<ProductDTO, UTDProductDTO>(product);
-                    var Products = new List<UTDProductDTO>
-                    {
-                       ProductEntity
-                    };
-                    var image1 = new ProductImageDTO
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = product.Id,
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now
-                    };
-
-
-
-                    var Image1Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image1);
-
-                    var Images1 = new List<UTDProductImageDTO>
-                {
-                    Image1Entity
-                };
-                    var Images2 = new List<UTDProductImageDTO>();
-                    if (Form.Files.Count > 1)
-                    {
-                        var image2 = new ProductImageDTO
-                        {
-                            Id = Guid.NewGuid(),
-                            ProductId = product.Id,
-                            CreatedBy = identityName,
-                            CreatedDate = DateTime.Now,
-                            ModifiedBy = identityName,
-                            ModifiedDate = DateTime.Now
-                        };
-                        var Image2Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image2);
-
-                        Images2 = new List<UTDProductImageDTO>
-                {
-                    Image2Entity
-                };
-                    }
-                    var image1table = ObjectDatatableConverter.ToDataTable(Images1);
-                    var image2table = ObjectDatatableConverter.ToDataTable(Images2);
-                    var Producttable = ObjectDatatableConverter.ToDataTable(Products);
-                    var SPParameters = new DynamicParameters();
-                    SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
-                    SPParameters.Add("@UDTProductImage", image1table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
-                    SPParameters.Add("@UDTProductImage2", image2table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
-                    SPParameters.Add("@Extension1", Path.GetExtension(Form.Files[0].FileName));
-                    if (Form.Files.Count > 1)
-                        SPParameters.Add("@Extension2", Path.GetExtension(Form.Files[1].FileName));
-                    else
-                        SPParameters.Add("@Extension2", General.NOEXTENSION);
-
-                    SPParameters.Add("@DiskDirectory", DiskDirectory);
-
-
-
-                    var List = await _unitOfWork.SP.ListAsnyc<NumberProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
-                    return List.FirstOrDefault();
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public object GetProducts()
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail("GetProducts", correlationGuid, nameof(ProductService), nameof(GetProducts), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                return _unitOfWork.ProductRepository.GetAll();
-
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetProducts", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProducts)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<string> DeleteProduct(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProduct), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@ProductId", Id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCT, SPParameters);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                return ex.Message;
-            }
-        }
-
-        public async Task<NumberProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(UpdateProduct), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-
-
-                var product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
-
-                if (product == null)
-                {
-                    var identityName = _userIdentity?.Name ?? "Unknown";
-
-                    var Newproduct = new ProductDTO
-                    {
-                        Id = Guid.Parse(Form["Id"].ToString()),
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
-                        Price = Form["Price"].ToString(),
-                        PriceAfterDiscount = !string.IsNullOrEmpty(Form["PriceAfterDiscount"].ToString()) && Form["PriceAfterDiscount"].ToString() != "null" ? Form["PriceAfterDiscount"].ToString() : null,
-                        Name = Form["Name"].ToString(),
-                        Description = Form["Description"].ToString(),
-                        ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString()),
-                    };
-
-                    if (!string.IsNullOrEmpty(Form["Img1"]))
-                    {
-                        var url = Form["Img1"].ToString().Split(".")[0] + Path.GetExtension(Form.Files[0].FileName);
-                        Newproduct.ProductImageURL1 = url;
-                    }
-                    string Extention2 = null;
-                    if (Form.Files.Count > 0)
-                    {
-                        if (Form.Files[0].Name == "ImgFile2")
-                            Extention2 = Path.GetExtension(Form.Files[0].FileName);
-                        if (Form.Files.Count > 1)
-                        {
-                            if (Form.Files[1].Name == "ImgFile2")
-                                Extention2 = Path.GetExtension(Form.Files[1].FileName);
-                        }
-                        if (Extention2 == null)
-                        {
-                            if (!string.IsNullOrEmpty(Newproduct.ProductImageURL2))
-                            {
-                                var url = Newproduct.ProductImageURL2.Split(".")[0] + Extention2;
-                                Newproduct.ProductImageURL2 = url;
-                            }
-                        }
-                    }
-
-                    var UTDProduct = _mapper.Map<ProductDTO, UTDProductDTO>(Newproduct);
-                    var Products = new List<UTDProductDTO>
-                    {
-                       UTDProduct
-                    };
-
-                    var Producttable = ObjectDatatableConverter.ToDataTable(Products);
-                    var SPParameters = new DynamicParameters();
-                    SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
-                    if (!string.IsNullOrEmpty(Extention2))
-                        SPParameters.Add("@Img2Id", Guid.NewGuid());
-                    else
-                        SPParameters.Add("@Img2Id", Guid.Empty);
-                    SPParameters.Add("@Extention2", Extention2);
-                    SPParameters.Add("@DiskDirectory", DiskDirectory);
-
-
-                    var List = await _unitOfWork.SP.ThreeListAsnyc<NumberProductDTO, string, string>(StoredProcedure.UPDATEPRODUCT, SPParameters);
-                    var URL1 = Path.Combine(DiskDirectory, List.Item2.FirstOrDefault());
-                    var URL2 = Path.Combine(DiskDirectory, List.Item3.FirstOrDefault());
-                    if (URL1 != URL2)
-                    {
-                        if (Directory.Exists(URL1))
-                        {
-                            if (!Directory.Exists(URL2))
-                            {
-                                Directory.CreateDirectory(URL2);
-                                var Directories = Directory.GetDirectories(URL2);
-                                Directory.Delete(URL2);
-                                if (Directories.Length > 0)
-                                    Directory.CreateDirectory(Directories[^1]);
-                            }
-                            Directory.Move(URL1, URL2);
-                        }
-                    }
-
-                    return List.Item1.FirstOrDefault();
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<NumberProductDTO> GetProduct(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProduct), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var Model = await _unitOfWork.ProductRepository.GetAsync(Id);
-                return _mapper.Map<ProductEntity, NumberProductDTO>(Model);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file
-            ,string DiskDirectory)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(file, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var identityName = _userIdentity?.Name ?? "Unknown";
-
-                var image = new ProductImageDTO
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = Guid.Parse(ProductId),
-                    CreatedBy = identityName,
-                    CreatedDate = DateTime.Now,
-                    ModifiedBy = identityName,
-                    ModifiedDate = DateTime.Now
-                };
-
-
-                var Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image);
-                var Images = new List<UTDProductImageDTO>
-                {
-                    Entity
-                };
-                var table = ObjectDatatableConverter.ToDataTable(Images);
-
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@UDTProductImage", table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
-                SPParameters.Add("@Extension", Path.GetExtension(file.FileName));
-                SPParameters.Add("@DiskDirectory", DiskDirectory);
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<EnumUpdatingResult> UpdateProductDepartment(ProductDepartmentDTO ProductDepartment)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(ProductDepartment, correlationGuid, nameof(ProductService), nameof(UpdateProductDepartment), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var Department = await _unitOfWork.ProductDepartmentRepository.GetProductDepartmentByName(ProductDepartment.Name.Trim(), ProductDepartment.Id);
+        //        if (Department == null)
+        //        {
+        //            var Entity = _mapper.Map<ProductDepartmentDTO, ProductDepartmentEntity>(ProductDepartment);
+        //            await _unitOfWork.ProductDepartmentRepository.UpdateProductDepartment(Entity);
+        //            await _unitOfWork.SaveAsync();
+        //            return EnumUpdatingResult.Successed;
+        //        }
+        //        return EnumUpdatingResult.Failed;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(ProductDepartment, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<ProductDepartmentDTO> GetProductDepartment(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProductDepartment), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var Model = await _unitOfWork.ProductDepartmentRepository.GetAsync(Id);
+        //        return _mapper.Map<ProductDepartmentEntity, ProductDepartmentDTO>(Model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //#endregion
+
+        //#region Product
+
+        //public async Task<NumberProductDTO> AddNewProduct(IFormCollection Form, string DiskDirectory)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+        //        _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(AddNewProduct), 1, _userIdentity.Name);
+        //        #endregion Logging info
+
+        //        var Product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+        //        if (Product == null)
+        //        {
+
+        //            var identityName = _userIdentity?.Name ?? "Unknown";
+
+        //            decimal PriceAfterDiscount ;
+        //            var product = new ProductDTO
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                CreatedBy = identityName,
+        //                CreatedDate = DateTime.Now,
+        //                ModifiedBy = identityName,
+        //                ModifiedDate = DateTime.Now,
+        //                Price = Form["Price"].ToString(),
+        //                PriceAfterDiscount = decimal.TryParse(Form["PriceAfterDiscount"].ToString(), out PriceAfterDiscount) ? PriceAfterDiscount.ToString() : null,
+        //                Name = Form["Name"].ToString(),
+        //                Description = Form["Description"].ToString(),
+        //                ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString())
+        //            };
+        //            var ProductEntity = _mapper.Map<ProductDTO, UTDProductDTO>(product);
+        //            var Products = new List<UTDProductDTO>
+        //            {
+        //               ProductEntity
+        //            };
+        //            var image1 = new ProductImageDTO
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                ProductId = product.Id,
+        //                CreatedBy = identityName,
+        //                CreatedDate = DateTime.Now,
+        //                ModifiedBy = identityName,
+        //                ModifiedDate = DateTime.Now
+        //            };
+
+
+
+        //            var Image1Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image1);
+
+        //            var Images1 = new List<UTDProductImageDTO>
+        //        {
+        //            Image1Entity
+        //        };
+        //            var Images2 = new List<UTDProductImageDTO>();
+        //            if (Form.Files.Count > 1)
+        //            {
+        //                var image2 = new ProductImageDTO
+        //                {
+        //                    Id = Guid.NewGuid(),
+        //                    ProductId = product.Id,
+        //                    CreatedBy = identityName,
+        //                    CreatedDate = DateTime.Now,
+        //                    ModifiedBy = identityName,
+        //                    ModifiedDate = DateTime.Now
+        //                };
+        //                var Image2Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image2);
+
+        //                Images2 = new List<UTDProductImageDTO>
+        //        {
+        //            Image2Entity
+        //        };
+        //            }
+        //            var image1table = ObjectDatatableConverter.ToDataTable(Images1);
+        //            var image2table = ObjectDatatableConverter.ToDataTable(Images2);
+        //            var Producttable = ObjectDatatableConverter.ToDataTable(Products);
+        //            var SPParameters = new DynamicParameters();
+        //            SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
+        //            SPParameters.Add("@UDTProductImage", image1table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+        //            SPParameters.Add("@UDTProductImage2", image2table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+        //            SPParameters.Add("@Extension1", Path.GetExtension(Form.Files[0].FileName));
+        //            if (Form.Files.Count > 1)
+        //                SPParameters.Add("@Extension2", Path.GetExtension(Form.Files[1].FileName));
+        //            else
+        //                SPParameters.Add("@Extension2", General.NOEXTENSION);
+
+        //            SPParameters.Add("@DiskDirectory", DiskDirectory);
+
+
+
+        //            var List = await _unitOfWork.SP.ListAsnyc<NumberProductDTO>(StoredProcedure.ADDPRODUCT, SPParameters);
+        //            return List.FirstOrDefault();
+        //        }
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public object GetProducts()
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail("GetProducts", correlationGuid, nameof(ProductService), nameof(GetProducts), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        return _unitOfWork.ProductRepository.GetAll();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail("GetProducts", correlationGuid, $"{nameof(ProductService)}_{nameof(GetProducts)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<string> DeleteProduct(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(DeleteProduct), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var SPParameters = new DynamicParameters();
+        //        SPParameters.Add("@ProductId", Id);
+        //        return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCT, SPParameters);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        return ex.Message;
+        //    }
+        //}
+
+        //public async Task<NumberProductDTO> UpdateProduct(IFormCollection Form, string DiskDirectory)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Form, correlationGuid, nameof(ProductService), nameof(UpdateProduct), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+
+
+        //        var product = await _unitOfWork.ProductRepository.GetProductByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+
+        //        if (product == null)
+        //        {
+        //            var identityName = _userIdentity?.Name ?? "Unknown";
+
+        //            var Newproduct = new ProductDTO
+        //            {
+        //                Id = Guid.Parse(Form["Id"].ToString()),
+        //                ModifiedBy = identityName,
+        //                ModifiedDate = DateTime.Now,
+        //                Price = Form["Price"].ToString(),
+        //                PriceAfterDiscount = !string.IsNullOrEmpty(Form["PriceAfterDiscount"].ToString()) && Form["PriceAfterDiscount"].ToString() != "null" ? Form["PriceAfterDiscount"].ToString() : null,
+        //                Name = Form["Name"].ToString(),
+        //                Description = Form["Description"].ToString(),
+        //                ProductCategoryId = Guid.Parse(Form["ProductCategoryId"].ToString()),
+        //            };
+
+        //            if (!string.IsNullOrEmpty(Form["Img1"]))
+        //            {
+        //                var url = Form["Img1"].ToString().Split(".")[0] + Path.GetExtension(Form.Files[0].FileName);
+        //                Newproduct.ProductImageURL1 = url;
+        //            }
+        //            string Extention2 = null;
+        //            if (Form.Files.Count > 0)
+        //            {
+        //                if (Form.Files[0].Name == "ImgFile2")
+        //                    Extention2 = Path.GetExtension(Form.Files[0].FileName);
+        //                if (Form.Files.Count > 1)
+        //                {
+        //                    if (Form.Files[1].Name == "ImgFile2")
+        //                        Extention2 = Path.GetExtension(Form.Files[1].FileName);
+        //                }
+        //                if (Extention2 == null)
+        //                {
+        //                    if (!string.IsNullOrEmpty(Newproduct.ProductImageURL2))
+        //                    {
+        //                        var url = Newproduct.ProductImageURL2.Split(".")[0] + Extention2;
+        //                        Newproduct.ProductImageURL2 = url;
+        //                    }
+        //                }
+        //            }
+
+        //            var UTDProduct = _mapper.Map<ProductDTO, UTDProductDTO>(Newproduct);
+        //            var Products = new List<UTDProductDTO>
+        //            {
+        //               UTDProduct
+        //            };
+
+        //            var Producttable = ObjectDatatableConverter.ToDataTable(Products);
+        //            var SPParameters = new DynamicParameters();
+        //            SPParameters.Add("@UDTProduct", Producttable.AsTableValuedParameter(UDT.UDTPRODUCT));
+        //            if (!string.IsNullOrEmpty(Extention2))
+        //                SPParameters.Add("@Img2Id", Guid.NewGuid());
+        //            else
+        //                SPParameters.Add("@Img2Id", Guid.Empty);
+        //            SPParameters.Add("@Extention2", Extention2);
+        //            SPParameters.Add("@DiskDirectory", DiskDirectory);
+
+
+        //            var List = await _unitOfWork.SP.ThreeListAsnyc<NumberProductDTO, string, string>(StoredProcedure.UPDATEPRODUCT, SPParameters);
+        //            var URL1 = Path.Combine(DiskDirectory, List.Item2.FirstOrDefault());
+        //            var URL2 = Path.Combine(DiskDirectory, List.Item3.FirstOrDefault());
+        //            if (URL1 != URL2)
+        //            {
+        //                if (Directory.Exists(URL1))
+        //                {
+        //                    if (!Directory.Exists(URL2))
+        //                    {
+        //                        Directory.CreateDirectory(URL2);
+        //                        var Directories = Directory.GetDirectories(URL2);
+        //                        Directory.Delete(URL2);
+        //                        if (Directories.Length > 0)
+        //                            Directory.CreateDirectory(Directories[^1]);
+        //                    }
+        //                    Directory.Move(URL1, URL2);
+        //                }
+        //            }
+
+        //            return List.Item1.FirstOrDefault();
+        //        }
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateProduct)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<NumberProductDTO> GetProduct(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetProduct), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var Model = await _unitOfWork.ProductRepository.GetAsync(Id);
+        //        return _mapper.Map<ProductEntity, NumberProductDTO>(Model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<ProductImageDTO> SaveProductImage(string ProductId, IFormFile file
+        //    ,string DiskDirectory)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(file, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var identityName = _userIdentity?.Name ?? "Unknown";
+
+        //        var image = new ProductImageDTO
+        //        {
+        //            Id = Guid.NewGuid(),
+        //            ProductId = Guid.Parse(ProductId),
+        //            CreatedBy = identityName,
+        //            CreatedDate = DateTime.Now,
+        //            ModifiedBy = identityName,
+        //            ModifiedDate = DateTime.Now
+        //        };
+
+
+        //        var Entity = _mapper.Map<ProductImageDTO, UTDProductImageDTO>(image);
+        //        var Images = new List<UTDProductImageDTO>
+        //        {
+        //            Entity
+        //        };
+        //        var table = ObjectDatatableConverter.ToDataTable(Images);
+
+        //        var SPParameters = new DynamicParameters();
+        //        SPParameters.Add("@UDTProductImage", table.AsTableValuedParameter(UDT.UDTPRODUCTIMAGE));
+        //        SPParameters.Add("@Extension", Path.GetExtension(file.FileName));
+        //        SPParameters.Add("@DiskDirectory", DiskDirectory);
                 
-                var Imglist = await _unitOfWork.SP.ListAsnyc<UTDProductImageDTO>(StoredProcedure.ADDPRODUCTIMAGE, SPParameters);
-                var imageDTO = _mapper.Map<UTDProductImageDTO,ProductImageDTO>(Imglist.FirstOrDefault());
-                return imageDTO;
+        //        var Imglist = await _unitOfWork.SP.ListAsnyc<UTDProductImageDTO>(StoredProcedure.ADDPRODUCTIMAGE, SPParameters);
+        //        var imageDTO = _mapper.Map<UTDProductImageDTO,ProductImageDTO>(Imglist.FirstOrDefault());
+        //        return imageDTO;
 
 
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail(file, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail(file, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
-        public async Task<ProductImageDTO> GetProductImage(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //public async Task<ProductImageDTO> GetProductImage(Guid Id)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(SaveProductImage), 1, _userIdentity.Name);
 
-                #endregion Logging info
-
-
-                var entity = await _unitOfWork.ProductImageRepository.GetAsync(Id);
-                return _mapper.Map<ProductImageEntity, ProductImageDTO>(entity);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                throw;
-            }
-        }
-
-        public async Task<List<ProductImageDataDTO>> GetProductImages(Guid ProductId)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductService), nameof(GetProductImages), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@ProductId", ProductId);
+        //        #endregion Logging info
 
 
-                return (await _unitOfWork.SP.ListAsnyc<ProductImageDataDTO>(StoredProcedure.GETPRODUCTIMAGES, SPParameters)).ToList();
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //        var entity = await _unitOfWork.ProductImageRepository.GetAsync(Id);
+        //        return _mapper.Map<ProductImageEntity, ProductImageDTO>(entity);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(SaveProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                throw;
-            }
-        }
+        //        throw;
+        //    }
+        //}
 
-        public async Task<string> DeleteProductImage(Guid ImageId)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //public async Task<List<ProductImageDataDTO>> GetProductImages(Guid ProductId)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-            try
-            {
-                #region Logging info
+        //    try
+        //    {
+        //        #region Logging info
 
-                _logger.InfoInDetail(ImageId, correlationGuid, nameof(ProductService), nameof(DeleteProductImage), 1, _userIdentity.Name);
+        //        _logger.InfoInDetail(ProductId, correlationGuid, nameof(ProductService), nameof(GetProductImages), 1, _userIdentity.Name);
 
-                #endregion Logging info
+        //        #endregion Logging info
 
-                var IsDeleted = await _unitOfWork.ProductImageRepository.RemoveAsync(ImageId);
-                if (IsDeleted)
-                {
-                    var res = await _unitOfWork.SaveAsync();
-                    return "true";
+        //        var SPParameters = new DynamicParameters();
+        //        SPParameters.Add("@ProductId", ProductId);
 
-                }
-                return "This Image Not Exist";
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
 
-                _logger.ErrorInDetail(ImageId, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        return (await _unitOfWork.SP.ListAsnyc<ProductImageDataDTO>(StoredProcedure.GETPRODUCTIMAGES, SPParameters)).ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                #endregion Logging info
+        //        _logger.ErrorInDetail(ProductId, correlationGuid, $"{nameof(ProductService)}_{nameof(GetProductImages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                return ex.Message;
-            }
-        }
+        //        #endregion Logging info
 
-        public async Task<string> DeleteProductImageByURL(string URL)
-        {
-            var correlationGuid = Guid.NewGuid();
+        //        throw;
+        //    }
+        //}
 
-            try
-            {
-                #region Logging info
+        //public async Task<string> DeleteProductImage(Guid ImageId)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
 
-                _logger.InfoInDetail(URL, correlationGuid, nameof(ProductService), nameof(DeleteProductImageByURL), 1, _userIdentity.Name);
+        //    try
+        //    {
+        //        #region Logging info
 
-                #endregion Logging info
+        //        _logger.InfoInDetail(ImageId, correlationGuid, nameof(ProductService), nameof(DeleteProductImage), 1, _userIdentity.Name);
 
-                var IsDeleted =  _unitOfWork.ProductImageRepository.DeleteByURL(URL);
-                if (IsDeleted)
-                {
-                    var res = await _unitOfWork.SaveAsync();
-                    return "true";
+        //        #endregion Logging info
 
-                }
-                return "This Image Not Exist";
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
+        //        var IsDeleted = await _unitOfWork.ProductImageRepository.RemoveAsync(ImageId);
+        //        if (IsDeleted)
+        //        {
+        //            var res = await _unitOfWork.SaveAsync();
+        //            return "true";
 
-                _logger.ErrorInDetail(URL, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImageByURL)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+        //        }
+        //        return "This Image Not Exist";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
 
-                #endregion Logging info
+        //        _logger.ErrorInDetail(ImageId, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
-                return ex.Message;
-            }
+        //        #endregion Logging info
 
-        }
-        #endregion
+        //        return ex.Message;
+        //    }
+        //}
+
+        //public async Task<string> DeleteProductImageByURL(string URL)
+        //{
+        //    var correlationGuid = Guid.NewGuid();
+
+        //    try
+        //    {
+        //        #region Logging info
+
+        //        _logger.InfoInDetail(URL, correlationGuid, nameof(ProductService), nameof(DeleteProductImageByURL), 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        var IsDeleted =  _unitOfWork.ProductImageRepository.DeleteByURL(URL);
+        //        if (IsDeleted)
+        //        {
+        //            var res = await _unitOfWork.SaveAsync();
+        //            return "true";
+
+        //        }
+        //        return "This Image Not Exist";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Logging info
+
+        //        _logger.ErrorInDetail(URL, correlationGuid, $"{nameof(ProductService)}_{nameof(DeleteProductImageByURL)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+        //        #endregion Logging info
+
+        //        return ex.Message;
+        //    }
+
+        //}
+        //#endregion
     }
 }

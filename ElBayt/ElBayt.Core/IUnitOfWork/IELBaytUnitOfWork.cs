@@ -13,7 +13,6 @@ namespace ElBayt.Core.IUnitOfWork
         IProductImageRepository ProductImageRepository { get; }
         IProductCategoryRepository ProductCategoryRepository { get; }
         IProductTypeRepository ProductTypeRepository { get; }
-        IProductDepartmentRepository ProductDepartmentRepository { get; }
         IServiceRepository ServiceRepository { get; }
         IServiceDepartmentRepository ServiceDepartmentRepository { get; }
         ISPRepository SP { get; }

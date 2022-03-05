@@ -28,31 +28,31 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public object GetProductImages(Guid ProductId)
-        {
-            var models =  _dbContext.Set<ProductImageModel>().
-                Where(c => c.ProductId == ProductId);
+        //public object GetProductImages(Guid ProductId)
+        //{
+        //    var models =  _dbContext.Set<ProductImageModel>().
+        //        Where(c => c.ProductId == ProductId);
 
-            var res =  models.AsNoTracking().AsEnumerable();
+        //    var res =  models.AsNoTracking().AsEnumerable();
 
-            return models;
+        //    return models;
 
-        }
+        //}
 
-        public bool DeleteByURL(string URL)
-        {
-            var image = _dbContext.ProductImages
-               .Where(c => c.URL == URL).
-               AsNoTracking().ToList().FirstOrDefault();
-            try
-            {
-                _dbContext.ProductImages.Remove(image);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        //public bool DeleteByURL(string URL)
+        //{
+        //    var image = _dbContext.ProductImages
+        //       .Where(c => c.URL == URL).
+        //       AsNoTracking().ToList().FirstOrDefault();
+        //    try
+        //    {
+        //        _dbContext.ProductImages.Remove(image);
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        return false;
+        //    }
+        //}
     }
 }

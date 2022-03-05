@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IProductDepartmentRepository : IGenericRepository<ProductDepartmentEntity, Guid>
+    public interface IClothTypeRepository : IGenericRepository<ClothTypeEntity, Guid>
     {
-        Task UpdateProductDepartment(ProductDepartmentEntity productDepartment);
-        Task<ProductDepartmentEntity> GetProductDepartmentByName(string Name, Guid Id);
+        Task UpdateClothType(ClothTypeEntity clothesTypes);
+        Task<ClothTypeEntity> GetClothTypeByName(string Name, Guid Id);
     }
 }

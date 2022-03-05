@@ -8,12 +8,11 @@ using System.Text;
 
 namespace ElBayt.Infra.Models
 {
-    [Table("ProductDepartment", Schema = "dbo")]
-    public class ProductDepartmentModel : BaseModel<Guid>
+    [Table("Cloth", Schema = "dbo")]
+    public class ClothModel : ProductModel
     {
-        [Required]
-        [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
-        public string Name { get; set; }
-   
+        [ForeignKey(nameof(ClothCategories))]
+        public Guid ClothCategoryId { get; set; }
+        public virtual ClothCategoryModel ClothCategories { get; set; }
     }
 }

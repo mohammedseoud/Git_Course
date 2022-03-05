@@ -12,9 +12,9 @@ namespace ElBayt.Core.Entities
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
-        public Guid ProductTypeId { get; set; }
+        //public Guid ProductTypeId { get; set; }
 
-        public virtual ProductTypeEntity ProductTypes { get; set; }
+        //public virtual ProductTypeEntity ProductTypes { get; set; }
 
     }
 }

@@ -8,7 +8,6 @@ using System.Text;
 
 namespace ElBayt.Infra.Models
 {
-    [Table("Product", Schema = "dbo")]
     public class ProductModel : BaseModel<Guid>
     {
         [Required]
@@ -31,17 +30,11 @@ namespace ElBayt.Infra.Models
         [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]
         public string ProductImageURL2 { get; set; }
 
-        
-        [ForeignKey(nameof(ProductCategories))]
-        public Guid ProductCategoryId { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
+        //[ForeignKey(nameof(ProductCategories))]
+        //public Guid ProductCategoryId { get; set; }
 
-        public int Reviews { get; set; }
 
-        public decimal Ratings { get; set; }
-
-        public virtual ProductCategoryModel ProductCategories { get; set; }
+        //public virtual ProductCategoryModel ProductCategories { get; set; }
     }
 }

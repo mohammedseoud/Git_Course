@@ -17,30 +17,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ProductDepartmentRepository : GenericRepository<ProductDepartmentEntity, ProductDepartmentModel, Guid>, IProductDepartmentRepository
+    public class ClothTypeRepository : GenericRepository<ClothTypeEntity, ClothTypeModel, Guid>, IClothTypeRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
         
 
-        public ProductDepartmentRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
+        public ClothTypeRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
-        public async Task<ProductDepartmentEntity> GetProductDepartmentByName(string Name, Guid Id)
+        public async Task<ClothTypeEntity> GetClothTypeByName(string Name, Guid Id)
         {
-            var department = await _dbContext.ProductDepartments
+            var clothtype = await _dbContext.ClothTypes
                 .Where(c => c.Name.Trim() == Name && c.Id != Id).
                 AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<ProductDepartmentModel, ProductDepartmentEntity>(department);
+            return _mapper.Map<ClothTypeModel, ClothTypeEntity>(clothtype);
         }
 
-        public async Task UpdateProductDepartment(ProductDepartmentEntity productDepartment)
+        public async Task UpdateClothType(ClothTypeEntity clothType)
         {
-            var Department = await _dbContext.ProductDepartments.FindAsync(productDepartment.Id);
-            Department.Name = productDepartment.Name;
+            var ClothType = await _dbContext.ClothTypes.FindAsync(clothType.Id);
+            ClothType.Name = clothType.Name;
         }
     }
 }

@@ -27,19 +27,19 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<ProductTypeEntity> GetProductTypeByName(string Name,Guid Id)
-        {
-            var department = await _dbContext.ProductTypes
-               .Where(c => c.Name.Trim() == Name && c.Id != Id).
-               AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<ProductTypeModel, ProductTypeEntity>(department);
-        }
+        //public async Task<ProductTypeEntity> GetProductTypeByName(string Name,Guid Id)
+        //{
+        //    var department = await _dbContext.ProductTypes
+        //       .Where(c => c.Name.Trim() == Name && c.Id != Id).
+        //       AsNoTracking().FirstOrDefaultAsync();
+        //    return _mapper.Map<ProductTypeModel, ProductTypeEntity>(department);
+        //}
 
-        public async Task UpdateProductType(ProductTypeEntity productType)
-        {
-            var Type = await _dbContext.ProductTypes.FindAsync(productType.Id);
-            Type.Name = productType.Name;
-            Type.DepartmentId = productType.DepartmentId;
-        }
+        //public async Task UpdateProductType(ProductTypeEntity productType)
+        //{
+        //    var Type = await _dbContext.ProductTypes.FindAsync(productType.Id);
+        //    Type.Name = productType.Name;
+        //    //Type.DepartmentId = productType.DepartmentId;
+        //}
     }
 }

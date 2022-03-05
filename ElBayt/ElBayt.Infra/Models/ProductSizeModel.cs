@@ -11,14 +11,14 @@ namespace ElBayt.Infra.Models
     [Table("ProductSize", Schema = "dbo")]
     public class ProductSizeModel: BaseModel<Guid>
     {
-        [Required]
-        [ForeignKey(nameof(Products))]
-        public Guid ProductId { get; set; }
-        [Required]
-        [ForeignKey(nameof(Sizes))]
-        public Guid SizeId { get; set; }
+        //[Required]
+        //[ForeignKey(nameof(Products))]
+        //public Guid ProductId { get; set; }
+        //[Required]
+        //[ForeignKey(nameof(Sizes))]
+        //public Guid SizeId { get; set; }
         public int Amount { get; set; }
-        public virtual ProductModel Products { get; set; }
-        public virtual SizeModel Sizes { get; set; }
+       // public virtual ProductModel Products { get; set; }
+   //     public virtual SizeModel Sizes { get; set; }
     }
 }
