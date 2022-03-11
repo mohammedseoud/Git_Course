@@ -8,7 +8,7 @@ namespace ElBayt.DTO.ELBayt.DTOs
     public class UTDProductTypeDTO : BaseDto<Guid>, IBaseDTO
     {
         public string Name { get; set; }
-        public Guid DepartmentId { get; set; }
-      
+        public string TypePic { get; set; }
+
     }
 }

@@ -21,6 +21,8 @@ namespace ElBayt.Infra.SPs
         public const string UPDATEPRODUCTTYPE = "UpdateProductType";
         public const string GETPRODUCTIMAGES = "GetProductImages";
         public const string GETPRODUCTDATA = "GetProductData";
+        public const string ADDCLOTHTYPE = "AddClothType";
+        
 
     }
 }

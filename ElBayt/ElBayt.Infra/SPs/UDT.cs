@@ -10,6 +10,7 @@ namespace ElBayt.Infra.SPs
         public const string UDTPRODUCT = "[dbo].[UDTProduct]";
         public const string UDTPRODUCTTYPE = "[dbo].[UDTProductType]";
         public const string UDTPRODUCTCATEGORY = "[dbo].[UDTProductCategory]";
+        public const string UDTCLOTHTYPE = "[dbo].[UDTClothType]";
 
     }
 }

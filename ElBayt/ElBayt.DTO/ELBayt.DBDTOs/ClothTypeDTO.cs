@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DBDTOs
 {
-    public class ProductCategoryDTO : BaseDto<Guid>, IBaseDTO
-    { 
-        public string Name { get; set; }
+    public class ClothTypeDTO : ProductTypeDTO
+    {
+        
     }
 }

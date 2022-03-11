@@ -12,8 +12,10 @@ namespace ElBayt.Core.Entities
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
-        //public Guid DepartmentId { get; set; }
-        //public virtual ProductDepartmentEntity Departments { get; set; }
+
+        [Required]
+        [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
+        public string TypePic { get; set; }
 
     }
 }

@@ -7,11 +7,10 @@ using System.Text;
 
 namespace ElBayt.Core.Entities
 {
-    public class ProductCategoryEntity : EnhancedEntity<Guid> , BaseEntity
+    public class ClothCategoryEntity : ProductCategoryEntity
     {
         [Required]
-        [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
-        public string Name { get; set; }
-
+        public Guid ClothTypeId { get; set; }
+        public virtual ClothTypeEntity ClothTypes { get; set; }
     }
 }
