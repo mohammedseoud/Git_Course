@@ -11,5 +11,9 @@ namespace ElBayt.Infra.Models
     [Table("ClothType", Schema = "dbo")]
     public class ClothTypeModel : ProductTypeModel
     {
+        [Required]
+        [ForeignKey(nameof(ClothDepartments))]
+        public Guid ClothDepartmentId { get; set; }
+        public virtual ClothDepartmentModel ClothDepartments { get; set; }
     }
 }

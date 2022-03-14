@@ -41,6 +41,7 @@ namespace ElBayt.Infra.Repositories
         {
             var ClothType = await _dbContext.ClothTypes.FindAsync(clothType.Id);
             ClothType.Name = clothType.Name;
+            ClothType.ClothDepartmentId = clothType.ClothDepartmentId;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ElBayt.Core.Entities;
+﻿using ElBayt.Common.Entities;
+using ElBayt.Core.Entities;
 using ElBayt.Core.GenericIRepository;
 using System;
 using System.Collections.Generic;

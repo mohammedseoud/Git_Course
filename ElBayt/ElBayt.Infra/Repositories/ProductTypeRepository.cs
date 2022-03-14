@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Infra.Repositories
 {

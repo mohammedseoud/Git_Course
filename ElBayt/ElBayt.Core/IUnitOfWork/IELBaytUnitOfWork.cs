@@ -9,8 +9,11 @@ namespace ElBayt.Core.IUnitOfWork
 {
     public interface IELBaytUnitOfWork : Common.UnitOfWork.IUnitOfWork
     {
+        IClothDepartmentRepository ClothDepartmentRepository { get; }
         IClothTypeRepository ClothTypeRepository { get; }
         IClothCategoryRepository ClothCategoryRepository { get; }
+        IClothRepository ClothRepository { get; }
+        IClothImageRepository ClothImageRepository { get; }
         IProductRepository ProductRepository { get; }
         IProductImageRepository ProductImageRepository { get; }
         IProductCategoryRepository ProductCategoryRepository { get; }

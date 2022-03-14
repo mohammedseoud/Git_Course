@@ -11,6 +11,7 @@ namespace ElBayt.Infra.Models
     [Table("ClothImage", Schema = "dbo")]
     public class ClothImageModel : ProductImageModel
     {
+        [Required]
         [ForeignKey(nameof(Cloths))]
         public Guid ClothId { get; set; }
 

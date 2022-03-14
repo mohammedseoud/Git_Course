@@ -8,7 +8,6 @@ using System.Text;
 
 namespace ElBayt.Infra.Models
 {
-    [Table("Brand", Schema = "dbo")]
     public class BrandModel : BaseModel<Guid>
     {
         [Required]

@@ -25,16 +25,18 @@ namespace ElBayt.Infra.Context
         public virtual DbSet<GovernorateModel> Governorates { get; set; }
         public virtual DbSet<ServiceModel> Services { get; set; }
         public virtual DbSet<ServiceDepartmentModel> ServiceDepartments { get; set; }
-        public virtual DbSet<SizeModel> Sizes { get; set; }
-        public virtual DbSet<ProductSizeModel> ProductSizes { get; set; }
         public virtual DbSet<ColorModel> Colors { get; set; }
-        public virtual DbSet<ProductColorModel> ProductColors { get; set; }
-        public virtual DbSet<ProductReviewModel> ProductReviews { get; set; }
-        public virtual DbSet<BrandModel> Brands { get; set; }
-        public virtual DbSet<ClothModel> Cloths { get; set; }
+        public virtual DbSet<ClothSizeModel> ClothSizes { get; set; }
+        public virtual DbSet<ClothSizesModel> ClothesSizes { get; set; }
+        public virtual DbSet<ClothBrandModel> ClothBrands { get; set; }
+        public virtual DbSet<ClothBrandsModel> ClothesBrands { get; set; }
+        public virtual DbSet<ClothModel> Clothes { get; set; }
         public virtual DbSet<ClothCategoryModel> ClothCategories { get; set; }
         public virtual DbSet<ClothTypeModel> ClothTypes { get; set; }
-        public virtual DbSet<ClothImageModel> Images { get; set; }
+        public virtual DbSet<ClothImageModel> ClothImages { get; set; }
+        public virtual DbSet<ClothDepartmentModel> ClothDepartments { get; set; }
+        public virtual DbSet<ClothColorsModel> ClothColors { get; set; }
+        public virtual DbSet<ClothCategoriesModel> ClothesCategories { get; set; }
 
 
         public virtual void MarkEntryAsModified(BaseGeneralModel entity, EntityState entityState = EntityState.Modified)
