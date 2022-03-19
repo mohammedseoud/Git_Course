@@ -14,7 +14,7 @@ namespace ElBayt.Services.Contracts
         public Task<ClothTypeDTO> AddNewClothType(IFormCollection Form, string DiskDirectory);
         public object GetClothTypes();
         public Task<string> DeleteClothType(Guid Id);
-        public Task<EnumUpdatingResult> UpdateClothType(ClothTypeDTO clothType, string DiskDirectory);
+        public Task<EnumUpdatingResult> UpdateClothType(IFormCollection Form, string DiskDirectory, string machineDirectory);
         public Task<ClothTypeDTO> GetClothType(Guid Id);
         #endregion
         #region Categories
@@ -37,11 +37,18 @@ namespace ElBayt.Services.Contracts
         public Task<string> DeleteClothImageByURL(string URL);
         #endregion
         #region Departments
-        public Task<EnumInsertingResult> AddNewClothDepartment(ClothDepartmentDTO clothDepartment);
+        public Task<ClothDepartmentDTO> AddNewClothDepartment(IFormCollection Form, string DiskDirectory);
         public object GetClothDepartments();
         public Task<string> DeleteClothDepartment(Guid Id);
-        public Task<EnumUpdatingResult> UpdateClothDepartment(ClothDepartmentDTO clothDepartment);
+        public Task<EnumUpdatingResult> UpdateClothDepartment(IFormCollection Form, string DiskDirectory, string MachineDirectory);
         public Task<ClothDepartmentDTO> GetClothDepartment(Guid Id);
+        #endregion
+        #region Brands
+        public Task<ClothBrandDTO> AddNewClothBrand(IFormCollection Form, string DiskDirectory);
+        public object GetClothBrands();
+        public Task<string> DeleteClothBrand(Guid Id);
+        public Task<EnumUpdatingResult> UpdateClothBrand(IFormCollection Form, string DiskDirectory, string MachineDirectory);
+        public Task<ClothBrandDTO> GetClothBrand(Guid Id);
         #endregion
     }
 }

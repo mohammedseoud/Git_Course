@@ -66,7 +66,9 @@ namespace ElBayt.Services.Implementations
                         ModifiedBy = identityName,
                         ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
+                        ClothDepartmentId = Guid.Parse(Form["ClothDepartmentId"].ToString())
                     };
+
                     var clothtypeEntity = _mapper.Map<ClothTypeDTO, UTDClothTypeDTO>(clothtype);
                     var clothtypes = new List<UTDClothTypeDTO>
                         {
@@ -137,7 +139,7 @@ namespace ElBayt.Services.Implementations
 
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@TypeId", Id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTTYPE, SPParameters);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHTYPE, SPParameters);
             }
             catch (Exception ex)
             {
@@ -151,7 +153,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<EnumUpdatingResult> UpdateClothType(ClothTypeDTO clothType, string DiskDirectory)
+        public async Task<EnumUpdatingResult> UpdateClothType(IFormCollection Form, string DiskDirectory,string machineDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -159,14 +161,24 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(clothType, correlationGuid, nameof(ClothesService), nameof(UpdateClothType), 1, _userIdentity.Name);
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateClothDepartment), 1, _userIdentity.Name);
 
                 #endregion Logging info
 
-                var _clothType = await _unitOfWork.ClothTypeRepository.GetClothTypeByName(clothType.Name.Trim(), clothType.Id);
-                if (_clothType == null)
+                var _clothtype = await _unitOfWork.ClothTypeRepository.GetClothTypeByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                if (_clothtype == null)
                 {
-                    var UTDClothType = _mapper.Map<ClothTypeDTO, UTDClothTypeDTO>(clothType);
+                    var identityName = _userIdentity?.Name ?? "Unknown";
+                    var clothtype = new ClothTypeDTO
+                    {
+                        Id = Guid.Parse(Form["Id"].ToString()),
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Name = Form["Name"].ToString(),
+                        ClothDepartmentId = Guid.Parse(Form["ClothDepartmentId"].ToString())
+                    };
+
+                    var UTDClothType = _mapper.Map<ClothTypeDTO, UTDClothTypeDTO>(clothtype);
                     var ClothTypes = new List<UTDClothTypeDTO>
                     {
                        UTDClothType
@@ -174,24 +186,58 @@ namespace ElBayt.Services.Implementations
 
                     var clothTypetable = ObjectDatatableConverter.ToDataTable(ClothTypes);
                     var SPParameters = new DynamicParameters();
-                    SPParameters.Add("@UDTClothType", clothTypetable.AsTableValuedParameter(UDT.UDTPRODUCTTYPE));
-                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATEPRODUCTTYPE, SPParameters);
-                    var URL1 = Path.Combine(DiskDirectory, URL.Item1.FirstOrDefault());
-                    var URL2 = Path.Combine(DiskDirectory, URL.Item2.FirstOrDefault());
+                    SPParameters.Add("@UDTClothType", clothTypetable.AsTableValuedParameter(UDT.UDTCLOTHTYPE));
+                    if (Form.Files.Count > 0)
+                        SPParameters.Add("@Extension", Path.GetExtension(Form.Files[0].FileName));
+                    else
+                        SPParameters.Add("@Extension", null);
+
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATECLOTHTYPE, SPParameters);
+                    var URL1 = Path.Combine(machineDirectory, URL.Item1.FirstOrDefault());
+                    var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
+
                     if (URL1 != URL2)
                     {
-                        if (Directory.Exists(URL1))
+                        var files1 = URL1.Split("\\");
+                        var files2 = URL2.Split("\\");
+
+                        var URL1Directory = URL1.Remove(URL1.IndexOf(files1[^1]));
+                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
+                        var _files1 = Directory.GetFiles(URL1Directory);
+                        if (Directory.Exists(URL1Directory))
                         {
-                            if (!Directory.Exists(URL2))
+                            if (!Directory.Exists(URL2Directory))
                             {
-                                Directory.CreateDirectory(URL2);
-                                var Directories = Directory.GetDirectories(URL2);
-                                Directory.Delete(URL2);
-                                if (Directories.Length > 0)
-                                    Directory.CreateDirectory(Directories[^1]);
+                                var _files = Directory.GetFiles(URL1Directory);
+                                var _directories = Directory.GetDirectories(URL1Directory);
+                                Directory.CreateDirectory(URL2Directory);
+                                foreach (var file in _files)
+                                {
+                                    var files = file.Split("\\");
+                                    File.Move(file, URL2Directory + files[^1]);
+                                }
+
+                                foreach (var directory in _directories)
+                                {
+                                    var directories = directory.Split("\\");
+                                    Directory.Move(directory, URL2Directory + directories[^1]);
+                                }
+                                Directory.Delete(URL1Directory);
                             }
-                            Directory.Move(URL1, URL2);
                         }
+                    }
+
+
+                    if (Form.Files.Count > 0)
+                    {
+                        var files1 = URL1.Split("\\");
+                        var files2 = URL2.Split("\\");
+                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
+                        File.Delete(URL2Directory + files1[^1]);
+
+                        using var stream = new FileStream(URL2, FileMode.Create);
+                        Form.Files[0].CopyTo(stream);
                     }
 
                     return EnumUpdatingResult.Successed;
@@ -202,12 +248,10 @@ namespace ElBayt.Services.Implementations
             catch (Exception ex)
             {
                 #region Logging info
-
-                _logger.ErrorInDetail(clothType, correlationGuid, $"{nameof(ProductService)}_{nameof(UpdateClothType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
                 #endregion Logging info
 
-                throw;
+                return EnumUpdatingResult.Failed;
             }
         }
 
@@ -219,7 +263,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ProductService), nameof(GetClothType), 1, _userIdentity.Name);
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothType), 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -230,7 +274,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ProductService)}_{nameof(GetClothType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -268,7 +312,7 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(clothCategory, correlationGuid, $"{nameof(ProductService)}_{nameof(AddNewClothCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(clothCategory, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -397,67 +441,58 @@ namespace ElBayt.Services.Implementations
         #endregion
 
         #region Departments
-        public async Task<EnumInsertingResult> AddNewClothDepartment(ClothDepartmentDTO clothDepartment)
+
+        public async Task<ClothDepartmentDTO> AddNewClothDepartment(IFormCollection Form, string DiskDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
             try
             {
                 #region Logging info
-
-                _logger.InfoInDetail(clothDepartment, correlationGuid, nameof(ClothesService), nameof(AddNewClothDepartment), 1, _userIdentity.Name);
-
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(AddNewClothDepartment), 1, _userIdentity.Name);
                 #endregion Logging info
 
-                var Department = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(clothDepartment.Name.Trim(), clothDepartment.Id);
-                if (Department == null)
+                var ClothDepartment = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                if (ClothDepartment == null)
                 {
-                    var Entity = _mapper.Map<ClothDepartmentDTO, ClothDepartmentEntity>(clothDepartment);
-                    Entity.Id = Guid.NewGuid();
-                    await _unitOfWork.ClothDepartmentRepository.AddAsync(Entity);
-                    await _unitOfWork.SaveAsync();
-                    return EnumInsertingResult.Successed;
-                }
 
-                return EnumInsertingResult.Failed;
+                    var identityName = _userIdentity?.Name ?? "Unknown";
+
+                    var clothDepartment = new ClothDepartmentDTO
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedBy = identityName,
+                        CreatedDate = DateTime.Now,
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Name = Form["Name"].ToString(),
+                    };
+                    var clothDepartmentEntity = _mapper.Map<ClothDepartmentDTO, UTDClothDepartmentDTO>(clothDepartment);
+                    var clothDepartments = new List<UTDClothDepartmentDTO>
+                        {
+                           clothDepartmentEntity
+                        };
+
+                    var clothDepartmenttable = ObjectDatatableConverter.ToDataTable(clothDepartments);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTClothDepartment", clothDepartmenttable.AsTableValuedParameter(UDT.UDTCLOTHDEPARTMENT));
+                    SPParameters.Add("@Extension", Path.GetExtension(Form.Files[0].FileName));
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+
+                    var List = await _unitOfWork.SP.ListAsnyc<ClothDepartmentDTO>(StoredProcedure.ADDCLOTHDEPARTMENT, SPParameters);
+                    return List.FirstOrDefault();
+                }
+                return null;
             }
             catch (Exception ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(clothDepartment, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
                 throw;
-            }
-        }
-
-        public async Task<string> DeleteClothDepartment(Guid id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
-            try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(id, correlationGuid, nameof(ClothesService), nameof(DeleteClothDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@DepartmentId", id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTDEPARTMENT, SPParameters);
-            }
-            catch (Exception ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail(id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                return ex.Message;
             }
         }
 
@@ -488,7 +523,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<EnumUpdatingResult> UpdateClothDepartment(ClothDepartmentDTO ClothDepartment)
+        public async Task<string> DeleteClothDepartment(Guid Id)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -496,29 +531,126 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail(ClothDepartment, correlationGuid, nameof(ClothesService), nameof(UpdateClothDepartment), 1, _userIdentity.Name);
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothDepartment), 1, _userIdentity.Name);
 
                 #endregion Logging info
 
-                var Department = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(ClothDepartment.Name.Trim(), ClothDepartment.Id);
-                if (Department == null)
-                {
-                    var Entity = _mapper.Map<ClothDepartmentDTO, ClothDepartmentEntity>(ClothDepartment);
-                    await _unitOfWork.ClothDepartmentRepository.UpdateClothDepartment(Entity);
-                    await _unitOfWork.SaveAsync();
-                    return EnumUpdatingResult.Successed;
-                }
-                return EnumUpdatingResult.Failed;
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@DepartmentId", Id);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHDEPARTMENT, SPParameters);
             }
             catch (Exception ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail(ClothDepartment, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
-                throw;
+                return ex.Message;
+            }
+        }
+
+        public async Task<EnumUpdatingResult> UpdateClothDepartment(IFormCollection Form, string DiskDirectory,string machineDirectory)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateClothDepartment), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var _clothDepartment = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                if (_clothDepartment == null)
+                {
+                    var identityName = _userIdentity?.Name ?? "Unknown";
+                    var clothDepartment = new ClothDepartmentDTO
+                    {
+                        Id = Guid.Parse(Form["Id"].ToString()),
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Name = Form["Name"].ToString(),
+                    };
+
+                    var UTDClothDepartment = _mapper.Map<ClothDepartmentDTO, UTDClothDepartmentDTO>(clothDepartment);
+                    var ClothDepartments = new List<UTDClothDepartmentDTO>
+                    {
+                       UTDClothDepartment
+                    };
+
+                    var clothDepartmenttable = ObjectDatatableConverter.ToDataTable(ClothDepartments);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTClothDepartment", clothDepartmenttable.AsTableValuedParameter(UDT.UDTCLOTHDEPARTMENT));
+                    if (Form.Files.Count > 0)
+                        SPParameters.Add("@Extension", Path.GetExtension(Form.Files[0].FileName));
+                    else
+                        SPParameters.Add("@Extension", null);
+
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATECLOTHDEPARTMENT, SPParameters);
+                    var URL1 = Path.Combine(machineDirectory, URL.Item1.FirstOrDefault());
+                    var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
+                   
+                    if (URL1 != URL2)
+                    {
+                        var files1 = URL1.Split("\\");
+                        var files2 = URL2.Split("\\");
+                      
+                        var URL1Directory = URL1.Remove(URL1.IndexOf(files1[^1])); 
+                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
+                        var _files1 = Directory.GetFiles(URL1Directory);
+                       if (Directory.Exists(URL1Directory))
+                        {
+                            if (!Directory.Exists(URL2Directory))
+                            {
+                                var _files = Directory.GetFiles(URL1Directory);
+                                var _directories = Directory.GetDirectories(URL1Directory);
+                                Directory.CreateDirectory(URL2Directory);
+                                foreach (var file in _files)
+                                {
+                                    var files = file.Split("\\");
+                                    File.Move(file, URL2Directory + files[^1]);
+                                }
+
+                                foreach (var directory in _directories)
+                                {
+                                    var directories = directory.Split("\\"); 
+                                    Directory.Move(directory, URL2Directory + directories[^1]);
+                                }
+
+
+                                Directory.Delete(URL1Directory);
+                            }
+                        }
+                    }
+
+
+                    if (Form.Files.Count > 0)
+                    {
+                        var files1 = URL1.Split("\\");
+                        var files2 = URL2.Split("\\");
+                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
+                        File.Delete(URL2Directory + files1[^1]);
+
+                        using var stream = new FileStream(URL2, FileMode.Create);
+                        Form.Files[0].CopyTo(stream);
+                    }
+
+                    return EnumUpdatingResult.Successed;
+                }
+
+                return EnumUpdatingResult.Failed;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                #endregion Logging info
+
+                return EnumUpdatingResult.Failed;
             }
         }
 
@@ -1030,6 +1162,250 @@ namespace ElBayt.Services.Implementations
 
         }
         #endregion
+
+        #region Brands
+
+        public async Task<ClothBrandDTO> AddNewClothBrand(IFormCollection Form, string DiskDirectory)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(AddNewClothBrand), 1, _userIdentity.Name);
+                #endregion Logging info
+
+                var ClothBrand = await _unitOfWork.ClothBrandRepository.GetClothBrandByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                if (ClothBrand == null)
+                {
+
+                    var identityName = _userIdentity?.Name ?? "Unknown";
+
+                    var clothBrand = new ClothBrandDTO
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedBy = identityName,
+                        CreatedDate = DateTime.Now,
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Name = Form["Name"].ToString(),
+                    };
+                    var clothBrandEntity = _mapper.Map<ClothBrandDTO, UTDClothBrandDTO>(clothBrand);
+                    var clothBrands = new List<UTDClothBrandDTO>
+                        {
+                           clothBrandEntity
+                        };
+
+                    var clothDepartmenttable = ObjectDatatableConverter.ToDataTable(clothBrands);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTClothBrand", clothDepartmenttable.AsTableValuedParameter(UDT.UDTCLOTHBRAND));
+                    SPParameters.Add("@Extension", Path.GetExtension(Form.Files[0].FileName));
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+
+                    var List = await _unitOfWork.SP.ListAsnyc<ClothBrandDTO>(StoredProcedure.ADDCLOTHBRAND, SPParameters);
+                    return List.FirstOrDefault();
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public object GetClothBrands()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail("GetClothBrands", correlationGuid, nameof(ClothesService), nameof(GetClothBrands), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return _unitOfWork.ClothBrandRepository.GetAll();
+
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail("GetClothBrands", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrands)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteClothBrand(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothBrand), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@BrandId", Id);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHBRAND, SPParameters);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+        }
+
+        public async Task<EnumUpdatingResult> UpdateClothBrand(IFormCollection Form, string DiskDirectory, string machineDirectory)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateClothBrand), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var _clothBrand = await _unitOfWork.ClothBrandRepository.GetClothBrandByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                if (_clothBrand == null)
+                {
+                    var identityName = _userIdentity?.Name ?? "Unknown";
+                    var clothBrand = new ClothBrandDTO
+                    {
+                        Id = Guid.Parse(Form["Id"].ToString()),
+                        ModifiedBy = identityName,
+                        ModifiedDate = DateTime.Now,
+                        Name = Form["Name"].ToString(),
+                    };
+
+                    var UTDClothBrand = _mapper.Map<ClothBrandDTO, UTDClothBrandDTO>(clothBrand);
+                    var ClothBrands = new List<UTDClothBrandDTO>
+                    {
+                       UTDClothBrand
+                    };
+
+                    var clothBrandtable = ObjectDatatableConverter.ToDataTable(ClothBrands);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTClothBrand", clothBrandtable.AsTableValuedParameter(UDT.UDTCLOTHBRAND));
+                    if (Form.Files.Count > 0)
+                        SPParameters.Add("@Extension", Path.GetExtension(Form.Files[0].FileName));
+                    else
+                        SPParameters.Add("@Extension", null);
+
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATECLOTHBRAND, SPParameters);
+                    var URL1 = Path.Combine(machineDirectory, URL.Item1.FirstOrDefault());
+                    var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
+
+                    if (URL1 != URL2)
+                    {
+                        var files1 = URL1.Split("\\");
+                        var files2 = URL2.Split("\\");
+
+                        var URL1Directory = URL1.Remove(URL1.IndexOf(files1[^1]));
+                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
+                        var _files1 = Directory.GetFiles(URL1Directory);
+                        if (Directory.Exists(URL1Directory))
+                        {
+                            if (!Directory.Exists(URL2Directory))
+                            {
+                                var _files = Directory.GetFiles(URL1Directory);
+                                var _directories = Directory.GetDirectories(URL1Directory);
+                                Directory.CreateDirectory(URL2Directory);
+                                foreach (var file in _files)
+                                {
+                                    var files = file.Split("\\");
+                                    File.Move(file, URL2Directory + files[^1]);
+                                }
+
+                                foreach (var directory in _directories)
+                                {
+                                    var directories = directory.Split("\\");
+                                    Directory.Move(directory, URL2Directory + directories[^1]);
+                                }
+
+
+                                Directory.Delete(URL1Directory);
+                            }
+                        }
+                    }
+
+
+                    if (Form.Files.Count > 0)
+                    {
+                        var files1 = URL1.Split("\\");
+                        var files2 = URL2.Split("\\");
+                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
+                        File.Delete(URL2Directory+ files1[^1]);
+                     
+                        using var stream = new FileStream(URL2, FileMode.Create);
+                        Form.Files[0].CopyTo(stream);
+                    }
+
+                    return EnumUpdatingResult.Successed;
+                }
+
+                return EnumUpdatingResult.Failed;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                #endregion Logging info
+
+                return EnumUpdatingResult.Failed;
+            }
+        }
+
+        public async Task<ClothBrandDTO> GetClothBrand(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothBrand), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Model = await _unitOfWork.ClothBrandRepository.GetAsync(Id);
+                return _mapper.Map<ClothBrandEntity, ClothBrandDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        #endregion
+
 
     }
 }

@@ -5,8 +5,8 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DBDTOs
 {
-    public class ClothTypeDTO : ProductTypeDTO
+    public class ClothBrandDTO : ProductBrandDTO
     {
-         public Guid ClothDepartmentId { get; set; }
+
     }
 }

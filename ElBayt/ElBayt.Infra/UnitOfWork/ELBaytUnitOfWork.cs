@@ -178,6 +178,7 @@ namespace ElBayt.Infra.UnitOfWork
 
         #region properties
         private IClothRepository _clothRepository;
+        private IClothBrandRepository _clothBrandRepository;
         private IClothDepartmentRepository _clothDepartmentRepository;
         private IClothTypeRepository _clothTypeRepository;
         private IClothCategoryRepository _clothcategoryRepository;
@@ -199,6 +200,9 @@ namespace ElBayt.Infra.UnitOfWork
 
         public IClothDepartmentRepository ClothDepartmentRepository =>
            _clothDepartmentRepository ??= new ClothDepartmentRepository(_context, _mapper);
+
+        public IClothBrandRepository ClothBrandRepository =>
+            _clothBrandRepository ??= new ClothBrandRepository(_context, _mapper);
 
         public IClothTypeRepository ClothTypeRepository =>
             _clothTypeRepository ??= new ClothTypeRepository(_context, _mapper);

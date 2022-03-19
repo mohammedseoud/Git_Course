@@ -261,6 +261,26 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Result
                 if (!string.IsNullOrEmpty(URL))
                 {
+                    var files = URL.Split("\\");
+                    var fullpath = Path.Combine(_config["FilesInfo:Directory"], URL.Remove(URL.IndexOf(files[^1])));
+                    if (Directory.Exists(fullpath))
+                        Directory.Delete(fullpath, true);
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = true;
+                }
+                else
+                {
+                    Response.Errors.Add(CommonMessages.ITEM_NOT_EXISTS);
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = false;
+
+                }
+                #endregion
+
+
+                #region Result
+                if (!string.IsNullOrEmpty(URL))
+                {
                     var fullpath = Path.Combine(_config["FilesInfo:Path"], URL);
                     if (Directory.Exists(fullpath))
                         Directory.Delete(fullpath);
@@ -318,7 +338,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpPut]
         [Route(nameof(UpdateClothType))]
-        public async Task<ActionResult> UpdateClothType(ClothTypeDTO ClothType)
+        public async Task<ActionResult> UpdateClothType()
         {
             var Response = new ElBaytResponse<string>
             {
@@ -329,10 +349,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(ClothType, correlationGuid, nameof(ClothesController), nameof(UpdateClothType), 1, User.Identity.Name);
+                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ClothesController), nameof(UpdateClothType), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var res = await _departmentsServices.ClothesService.UpdateClothType(ClothType, _config["FilesInfo:Path"]);
+                var res = await _departmentsServices.ClothesService.UpdateClothType(Request.Form, _config["FilesInfo:WebFolder"], _config["FilesInfo:Directory"]);
 
                 #region Result
                 if (res == EnumUpdatingResult.Successed)
@@ -353,7 +373,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ClothType}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ClothesController)}_{nameof(UpdateClothType)}_{nameof(NotFoundException)}",
                     ex, 1, User.Identity.Name);
 
@@ -370,7 +390,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ClothType}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ClothesController)}_{nameof(UpdateClothType)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
@@ -728,26 +748,37 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         #endregion
 
         #region Departments
+
         [HttpPost]
         [Route(nameof(AddNewClothDepartment))]
-        public async Task<IActionResult> AddNewClothDepartment(ClothDepartmentDTO ClothDepartment)
+        public async Task<IActionResult> AddNewClothDepartment()
         {
 
-            var Response = new ElBaytResponse<string>();
-            Response.Errors = new List<string>();
+            var Response = new ElBaytResponse<string>
+            {
+                Errors = new List<string>()
+            };
             var correlationGuid = Guid.NewGuid();
             try
             {
 
                 #region Logging info
-                _logger.InfoInDetail(ClothDepartment, correlationGuid, nameof(ClothesController), nameof(AddNewClothDepartment), 1, User.Identity.Name);
+                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ClothesController), nameof(AddNewClothDepartment), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var res = await _departmentsServices.ClothesService.AddNewClothDepartment(ClothDepartment);
+                var clothDepartment = await _departmentsServices.ClothesService.AddNewClothDepartment(Request.Form, _config["FilesInfo:WebFolder"]);
 
-                #region Result
-                if (res == EnumInsertingResult.Successed)
+                if (clothDepartment != null)
                 {
+                    var path = Path.Combine(_config["FilesInfo:Directory"], clothDepartment.DepartmentPic);
+                    var files = path.Split("\\");
+                    var PicDirectory = path.Remove(path.IndexOf(files[^1]));
+
+                    if (!Directory.Exists(PicDirectory))
+                        Directory.CreateDirectory(PicDirectory);
+
+                    using var stream = new FileStream(path, FileMode.Create);
+                    Request.Form.Files[0].CopyTo(stream);
 
                     Response.Result = EnumResponseResult.Successed;
                     Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
@@ -757,7 +788,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                     Response.Result = EnumResponseResult.Failed;
                     Response.Data = CommonMessages.NAME_EXISTS;
                 }
-                #endregion
+
 
                 return Ok(Response);
             }
@@ -765,7 +796,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ClothDepartment}", correlationGuid, $"{nameof(ClothesController)}_{nameof(AddNewClothDepartment)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid, $"{nameof(ClothesController)}_{nameof(AddNewClothDepartment)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
 
@@ -782,7 +813,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {ClothDepartment}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ClothesController)}_{nameof(AddNewClothDepartment)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
@@ -802,7 +833,6 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Route(nameof(GetClothDepartments))]
         public ActionResult GetClothDepartments()
         {
-
             var Response = new ElBaytResponse<object>
             {
                 Errors = new List<string>()
@@ -812,12 +842,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-
-                _logger.InfoInDetail("GetClothDepartments", correlationGuid, nameof(ClothesController), nameof(GetClothDepartments), 1, User.Identity.Name);
+                _logger.InfoInDetail("GetAll", correlationGuid, nameof(ClothesController), nameof(GetClothDepartments), 1, User.Identity.Name);
                 #endregion Logging info
 
                 var Departments = _departmentsServices.ClothesService.GetClothDepartments();
-
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Departments;
@@ -943,7 +971,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Result
                 if (!string.IsNullOrEmpty(URL))
                 {
-                    var fullpath = Path.Combine(_config["FilesInfo:Path"], URL);
+                    var files = URL.Split("\\");
+                    var fullpath = Path.Combine(_config["FilesInfo:Directory"], URL.Remove(URL.IndexOf(files[^1])) );
                     if (Directory.Exists(fullpath))
                         Directory.Delete(fullpath, true);
                     Response.Result = EnumResponseResult.Successed;
@@ -957,6 +986,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 }
                 #endregion
+
 
                 return Ok(Response);
             }
@@ -999,7 +1029,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         [HttpPut]
         [Route(nameof(UpdateClothDepartment))]
-        public async Task<ActionResult> UpdateClothDepartment(ClothDepartmentDTO clothDepartment)
+        public async Task<ActionResult> UpdateClothDepartment()
         {
             var Response = new ElBaytResponse<string>
             {
@@ -1010,10 +1040,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
 
                 #region Logging info
-                _logger.InfoInDetail(clothDepartment, correlationGuid, nameof(ClothesController), nameof(UpdateClothDepartment), 1, User.Identity.Name);
+                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ClothesController), nameof(UpdateClothDepartment), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var res = await _departmentsServices.ClothesService.UpdateClothDepartment(clothDepartment);
+                var res = await _departmentsServices.ClothesService.UpdateClothDepartment(Request.Form, _config["FilesInfo:WebFolder"], _config["FilesInfo:Directory"]);
 
                 #region Result
                 if (res == EnumUpdatingResult.Successed)
@@ -1028,14 +1058,13 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                     Response.Data = CommonMessages.NAME_EXISTS;
                 }
                 #endregion
-
                 return Ok(Response);
             }
             catch (NotFoundException ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {clothDepartment}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ClothesController)}_{nameof(UpdateClothDepartment)}_{nameof(NotFoundException)}",
                     ex, 1, User.Identity.Name);
 
@@ -1052,7 +1081,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             {
                 #region Logging info
 
-                _logger.ErrorInDetail($"newException {clothDepartment}", correlationGuid,
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
                     $"{nameof(ClothesController)}_{nameof(UpdateClothDepartment)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
                 #endregion Logging info
@@ -1066,7 +1095,356 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 return BadRequest(Response);
             }
         }
+        #endregion
 
+        #region Brands
+
+        [HttpPost]
+        [Route(nameof(AddNewClothBrand))]
+        public async Task<IActionResult> AddNewClothBrand()
+        {
+
+            var Response = new ElBaytResponse<string>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ClothesController), nameof(AddNewClothBrand), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var clothBrand = await _departmentsServices.ClothesService.AddNewClothBrand(Request.Form, _config["FilesInfo:WebFolder"]);
+
+                if (clothBrand != null)
+                {
+                    var path = Path.Combine(_config["FilesInfo:Directory"], clothBrand.BrandPic);
+                    var files = path.Split("\\");
+                    var PicDirectory = path.Remove(path.IndexOf(files[^1]));
+
+                    if (!Directory.Exists(PicDirectory))
+                        Directory.CreateDirectory(PicDirectory);
+
+                    using var stream = new FileStream(path, FileMode.Create);
+                    Request.Form.Files[0].CopyTo(stream);
+
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
+
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid, $"{nameof(ClothesController)}_{nameof(AddNewClothBrand)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = CommonMessages.FAILED_ADDING;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(AddNewClothBrand)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = CommonMessages.FAILED_ADDING;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpGet]
+        [Route(nameof(GetClothBrands))]
+        public ActionResult GetClothBrands()
+        {
+            var Response = new ElBaytResponse<object>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail("GetAll", correlationGuid, nameof(ClothesController), nameof(GetClothBrands), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var Brands = _departmentsServices.ClothesService.GetClothBrands();
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = Brands;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException GetClothBrands", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(GetClothBrands)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException GetClothBrands", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(GetClothBrands)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [HttpGet]
+        [Route(nameof(GetClothBrand))]
+        public async Task<ActionResult> GetClothBrand(Guid Id)
+        {
+            var Response = new ElBaytResponse<ClothBrandDTO>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesController), nameof(GetClothBrand), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var Brand = await _departmentsServices.ClothesService.GetClothBrand(Id);
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = Brand;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(GetClothBrand)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(GetClothBrand)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route(nameof(DeleteClothBrand))]
+        public async Task<ActionResult> DeleteClothBrand(Guid Id)
+        {
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesController), nameof(DeleteClothBrand), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var URL = await _departmentsServices.ClothesService.DeleteClothBrand(Id);
+
+                #region Result
+                if (!string.IsNullOrEmpty(URL))
+                {
+                    var files = URL.Split("\\");
+                    var fullpath = Path.Combine(_config["FilesInfo:Directory"], URL.Remove(URL.IndexOf(files[^1])));
+                    if (Directory.Exists(fullpath))
+                        Directory.Delete(fullpath, true);
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = true;
+                }
+                else
+                {
+                    Response.Errors.Add(CommonMessages.ITEM_NOT_EXISTS);
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = false;
+
+                }
+                #endregion
+
+
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(DeleteClothBrand)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(DeleteClothBrand)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+
+        [HttpPut]
+        [Route(nameof(UpdateClothBrand))]
+        public async Task<ActionResult> UpdateClothBrand()
+        {
+            var Response = new ElBaytResponse<string>
+            {
+                Errors = new List<string>()
+            };
+            var correlationGuid = Guid.NewGuid();
+            try
+            {
+
+                #region Logging info
+                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ClothesController), nameof(UpdateClothBrand), 1, User.Identity.Name);
+                #endregion Logging info
+
+                var res = await _departmentsServices.ClothesService.UpdateClothBrand(Request.Form, _config["FilesInfo:WebFolder"], _config["FilesInfo:Directory"]);
+
+                #region Result
+                if (res == EnumUpdatingResult.Successed)
+                {
+
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = CommonMessages.SUCCESSFULLY_ADDING;
+                }
+                else
+                {
+                    Response.Result = EnumResponseResult.Failed;
+                    Response.Data = CommonMessages.NAME_EXISTS;
+                }
+                #endregion
+                return Ok(Response);
+            }
+            catch (NotFoundException ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(UpdateClothBrand)}_{nameof(NotFoundException)}",
+                    ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = CommonMessages.FAILED_UPDATING;
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return NotFound(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail($"newException {Request.Form}", correlationGuid,
+                    $"{nameof(ClothesController)}_{nameof(UpdateClothBrand)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = CommonMessages.FAILED_UPDATING;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
         #endregion
 
         #region Products

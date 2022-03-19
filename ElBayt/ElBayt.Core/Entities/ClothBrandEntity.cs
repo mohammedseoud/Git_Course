@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ElBayt.Core.Entities
 {
-    public class ClothBrandEntity : BrandEntity
+    public class ClothBrandEntity : ProductBrandEntity
     {
     }
 }
