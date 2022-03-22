@@ -13,6 +13,7 @@ namespace ElBayt.Core.IUnitOfWork
         IClothDepartmentRepository ClothDepartmentRepository { get; }
         IClothTypeRepository ClothTypeRepository { get; }
         IClothCategoryRepository ClothCategoryRepository { get; }
+        IClothSizeRepository ClothSizeRepository { get; }
         IClothRepository ClothRepository { get; }
         IClothImageRepository ClothImageRepository { get; }
         IProductRepository ProductRepository { get; }

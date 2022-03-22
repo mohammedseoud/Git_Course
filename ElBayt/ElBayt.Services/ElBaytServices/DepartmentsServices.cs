@@ -21,20 +21,23 @@ namespace ElBayt.Services.ElBaytServices
         private readonly ILogger _logger;
         private readonly IUserIdentity _userIdentity;
         private readonly ITypeMapper _mapper;
+        private readonly IFileMapper _filemapper;
 
         public DepartmentsServices( ILogger logger, IUserIdentity userIdentity, IELBaytUnitOfWork unitOfWork,
-             ITypeMapper mapper)
+             ITypeMapper mapper, IFileMapper filemapper)
         {
             Guard.ArgumentIsNull(unitOfWork, nameof(unitOfWork));
             Guard.ArgumentIsNull(logger, nameof(logger));
             Guard.ArgumentIsNull(userIdentity, nameof(userIdentity));
             Guard.ArgumentIsNull(mapper, nameof(mapper));
+            Guard.ArgumentIsNull(filemapper, nameof(_filemapper));
 
             _logger = logger;
             _userIdentity = userIdentity;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-        
+            _filemapper = filemapper;
+
         }
 
         #region properties
@@ -44,7 +47,7 @@ namespace ElBayt.Services.ElBaytServices
         #region Getter
 
         public IClothesService ClothesService =>
-           _clothesService ??= new ClothesService(_unitOfWork, _userIdentity, _logger, _mapper);
+           _clothesService ??= new ClothesService(_unitOfWork, _userIdentity, _logger, _mapper, _filemapper);
 
 
         #endregion

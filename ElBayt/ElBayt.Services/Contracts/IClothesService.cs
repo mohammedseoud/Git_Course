@@ -21,7 +21,7 @@ namespace ElBayt.Services.Contracts
         public Task<EnumInsertingResult> AddNewClothCategory(ClothCategoryDTO clothCategory);
         public object GetClothCategories();
         public Task<string> DeleteClothCategory(Guid Id);
-        public Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory);
+        public Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory, string DiskDirectory, string machineDirectory);
         public Task<ClothCategoryDTO> GetClothCategory(Guid Id);
         #endregion
         #region Products
@@ -50,5 +50,13 @@ namespace ElBayt.Services.Contracts
         public Task<EnumUpdatingResult> UpdateClothBrand(IFormCollection Form, string DiskDirectory, string MachineDirectory);
         public Task<ClothBrandDTO> GetClothBrand(Guid Id);
         #endregion
+        #region Sizes
+        public Task<EnumInsertingResult> AddNewClothSize(ClothSizeDTO clothCategory);
+        public object GetClothSizes();
+        public Task<string> DeleteClothSize(Guid Id);
+        public Task<EnumUpdatingResult> UpdateClothSize(ClothSizeDTO clothCategory);
+        public Task<ClothSizeDTO> GetClothSize(Guid Id);
+        #endregion
+
     }
 }

@@ -29,14 +29,16 @@ namespace ElBayt.Services.Implementations
         private readonly IUserIdentity _userIdentity;
         private readonly ILogger _logger;
         private readonly ITypeMapper _mapper;
+        private readonly IFileMapper _filemapper;
 
         public ClothesService(IELBaytUnitOfWork unitOfWork, IUserIdentity userIdentity, ILogger logger,
-              ITypeMapper mapper)
+              ITypeMapper mapper, IFileMapper filemapper)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _userIdentity = userIdentity ?? throw new ArgumentNullException(nameof(userIdentity));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _filemapper = filemapper ?? throw new ArgumentNullException(nameof(filemapper));
         }
 
 
@@ -198,36 +200,8 @@ namespace ElBayt.Services.Implementations
                     var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
 
                     if (URL1 != URL2)
-                    {
-                        var files1 = URL1.Split("\\");
-                        var files2 = URL2.Split("\\");
-
-                        var URL1Directory = URL1.Remove(URL1.IndexOf(files1[^1]));
-                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
-                        var _files1 = Directory.GetFiles(URL1Directory);
-                        if (Directory.Exists(URL1Directory))
-                        {
-                            if (!Directory.Exists(URL2Directory))
-                            {
-                                var _files = Directory.GetFiles(URL1Directory);
-                                var _directories = Directory.GetDirectories(URL1Directory);
-                                Directory.CreateDirectory(URL2Directory);
-                                foreach (var file in _files)
-                                {
-                                    var files = file.Split("\\");
-                                    File.Move(file, URL2Directory + files[^1]);
-                                }
-
-                                foreach (var directory in _directories)
-                                {
-                                    var directories = directory.Split("\\");
-                                    Directory.Move(directory, URL2Directory + directories[^1]);
-                                }
-                                Directory.Delete(URL1Directory);
-                            }
-                        }
-                    }
-
+                        _filemapper.MoveDataBetweenTwoFile(URL1, URL2);
+                
 
                     if (Form.Files.Count > 0)
                     {
@@ -361,7 +335,7 @@ namespace ElBayt.Services.Implementations
 
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@CategoryId", Id);
-                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETEPRODUCTCATEGORY, SPParameters);
+                return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHCATEGORY, SPParameters);
             }
             catch (Exception ex)
             {
@@ -375,7 +349,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory)
+        public async Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory, string DiskDirectory,string machineDirectory)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -391,8 +365,23 @@ namespace ElBayt.Services.Implementations
 
                 if (Category == null)
                 {
-                    var ClothCategory = _mapper.Map<ClothCategoryDTO, ClothCategoryEntity>(clothCategory);
-                    await _unitOfWork.ClothCategoryRepository.UpdateClothCategory(ClothCategory);
+                    var UTDClothCategory = _mapper.Map<ClothCategoryDTO, UTDClothCategoryDTO>(clothCategory);
+                    var ClothCategories = new List<UTDClothCategoryDTO>
+                    {
+                       UTDClothCategory
+                    };
+
+                    var clothTypetable = ObjectDatatableConverter.ToDataTable(ClothCategories);
+                    var SPParameters = new DynamicParameters();
+                    SPParameters.Add("@UDTClothCategory", clothTypetable.AsTableValuedParameter(UDT.UDTCLOTHCATEGORY));
+
+                    SPParameters.Add("@DiskDirectory", DiskDirectory);
+                    var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATECLOTHCATEGORY, SPParameters);
+                    var URL1 = Path.Combine(machineDirectory, URL.Item1.FirstOrDefault());
+                    var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
+                 
+                    if (URL1 != URL2)
+                        _filemapper.MoveDataBetweenTwoFile(URL1, URL2);
 
                     return EnumUpdatingResult.Successed;
                 }
@@ -593,39 +582,9 @@ namespace ElBayt.Services.Implementations
                     var URL = await _unitOfWork.SP.ListAsnyc<string, string>(StoredProcedure.UPDATECLOTHDEPARTMENT, SPParameters);
                     var URL1 = Path.Combine(machineDirectory, URL.Item1.FirstOrDefault());
                     var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
-                   
+
                     if (URL1 != URL2)
-                    {
-                        var files1 = URL1.Split("\\");
-                        var files2 = URL2.Split("\\");
-                      
-                        var URL1Directory = URL1.Remove(URL1.IndexOf(files1[^1])); 
-                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
-                        var _files1 = Directory.GetFiles(URL1Directory);
-                       if (Directory.Exists(URL1Directory))
-                        {
-                            if (!Directory.Exists(URL2Directory))
-                            {
-                                var _files = Directory.GetFiles(URL1Directory);
-                                var _directories = Directory.GetDirectories(URL1Directory);
-                                Directory.CreateDirectory(URL2Directory);
-                                foreach (var file in _files)
-                                {
-                                    var files = file.Split("\\");
-                                    File.Move(file, URL2Directory + files[^1]);
-                                }
-
-                                foreach (var directory in _directories)
-                                {
-                                    var directories = directory.Split("\\"); 
-                                    Directory.Move(directory, URL2Directory + directories[^1]);
-                                }
-
-
-                                Directory.Delete(URL1Directory);
-                            }
-                        }
-                    }
+                        _filemapper.MoveDataBetweenTwoFile(URL1, URL2);
 
 
                     if (Form.Files.Count > 0)
@@ -1318,37 +1277,7 @@ namespace ElBayt.Services.Implementations
                     var URL2 = Path.Combine(machineDirectory, URL.Item2.FirstOrDefault());
 
                     if (URL1 != URL2)
-                    {
-                        var files1 = URL1.Split("\\");
-                        var files2 = URL2.Split("\\");
-
-                        var URL1Directory = URL1.Remove(URL1.IndexOf(files1[^1]));
-                        var URL2Directory = URL2.Remove(URL2.IndexOf(files2[^1]));
-                        var _files1 = Directory.GetFiles(URL1Directory);
-                        if (Directory.Exists(URL1Directory))
-                        {
-                            if (!Directory.Exists(URL2Directory))
-                            {
-                                var _files = Directory.GetFiles(URL1Directory);
-                                var _directories = Directory.GetDirectories(URL1Directory);
-                                Directory.CreateDirectory(URL2Directory);
-                                foreach (var file in _files)
-                                {
-                                    var files = file.Split("\\");
-                                    File.Move(file, URL2Directory + files[^1]);
-                                }
-
-                                foreach (var directory in _directories)
-                                {
-                                    var directories = directory.Split("\\");
-                                    Directory.Move(directory, URL2Directory + directories[^1]);
-                                }
-
-
-                                Directory.Delete(URL1Directory);
-                            }
-                        }
-                    }
+                        _filemapper.MoveDataBetweenTwoFile(URL1, URL2);
 
 
                     if (Form.Files.Count > 0)
@@ -1406,6 +1335,165 @@ namespace ElBayt.Services.Implementations
 
         #endregion
 
+        #region Sizes
+        public async Task<EnumInsertingResult> AddNewClothSize(ClothSizeDTO clothSize)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(clothSize, correlationGuid, nameof(ClothesService), nameof(AddNewClothSize), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Size = await _unitOfWork.ClothSizeRepository.GetClothSizeByName(clothSize.Name.Trim(), clothSize.Id); ;
+                if (Size == null)
+                {
+                    var Entity = _mapper.Map<ClothSizeDTO, ClothSizeEntity>(clothSize);
+                    Entity.Id = Guid.NewGuid();
+                    await _unitOfWork.ClothSizeRepository.AddAsync(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return EnumInsertingResult.Successed;
+                }
+                return EnumInsertingResult.Failed;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(clothSize, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public object GetClothSizes()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail("GetClothSizes", correlationGuid, nameof(ClothesService), nameof(GetClothSizes), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return _unitOfWork.ClothSizeRepository.GetAll();
+
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail("GetClothSizes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothSizes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<string> DeleteClothSize(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothSize), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted =await _unitOfWork.ClothSizeRepository.RemoveAsync(Id);
+                if (IsDeleted)
+                {
+                    await _unitOfWork.SaveAsync();
+                    return CommonMessages.SUCCESSFULLY_DELETING;
+                }
+                return CommonMessages.ITEM_NOT_EXISTS;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+        }
+
+        public async Task<EnumUpdatingResult> UpdateClothSize(ClothSizeDTO clothSize)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(clothSize, correlationGuid, nameof(ClothesService), nameof(UpdateClothSize), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Size = await _unitOfWork.ClothSizeRepository.GetClothSizeByName(clothSize.Name.Trim(), clothSize.Id);
+
+                if (Size == null)
+                {
+                    var ClothSize = _mapper.Map<ClothSizeDTO, ClothSizeEntity>(clothSize);
+                    await _unitOfWork.ClothSizeRepository.UpdateClothSize(ClothSize);
+                    await _unitOfWork.SaveAsync();
+                    return EnumUpdatingResult.Successed;
+                }
+
+                return EnumUpdatingResult.Failed;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(clothSize, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<ClothSizeDTO> GetClothSize(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothSize), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Model = await _unitOfWork.ClothSizeRepository.GetAsync(Id);
+                return _mapper.Map<ClothSizeEntity, ClothSizeDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        #endregion
 
     }
 }

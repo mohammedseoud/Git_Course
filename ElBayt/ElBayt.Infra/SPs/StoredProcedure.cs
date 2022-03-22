@@ -15,6 +15,7 @@ namespace ElBayt.Infra.SPs
         public const string DELETEPRODUCTTYPE = "DeleteProductType";
         public const string DELETECLOTHTYPE = "DeleteClothType";
         public const string DELETECLOTHBRAND = "DeleteClothBrand";
+        public const string DELETECLOTHCATEGORY = "DeleteClothCategory";
         public const string DELETEPRODUCTDEPARTMENT = "DeleteProductDepartment";
         public const string DELETECLOTHDEPARTMENT = "DeleteClothDepartment";
         public const string GETPRODUCTURL = "GetProductURL";
@@ -24,6 +25,7 @@ namespace ElBayt.Infra.SPs
         public const string UPDATEPRODUCTTYPE = "UpdateProductType";
         public const string UPDATECLOTHDEPARTMENT = "UpdateClothDepartment";
         public const string UPDATECLOTHTYPE = "UpdateClothType";
+        public const string UPDATECLOTHCATEGORY = "UpdateClothCategory";
         public const string UPDATECLOTHBRAND = "UpdateClothBrand";
         public const string GETPRODUCTIMAGES = "GetProductImages";
         public const string GETPRODUCTDATA = "GetProductData";

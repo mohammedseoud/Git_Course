@@ -81,6 +81,8 @@ namespace ELBayt.WebAPI
             services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
             services.AddScoped<ITypeMapper, TypeMapper>();
             services.AddScoped<IShopMapper, ShopMapper>();
+            services.AddScoped<IFileMapper, FileMapper>();
+
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();
             //services.AddScoped<IElBaytServices, ElBaytServices>();

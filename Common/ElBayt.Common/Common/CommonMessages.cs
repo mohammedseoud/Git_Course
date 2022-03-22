@@ -7,6 +7,7 @@ namespace ElBayt.Common.Common
     public class CommonMessages
     {
         public const string SUCCESSFULLY_ADDING = "Success in Adding";
+        public const string SUCCESSFULLY_DELETING = "Success in Deleting";
         public const string SUCCESSFULLY_UPDATING = "Success in Updating";
         public const string FAILED_ADDING = "Failed in Adding";
         public const string FAILED_UPDATING = "Error In Updating";

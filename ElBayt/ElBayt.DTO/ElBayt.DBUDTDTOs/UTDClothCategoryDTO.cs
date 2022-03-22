@@ -5,9 +5,8 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DBUDTDTOs
 {
-    public class UTDProductCategoryDTO : BaseDto<Guid>, IBaseDTO
+    public class UTDClothCategoryDTO : UTDProductCategoryDTO
     {
-        public string Name { get; set; }
-      
-    }
+        public Guid CategoryTypeId { get; set; }
+    } 
 }
