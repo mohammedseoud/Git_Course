@@ -35,6 +35,15 @@ namespace ElBayt.Infra.Repositories
             return _mapper.Map<ClothSizeModel, ClothSizeEntity>(size);
         }
 
+        public async Task<object> GetClothSizes(Guid ClothId)
+        {
+            return await _dbContext.ClothSizes
+                          .Where(c =>  c.ClothId == ClothId)
+                          .ToListAsync();  
+        }
+
+        
+
         public async Task UpdateClothSize(ClothSizeEntity clothSize)
         {
             var Size = await _dbContext.ClothSizes.FindAsync(clothSize.Id);

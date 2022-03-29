@@ -4,14 +4,16 @@ using ElBayt.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElBayt.Infra.Migrations
 {
     [DbContext(typeof(ElBaytContext))]
-    partial class ElBaytContextModelSnapshot : ModelSnapshot
+    [Migration("20220322130309_AddClothFKFromDb")]
+    partial class AddClothFKFromDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,43 +164,6 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothBrand", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothBrandsModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BrandId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClothId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("ClothId");
-
-                    b.ToTable("ClothBrands", "dbo");
-                });
-
             modelBuilder.Entity("ElBayt.Infra.Models.ClothCategoryModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -344,12 +309,6 @@ namespace ElBayt.Infra.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("PriceAfterDiscount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<Guid>("SizeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -401,6 +360,12 @@ namespace ElBayt.Infra.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("PriceAfterDiscount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ProductImageURL1")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -421,9 +386,6 @@ namespace ElBayt.Infra.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ClothId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -454,8 +416,6 @@ namespace ElBayt.Infra.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClothId");
 
                     b.ToTable("ClothSize", "dbo");
                 });
@@ -817,25 +777,6 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("Governorates");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothBrandsModel", b =>
-                {
-                    b.HasOne("ElBayt.Infra.Models.ClothBrandModel", "ClothBrands")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ElBayt.Infra.Models.ClothModel", "Clothes")
-                        .WithMany()
-                        .HasForeignKey("ClothId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClothBrands");
-
-                    b.Navigation("Clothes");
-                });
-
             modelBuilder.Entity("ElBayt.Infra.Models.ClothCategoryModel", b =>
                 {
                     b.HasOne("ElBayt.Infra.Models.ClothTypeModel", "ClothTypes")
@@ -902,17 +843,6 @@ namespace ElBayt.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("ClothCategories");
-                });
-
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothSizeModel", b =>
-                {
-                    b.HasOne("ElBayt.Infra.Models.ClothModel", "Clothes")
-                        .WithMany()
-                        .HasForeignKey("ClothId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Clothes");
                 });
 
             modelBuilder.Entity("ElBayt.Infra.Models.ClothTypeModel", b =>

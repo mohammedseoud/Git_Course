@@ -9,8 +9,10 @@ namespace ElBayt.Infra.SPs
         public const string GETSHOPDATA = "GetShopData";
         public const string ADDPRODUCTIMAGE = "AddProductImage";
         public const string ADDPRODUCT = "AddProduct";
+        public const string ADDCLOTH = "AddCloth";
         public const string UPDATEPRODUCT = "UpdateProduct";
         public const string DELETEPRODUCT = "DeleteProduct";
+        public const string DELETECLOTH = "DeleteCloth";
         public const string DELETEPRODUCTCATEGORY = "DeleteProductCategory";
         public const string DELETEPRODUCTTYPE = "DeleteProductType";
         public const string DELETECLOTHTYPE = "DeleteClothType";
@@ -27,10 +29,15 @@ namespace ElBayt.Infra.SPs
         public const string UPDATECLOTHTYPE = "UpdateClothType";
         public const string UPDATECLOTHCATEGORY = "UpdateClothCategory";
         public const string UPDATECLOTHBRAND = "UpdateClothBrand";
+        public const string UPDATECLOTH = "UpdateCloth";
         public const string GETPRODUCTIMAGES = "GetProductImages";
+        public const string GETCLOTHIMAGES = "GetClothImages";
+        public const string GETCLOTHBRANDS = "GetClothBrands";
         public const string GETPRODUCTDATA = "GetProductData";
         public const string ADDCLOTHTYPE = "AddClothType";
         public const string ADDCLOTHDEPARTMENT = "AddClothDepartment";
         public const string ADDCLOTHBRAND = "AddClothBrand";
+        public const string ADDCLOTHBRANDS = "AddClothBrands";
+        public const string ADDCLOTHIMAGE = "AddClothImage";
     }
 }

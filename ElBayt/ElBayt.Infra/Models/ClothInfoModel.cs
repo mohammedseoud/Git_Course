@@ -14,7 +14,9 @@ namespace ElBayt.Infra.Models
         [Required]
         [ForeignKey(nameof(Clothes))]
         public Guid ClothId { get; set; }
-
+        [Required]
+        public decimal Price { get; set; }
+        public decimal? PriceAfterDiscount { get; set; }
         [Required]
         [ForeignKey(nameof(Sizes))]
         public Guid SizeId { get; set; }

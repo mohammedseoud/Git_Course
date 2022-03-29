@@ -9,7 +9,9 @@ namespace ElBayt.Core.Entities
 {
     public class ClothEntity : ProductEntity
     {
-      
-      
+
+        [Required]
+        public Guid ClothCategoryId { get; set; }
+        public virtual ClothCategoryEntity ClothCategories { get; set; }
     }
 }

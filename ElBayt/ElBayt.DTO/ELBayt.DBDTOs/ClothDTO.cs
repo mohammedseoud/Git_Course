@@ -7,6 +7,7 @@ namespace ElBayt.DTO.ELBayt.DBDTOs
 {
     public class ClothDTO : ProductDTO
     {
-    
+        public Guid ClothCategoryId { get; set; }
+        public virtual ClothDTO ClothCategories { get; set; }
     }
 }

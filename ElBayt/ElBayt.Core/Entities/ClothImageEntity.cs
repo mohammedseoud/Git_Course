@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ElBayt.Core.Entities
 {
-    public class ClothImageEntity : EnhancedEntity<Guid> , BaseEntity
+    public class ClothImageEntity : ProductImageEntity
     {
         [Required]
         public Guid ClothId { get; set; }

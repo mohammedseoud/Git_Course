@@ -9,6 +9,5 @@ namespace ElBayt.DTO.ELBayt.DBUDTDTOs
     {
         public string URL { get; set; }
 
-        public Guid ProductId { get; set; }
     }
 }

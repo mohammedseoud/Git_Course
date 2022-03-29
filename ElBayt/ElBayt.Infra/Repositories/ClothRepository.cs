@@ -34,8 +34,6 @@ namespace ElBayt.Infra.Repositories
             var _Cloth = await _dbContext.Clothes.FindAsync(cloth.Id);
             _Cloth.Name = cloth.Name;
             _Cloth.Description = cloth.Description;
-            _Cloth.Price = cloth.Price;
-            _Cloth.PriceAfterDiscount = cloth.PriceAfterDiscount;
         }
 
         public async Task<ClothEntity> GetClothByName(string Name, Guid Id)

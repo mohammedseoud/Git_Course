@@ -34,6 +34,8 @@ namespace ElBayt.Infra.Context
         public virtual DbSet<ClothImageModel> ClothImages { get; set; }
         public virtual DbSet<ClothDepartmentModel> ClothDepartments { get; set; }
         public virtual DbSet<ClothInfoModel> ClothInfo { get; set; }
+        public virtual DbSet<ClothBrandsModel> ClothesBrands { get; set; }
+        
 
         public virtual void MarkEntryAsModified(BaseGeneralModel entity, EntityState entityState = EntityState.Modified)
         {

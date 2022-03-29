@@ -15,10 +15,7 @@ namespace ElBayt.DTO.ELBayt.DTOs
         public string Description { get; set; }
         public string ProductImageURL1 { get; set; }
         public string ProductImageURL2 { get; set; }
-        public Guid ProductCategoryId { get; set; }
-        public int Quantity { get; set; }
-        public int Reviews { get; set; }
-        public decimal Ratings { get; set; }
+        public Guid ClothCategoryId { get; set; }
         public string ClothCategoryName { get; set; }
 
     }

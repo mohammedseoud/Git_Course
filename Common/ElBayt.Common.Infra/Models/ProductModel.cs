@@ -12,12 +12,7 @@ namespace ElBayt.Common.Infra.Models
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
-        public string Name { get; set; }
-
-        [Required]
-        public decimal Price { get; set; }
-
-        public decimal? PriceAfterDiscount { get; set; }
+        public string Name { get; set; }       
 
         [StringLength(General.BIG_LINE_MAX_LENGTH)]
         [Required]

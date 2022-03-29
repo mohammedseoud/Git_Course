@@ -21,20 +21,22 @@ namespace ElBayt.Services.Contracts
         public Task<EnumInsertingResult> AddNewClothCategory(ClothCategoryDTO clothCategory);
         public object GetClothCategories();
         public Task<string> DeleteClothCategory(Guid Id);
-        public Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory, string DiskDirectory, string machineDirectory);
+        public Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory,  string machineDirectory);
         public Task<ClothCategoryDTO> GetClothCategory(Guid Id);
         #endregion
         #region Products
         public Task<NumberClothDTO> AddNewCloth(IFormCollection form, string DiskDirectory);
         public object GetClothes();
         public Task<string> DeleteCloth(Guid Id);
-        public Task<NumberClothDTO> UpdateCloth(IFormCollection Form, string DiskDirectory);
+        public Task<List<string>> UpdateCloth(IFormCollection Form, string DiskDirectory,string MachineDirectory);
         public Task<NumberClothDTO> GetCloth(Guid Id);
         public Task<ClothImageDTO> SaveClothImage(string ProductId, IFormFile file, string DiskDirectory);
         public Task<ClothImageDTO> GetClothImage(Guid Id);
         public Task<List<ClothImageDTO>> GetClothImages(Guid ProductId);
         public Task<string> DeleteClothImage(Guid ImageId);
         public Task<string> DeleteClothImageByURL(string URL);
+        public Task<string> AddClothBrands(SelectedBrandsDTO selectedBrands);
+        public Task<List<ClothBrandsDTO>> GetClothBrands(Guid ClothId);
         #endregion
         #region Departments
         public Task<ClothDepartmentDTO> AddNewClothDepartment(IFormCollection Form, string DiskDirectory);
@@ -52,7 +54,8 @@ namespace ElBayt.Services.Contracts
         #endregion
         #region Sizes
         public Task<EnumInsertingResult> AddNewClothSize(ClothSizeDTO clothCategory);
-        public object GetClothSizes();
+        public object GetSizes();
+        public Task<object> GetClothSizes(Guid Cloth);
         public Task<string> DeleteClothSize(Guid Id);
         public Task<EnumUpdatingResult> UpdateClothSize(ClothSizeDTO clothCategory);
         public Task<ClothSizeDTO> GetClothSize(Guid Id);
