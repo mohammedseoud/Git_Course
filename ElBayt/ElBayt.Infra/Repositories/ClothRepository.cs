@@ -32,8 +32,14 @@ namespace ElBayt.Infra.Repositories
         public async Task UpdateCloth(ClothEntity cloth)
         {
             var _Cloth = await _dbContext.Clothes.FindAsync(cloth.Id);
-            _Cloth.Name = cloth.Name;
-            _Cloth.Description = cloth.Description;
+            if (_Cloth != null)
+            {
+                _Cloth.Name = cloth.Name;
+                _Cloth.Description = cloth.Description;
+                _Cloth.ClothCategoryId = cloth.ClothCategoryId;
+                _Cloth.ProductImageURL1 = cloth.ProductImageURL1;
+                _Cloth.ProductImageURL2= cloth.ProductImageURL2;
+            }          
         }
 
         public async Task<ClothEntity> GetClothByName(string Name, Guid Id)

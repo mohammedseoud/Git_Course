@@ -38,8 +38,11 @@ namespace ElBayt.Infra.Repositories
         public async Task UpdateClothCategory(ClothCategoryEntity clothCategory)
         {
             var Category = await _dbContext.ClothCategories.FindAsync(clothCategory.Id);
-            Category.Name = clothCategory.Name;
-            Category.ClothTypeId = clothCategory.ClothTypeId;
+            if (Category != null)
+            {
+                Category.Name = clothCategory.Name;
+                Category.ClothTypeId = clothCategory.ClothTypeId;
+            }
         }
     }
 }

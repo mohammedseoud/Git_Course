@@ -12,37 +12,39 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothBrandRepository : GenericRepository<ClothBrandEntity, ClothBrandModel, Guid>, IClothBrandRepository
+    public class ColorRepository : GenericRepository<ColorEntity, ColorModel, Guid>, IColorRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
         
 
-        public ClothBrandRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
+        public ColorRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
-        public async Task<ClothBrandEntity> GetClothBrandByName(string Name, Guid Id)
+        public async Task<ColorEntity> GetColorByName(string Name, Guid Id)
         {
-            var brand = await _dbContext.ClothBrands
+            var size = await _dbContext.Colors
                .Where(c => c.Name.Trim() == Name && c.Id != Id).
                AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<ClothBrandModel, ClothBrandEntity>(brand);
+            return _mapper.Map<ColorModel, ColorEntity>(size);
         }
 
-        public async Task UpdateClothBrand(ClothBrandEntity clothBrand)
+     
+        
+
+        public async Task UpdateColor(ColorEntity Color)
         {
-            var ClothBrand = await _dbContext.ClothBrands.FindAsync(clothBrand.Id);
-            if (ClothBrand != null)
+            var color = await _dbContext.Colors.FindAsync(Color.Id);
+           
+            if (color != null)
             {
-                ClothBrand.Name = clothBrand.Name;
-                ClothBrand.BrandPic = clothBrand.BrandPic;
+                color.Name = Color.Name;
             }
         }
     }

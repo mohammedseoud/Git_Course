@@ -9,5 +9,6 @@ namespace ElBayt.Services.IElBaytServices
     {
         IProductService ProductService { get; }
         IShopService ShopService { get; }
+        IGeneralService GeneralService { get; }
     }
 }

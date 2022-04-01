@@ -22,12 +22,12 @@ namespace ElBayt.Infra.Models
         public Guid SizeId { get; set; }
      
         [ForeignKey(nameof(Colors))]
-        public Guid ColorId { get; set; }
+        public Guid? ColorId { get; set; }
 
         [Required]
         public int Amount { get; set; }
         [ForeignKey(nameof(Brands))]
-        public Guid BrandId { get; set; }
+        public Guid? BrandId { get; set; }
 
       
         public virtual ClothBrandModel Brands { get; set; }

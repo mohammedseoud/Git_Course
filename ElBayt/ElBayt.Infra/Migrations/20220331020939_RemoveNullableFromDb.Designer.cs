@@ -4,14 +4,16 @@ using ElBayt.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElBayt.Infra.Migrations
 {
     [DbContext(typeof(ElBaytContext))]
-    partial class ElBaytContextModelSnapshot : ModelSnapshot
+    [Migration("20220331020939_RemoveNullableFromDb")]
+    partial class RemoveNullableFromDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,13 +321,13 @@ namespace ElBayt.Infra.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("BrandId")
+                    b.Property<Guid>("BrandId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClothId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ColorId")
+                    b.Property<Guid>("ColorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
@@ -862,7 +864,9 @@ namespace ElBayt.Infra.Migrations
                 {
                     b.HasOne("ElBayt.Infra.Models.ClothBrandModel", "Brands")
                         .WithMany()
-                        .HasForeignKey("BrandId");
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ElBayt.Infra.Models.ClothModel", "Clothes")
                         .WithMany()
@@ -872,7 +876,9 @@ namespace ElBayt.Infra.Migrations
 
                     b.HasOne("ElBayt.Infra.Models.ColorModel", "Colors")
                         .WithMany()
-                        .HasForeignKey("ColorId");
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ElBayt.Infra.Models.ClothSizeModel", "Sizes")
                         .WithMany()

@@ -33,6 +33,8 @@ namespace ElBayt.Infra.SPs
         public const string GETPRODUCTIMAGES = "GetProductImages";
         public const string GETCLOTHIMAGES = "GetClothImages";
         public const string GETCLOTHBRANDS = "GetClothBrands";
+        public const string GETCLOTHINFO = "GetClothInfo";
+        public const string GETCLOTHDBLDATA = "GetClothDBLData";
         public const string GETPRODUCTDATA = "GetProductData";
         public const string ADDCLOTHTYPE = "AddClothType";
         public const string ADDCLOTHDEPARTMENT = "AddClothDepartment";

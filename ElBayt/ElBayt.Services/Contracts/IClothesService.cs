@@ -37,6 +37,12 @@ namespace ElBayt.Services.Contracts
         public Task<string> DeleteClothImageByURL(string URL);
         public Task<string> AddClothBrands(SelectedBrandsDTO selectedBrands);
         public Task<List<ClothBrandsDTO>> GetClothBrands(Guid ClothId);
+        public Task<ClothDBLDataDTO> GetClothDBLInfo(Guid ClothId);
+        public Task<string> AddClothInfo(ClothInfoDTO ClothInfo);
+        public Task<object> GetClothInfo(Guid ClothId);
+        public Task<string> DeleteClothInfo(Guid Id);
+        public Task<ClothInfoDTO> GetInfo(Guid Id);
+
         #endregion
         #region Departments
         public Task<ClothDepartmentDTO> AddNewClothDepartment(IFormCollection Form, string DiskDirectory);
@@ -60,6 +66,6 @@ namespace ElBayt.Services.Contracts
         public Task<EnumUpdatingResult> UpdateClothSize(ClothSizeDTO clothCategory);
         public Task<ClothSizeDTO> GetClothSize(Guid Id);
         #endregion
-
+        
     }
 }

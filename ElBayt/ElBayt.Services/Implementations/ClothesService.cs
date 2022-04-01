@@ -1090,7 +1090,7 @@ namespace ElBayt.Services.Implementations
                     return "true";
 
                 }
-                return "This Image Not Exist";
+                return CommonMessages.ITEM_NOT_EXISTS;
             }
             catch (Exception ex)
             {
@@ -1180,6 +1180,199 @@ namespace ElBayt.Services.Implementations
                 #region Logging info
 
                 _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrands)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<ClothDBLDataDTO> GetClothDBLInfo(Guid ClothId)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothDBLInfo), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ClothId", ClothId);
+
+
+                var Data = await _unitOfWork.SP.ThreeListAsnyc<DBLInfoDTO, DBLInfoDTO, DBLInfoDTO>(StoredProcedure.GETCLOTHDBLDATA, SPParameters);
+
+                var ClothDBLData = new ClothDBLDataDTO
+                {
+                    Brands = Data.Item1.ToList(),
+                    Colors = Data.Item2.ToList(),
+                    Sizes = Data.Item3.ToList()
+                };
+
+                return ClothDBLData;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothDBLInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<string> AddClothInfo(ClothInfoDTO ClothInfo)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ClothInfo, correlationGuid, nameof(ClothesService), nameof(AddClothInfo), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Entity = _mapper.Map<ClothInfoDTO, ClothInfoEntity>(ClothInfo);
+                if (ClothInfo.Id == Guid.Empty)
+                {
+                    Guid? ColorId = null;
+                    Guid? BrandId = null ;
+
+                    if (ClothInfo.BrandId != null)
+                        BrandId = Guid.Parse(ClothInfo.BrandId);
+
+
+                    if (ClothInfo.ColorId != null)
+                        ColorId = Guid.Parse(ClothInfo.ColorId);
+
+                    var _info = await _unitOfWork.ClothInfoRepository.GetClothInfo(ClothInfo.SizeId, ColorId, BrandId);
+
+                    if (_info == null)
+                    {
+                        Entity.Id = Guid.NewGuid();
+                        await _unitOfWork.ClothInfoRepository.AddAsync(Entity);
+                        await _unitOfWork.SaveAsync();
+                        return CommonMessages.SUCCESSFULLY_ADDING;
+                    }
+                    else
+                    {
+                        var Model = _mapper.Map<ClothInfoDTO, ClothInfoEntity>(ClothInfo);
+                        await _unitOfWork.ClothInfoRepository.UpdateInfo(Model);
+                        await _unitOfWork.SaveAsync();
+                        return CommonMessages.SUCCESSFULLY_UPDATING;
+                    }
+
+                }
+                else
+                {
+                    await _unitOfWork.ClothInfoRepository.UpdateInfo(Entity);
+                    await _unitOfWork.SaveAsync();
+                    return CommonMessages.SUCCESSFULLY_UPDATING;
+                }
+                
+                
+                
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ClothInfo, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddClothInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+        }
+        public async Task<object> GetClothInfo(Guid ClothId)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothInfo), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ClothId", ClothId);
+
+
+                return (await _unitOfWork.SP.ListAsnyc<ClothInfoDataDTO>(StoredProcedure.GETCLOTHINFO, SPParameters)).ToList();
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+        public async Task<string> DeleteClothInfo(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothInfo), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var IsDeleted =await _unitOfWork.ClothInfoRepository.RemoveAsync(Id);
+                if (IsDeleted)
+                {
+                    var res = await _unitOfWork.SaveAsync();
+                    return CommonMessages.SUCCESSFULLY_DELETING;
+
+                }
+                return CommonMessages.ITEM_NOT_EXISTS;
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                return ex.Message;
+            }
+
+        }
+
+        public async Task<ClothInfoDTO> GetInfo(Guid Id)
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetInfo), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Model = await _unitOfWork.ClothInfoRepository.GetAsync(Id);
+                return _mapper.Map<ClothInfoEntity, ClothInfoDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 

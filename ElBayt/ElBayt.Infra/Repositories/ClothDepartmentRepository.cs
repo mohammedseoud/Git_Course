@@ -39,8 +39,12 @@ namespace ElBayt.Infra.Repositories
         public async Task UpdateClothDepartment(ClothDepartmentEntity clothDepartment)
         {
             var ClothDepartment = await _dbContext.ClothDepartments.FindAsync(clothDepartment.Id);
-            ClothDepartment.Name = clothDepartment.Name;
-            ClothDepartment.DepartmentPic = clothDepartment.DepartmentPic;
+
+            if (ClothDepartment != null)
+            {
+                ClothDepartment.Name = clothDepartment.Name;
+                ClothDepartment.DepartmentPic = clothDepartment.DepartmentPic;
+            }
         }
     }
 }

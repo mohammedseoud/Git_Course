@@ -47,9 +47,12 @@ namespace ElBayt.Infra.Repositories
         public async Task UpdateClothSize(ClothSizeEntity clothSize)
         {
             var Size = await _dbContext.ClothSizes.FindAsync(clothSize.Id);
-            Size.Name = clothSize.Name;
-            Size.Width = clothSize.Width;
-            Size.Height= clothSize.Height;
+            if (Size != null)
+            {
+                Size.Name = clothSize.Name;
+                Size.Width = clothSize.Width;
+                Size.Height = clothSize.Height;
+            }
         }
     }
 }
