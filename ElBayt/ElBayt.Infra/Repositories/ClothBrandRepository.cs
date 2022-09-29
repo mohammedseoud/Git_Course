@@ -11,8 +11,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using ElBayt.Common.Infra.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {

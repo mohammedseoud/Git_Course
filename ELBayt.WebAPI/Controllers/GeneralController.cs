@@ -4,6 +4,7 @@ using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.IElBaytServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace ELBayt.WebAPI.Controllers
 {
     [EnableCors(CorsOrigin.LOCAL_ORIGIN)]
     [ApiController]
+    [Authorize]
     [Route("api/v1.0/ElBayt/General")]
     public class GeneralController : Controller
     {
@@ -35,6 +37,8 @@ namespace ELBayt.WebAPI.Controllers
         }
 
         #region Color
+
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewColor))]
         public async Task<IActionResult> AddNewColor(ColorDTO Color)
@@ -104,10 +108,14 @@ namespace ELBayt.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetColors))]
         public ActionResult GetColors()
         {
+            var _user = User.Identity.Name;
+
+
             var Response = new ElBaytResponse<object>
             {
                 Errors = new List<string>()
@@ -164,6 +172,7 @@ namespace ELBayt.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetColor))]
         public async Task<ActionResult> GetColor(Guid Id)
@@ -297,12 +306,12 @@ namespace ELBayt.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateColor))]
         public async Task<ActionResult> UpdateColor(ColorDTO Color)
         {
-            var Response = new ElBaytResponse<string>
+           var Response = new ElBaytResponse<string>
             {
                 Errors = new List<string>()
             };

@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.DTO.ELBayt.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -35,10 +36,11 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             _userIdentity = userIdentity ?? throw new ArgumentNullException(nameof(userIdentity));
         }
 
-       
+
 
         #region Types
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothType))]
         public async Task<IActionResult> AddNewClothType()
@@ -119,6 +121,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothTypes))]
         public ActionResult GetClothTypes()
@@ -179,6 +182,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothType))]
         public async Task<ActionResult> GetClothType(Guid Id)
@@ -239,7 +243,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothType))]
         public async Task<ActionResult> DeleteClothType(Guid Id)
@@ -335,7 +339,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothType))]
         public async Task<ActionResult> UpdateClothType()
@@ -408,6 +412,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         #endregion
 
         #region Categories
+
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothCategory))]
         public async Task<IActionResult> AddNewClothCategory(ClothCategoryDTO ClothCategory)
@@ -477,6 +483,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothCategories))]
         public ActionResult GetClothCategories()
@@ -537,6 +544,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothCategory))]
         public async Task<ActionResult> GetClothCategory(Guid Id)
@@ -597,7 +605,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothCategory))]
         public async Task<ActionResult> DeleteClothCategory(Guid Id)
@@ -673,7 +681,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothCategory))]
         public async Task<ActionResult> UpdateClothCategory(ClothCategoryDTO clothCategory)
@@ -749,6 +757,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         #region Departments
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothDepartment))]
         public async Task<IActionResult> AddNewClothDepartment()
@@ -829,6 +838,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothDepartments))]
         public ActionResult GetClothDepartments()
@@ -889,6 +899,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothDepartment))]
         public async Task<ActionResult> GetClothDepartment(Guid Id)
@@ -949,7 +960,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothDepartment))]
         public async Task<ActionResult> DeleteClothDepartment(Guid Id)
@@ -1027,7 +1038,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothDepartment))]
         public async Task<ActionResult> UpdateClothDepartment()
@@ -1100,6 +1111,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         #region Brands
 
+      //  [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothBrand))]
         public async Task<IActionResult> AddNewClothBrand()
@@ -1180,6 +1192,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothBrands))]
         public ActionResult GetClothBrands()
@@ -1240,6 +1253,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothBrand))]
         public async Task<ActionResult> GetClothBrand(Guid Id)
@@ -1300,7 +1314,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothBrand))]
         public async Task<ActionResult> DeleteClothBrand(Guid Id)
@@ -1377,7 +1391,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothBrand))]
         public async Task<ActionResult> UpdateClothBrand()
@@ -1449,6 +1463,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         #endregion
 
         #region Sizes
+
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothSize))]
         public async Task<IActionResult> AddNewClothSize(ClothSizeDTO ClothSize)
@@ -1518,6 +1534,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetSizes))]
         public ActionResult GetSizes()
@@ -1578,6 +1595,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothSizes))]
         public async Task<ActionResult> GetClothSizes(Guid ClothId)
@@ -1638,6 +1656,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothSize))]
         public async Task<ActionResult> GetClothSize(Guid Id)
@@ -1698,7 +1717,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothSize))]
         public async Task<ActionResult> DeleteClothSize(Guid Id)
@@ -1771,7 +1790,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothSize))]
         public async Task<ActionResult> UpdateClothSize(ClothSizeDTO clothSize)
@@ -1847,7 +1866,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         #region Products
 
-
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewCloth))]
         public async Task<IActionResult> AddNewCloth()
@@ -1947,6 +1966,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothes))]
         public ActionResult GetClothes()
@@ -2007,6 +2027,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetCloth))]
         public async Task<ActionResult> GetCloth(Guid Id)
@@ -2067,7 +2088,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteCloth))]
         public async Task<ActionResult> DeleteCloth(Guid Id)
@@ -2142,7 +2163,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPut]
         [Route(nameof(UpdateCloth))]
         public async Task<ActionResult> UpdateCloth()
@@ -2242,6 +2263,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(UploadClothImage))]
         public async Task<ActionResult> UploadClothImage()
@@ -2330,6 +2352,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothImages))]
         public async Task<ActionResult> GetClothImages(Guid clothId)
@@ -2390,6 +2414,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothImage))]
         public async Task<ActionResult> DeleteClothImage(Guid ImageId)
@@ -2471,6 +2496,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothImageByURL))]
         public async Task<ActionResult> DeleteClothImageByURL(string URL)
@@ -2542,6 +2568,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddClothBrands))]
         public async Task<ActionResult> AddClothBrands(SelectedBrandsDTO SelectedBrands)
@@ -2609,6 +2636,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetSelectedClothBrands))]
         public async Task<ActionResult> GetSelectedClothBrands(Guid clothId)
@@ -2669,6 +2697,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothDBLInfo))]
         public async Task<ActionResult> GetClothDBLInfo(Guid clothId)
@@ -2729,6 +2758,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddClothInfo))]
         public async Task<ActionResult> AddClothInfo(ClothInfoDTO ClothInfo)
@@ -2796,6 +2826,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetClothInfo))]
         public async Task<ActionResult> GetClothInfo(Guid clothId)
@@ -2856,7 +2887,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothInfo))]
         public async Task<ActionResult> DeleteClothInfo(Guid Id)
@@ -2929,7 +2960,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpGet]
         [Route(nameof(GetInfo))]
         public async Task<ActionResult> GetInfo(Guid Id)

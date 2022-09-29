@@ -57,28 +57,14 @@ namespace ELBayt.WebAPI
                 .AddDefaultTokenProviders()
               .AddEntityFrameworkStores<ElBaytContext>();
 
+            JWTConfigure(services);
+
 
             services.AddAutoMapper(typeof(TypeMapper));
-            services.AddAuthentication(cgf =>
-            {
-                cgf.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                cgf.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(option =>
-            {
-                option.RequireHttpsMetadata = true;
-                option.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:Key"])),
-                    ValidIssuer = Configuration["Token:Issuer"],
-                    ValidateIssuer = true,
-                    ValidateAudience = false
-                };
-            });
+
 
 
             services.AddScoped<IUserIdentity>();
-            services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
             services.AddScoped<ITypeMapper, TypeMapper>();
             services.AddScoped<IShopMapper, ShopMapper>();
             services.AddScoped<IFileMapper, FileMapper>();
@@ -122,6 +108,27 @@ namespace ELBayt.WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void JWTConfigure(IServiceCollection services)
+        {
+            services.AddScoped<IJWTTokenGenerator, JWTTokenGenerator>();
+            services.AddAuthentication(cgf =>
+            {
+                cgf.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                cgf.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(option =>
+            {
+                option.RequireHttpsMetadata = true;
+                option.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Token:Key"])),
+                    ValidIssuer = Configuration["Token:Issuer"],
+                    ValidateIssuer = true,
+                    ValidateAudience = false
+                };
             });
         }
     }
