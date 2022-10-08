@@ -5,7 +5,7 @@ using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.Common.Utilities;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.DTO.ELBayt.DTOs;

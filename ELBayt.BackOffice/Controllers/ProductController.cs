@@ -1,25 +1,13 @@
-﻿using ElBayt.Common.Common;
-using ElBayt.Common.Enums;
-using ElBayt.Common.Core.Logging;
-using ElBayt.DTO.ELBayt.DBDTOs;
+﻿using ElBayt.Common.Core.Logging;
 using ElBayt.Services.IElBaytServices;
-using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
-using System.IO;
-using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using ElBayt.Common.Core.SecurityModels;
-using ElBayt.DTO.ELBayt.DTOs;
+using ELBayt.BackOffice.Core;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
-    [EnableCors(CorsOrigin.LOCAL_ORIGIN)]
-    [ApiController]
-    [Route("api/v1.0/ElBayt/Product")]
-    public class ProductController : Controller
+    public class ProductController : ELBaytController
     {
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;

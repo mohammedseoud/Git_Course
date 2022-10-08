@@ -91,7 +91,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.AreaModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.AreaModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Area", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.CountryModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.CountryModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,7 +161,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Country", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.GovernorateModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.GovernorateModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -196,7 +196,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Governorate", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ProductCategoryModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ProductCategoryModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,7 +231,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ProductCategory", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ProductModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ProductModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,7 +274,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Product", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ProductTypeModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ProductTypeModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

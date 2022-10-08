@@ -1,15 +1,16 @@
-﻿using ElBayt.Core.Entities;
+﻿using ElBayt.Infra.Entities;
 using ElBayt.Core.GenericIRepository;
 using System;
 using System.Threading.Tasks;
+using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IClothRepository : IGenericRepository<ClothEntity, Guid>
+    public interface IClothRepository : IGenericRepository<ClothModel, Guid>
     {
-        public Task UpdateCloth(ClothEntity cloth);
-        public Task AddClothImage(ClothImageEntity Image);
-        public Task<ClothEntity> GetClothByName(string Name, Guid Id);
+        public Task UpdateCloth(ClothModel cloth);
+        public Task AddClothImage(ClothImageModel Image);
+        public Task<ClothModel> GetClothByName(string Name, Guid Id);
 
     }
 }

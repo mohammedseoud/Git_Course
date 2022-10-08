@@ -2,10 +2,10 @@
 using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Core.Mapping;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;
-using ElBayt.Infra.Models;
+using ElBayt.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,30 +15,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ColorRepository : GenericRepository<ColorEntity, ColorModel, Guid>, IColorRepository
+    public class ColorRepository : GenericRepository< ColorModel, Guid>, IColorRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
         
 
-        public ColorRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
+        public ColorRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
-        public async Task<ColorEntity> GetColorByName(string Name, Guid Id)
+        public async Task<ColorModel> GetColorByName(string Name, Guid Id)
         {
-            var size = await _dbContext.Colors.Value
+            var Color = await _dbContext.Colors.Value
                .Where(c => c.Name.Trim() == Name && c.Id != Id).
                AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<ColorModel, ColorEntity>(size);
+            return Color;
         }
 
      
         
 
-        public async Task UpdateColor(ColorEntity Color)
+        public async Task UpdateColor(ColorModel Color)
         {
             var color = await _dbContext.Colors.Value.FindAsync(Color.Id);
            

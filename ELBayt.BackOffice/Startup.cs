@@ -28,6 +28,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
 using ElBayt.Infra.Mapping;
 using ElBayt.Core.Mapping;
+using Microsoft.OpenApi.Models;
 
 namespace ELBayt.WebAPI
 {
@@ -48,6 +49,7 @@ namespace ELBayt.WebAPI
             services.AddControllers().AddJsonOptions(options =>
                options.JsonSerializerOptions.PropertyNamingPolicy = null); ;
 
+            services.AddSwaggerGen();
 
             services.AddDbContext<ElBaytContext>(options =>
               options.UseSqlServer(
@@ -59,10 +61,11 @@ namespace ELBayt.WebAPI
 
             JWTConfigure(services);
 
+            
 
             services.AddAutoMapper(typeof(TypeMapper));
 
-
+          
 
             services.AddScoped<IUserIdentity>();
             services.AddScoped<ITypeMapper, TypeMapper>();
@@ -104,6 +107,12 @@ namespace ELBayt.WebAPI
             app.UseDeveloperExceptionPage();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ELBayt.BackOffice");
+            });
 
             app.UseEndpoints(endpoints =>
             {

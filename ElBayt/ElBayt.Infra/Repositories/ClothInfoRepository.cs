@@ -1,10 +1,10 @@
 ﻿
 using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Core.Mapping;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;
-using ElBayt.Infra.Models;
+using ElBayt.Core.Models;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
@@ -13,30 +13,30 @@ using System.Collections.Generic;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothInfoRepository : GenericRepository<ClothInfoEntity,ClothInfoModel, Guid>, IClothInfoRepository
+    public class ClothInfoRepository : GenericRepository<ClothInfoModel, Guid>, IClothInfoRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
         
 
-        public ClothInfoRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
+        public ClothInfoRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
-        public async Task<object> GetClothInfo(Guid ClothId)
+        public async Task<List<ClothInfoModel>> GetClothInfo(Guid ClothId)
         {
             return await _dbContext.ClothInfo.Where(c => c.ClothId == ClothId).ToListAsync();
         }
 
-        public async Task<object> GetClothInfo(Guid SizeId, Guid? ColorId, Guid? BrandId)
+        public async Task<List<ClothInfoModel>> GetClothInfo(Guid SizeId, Guid? ColorId, Guid? BrandId)
         {
             return await _dbContext.ClothInfo.Where(c => c.SizeId == SizeId
             && c.BrandId == BrandId && c.ColorId == ColorId).ToListAsync();
         }
 
-        public async Task UpdateInfo(ClothInfoEntity Info)
+        public async Task UpdateInfo(ClothInfoModel Info)
         {
             var _Info = await _dbContext.ClothInfo.FindAsync(Info.Id);
             if (_Info != null)

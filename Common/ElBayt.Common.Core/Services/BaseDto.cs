@@ -4,13 +4,12 @@ using System.Text;
 
 namespace ElBayt.Common.Core.Services
 {
-    public class BaseDto<T>
+    public class BaseDto<T> : BasicDto<T>
     {
         protected BaseDto()
         {
         }
 
-        public virtual T Id { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }

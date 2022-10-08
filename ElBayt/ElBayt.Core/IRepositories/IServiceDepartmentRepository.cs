@@ -1,10 +1,11 @@
-﻿using ElBayt.Core.Entities;
+﻿using ElBayt.Infra.Entities;
 using ElBayt.Core.GenericIRepository;
 using System;
+using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IServiceDepartmentRepository : IGenericRepository<ServiceDepartmentEntity, Guid>
+    public interface IServiceDepartmentRepository : IGenericRepository<ServiceDepartmentModel,Guid>
     {
     }
 }

@@ -10,24 +10,27 @@ using ElBayt.Common.Common;
 
 namespace ElBayt.Core.GenericIRepository
 {
-    public interface IGenericRepository<TEntity,TId>
-        where TEntity : BaseEntity
+    public interface IGenericRepository<TModel, TId>
+        where TModel : BaseModel
     {
-        void Add(TEntity entity);
-        Task AddAsync(TEntity entity);
-        void AddRange(List<TEntity> entities);
-        Task AddRangeAsync(List<TEntity> entities);
-        TEntity Get(TId id);
-        Task<TEntity> GetAsync(TId id);
-        IQueryable<BaseModel> GetAll(Expression<Func<BaseModel,
-            bool>> filter = null, Func<IQueryable<BaseModel>,
-        IOrderedQueryable<BaseModel>> orderby = null, string IncludeProperties = null);
-        TEntity GetFirstOrDefault(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null);
-        Task<TEntity> FirstOrDefaultAsync(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null);
+        void Add(TModel entity);
+        Task AddAsync(TModel entity);
+        void AddRange(IEnumerable<TModel> entities);
+        Task AddRangeAsync(IEnumerable<TModel> entities);
+        TModel Get(TId id);
+        Task<TModel> GetAsync(TId id);
+        Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel,
+             bool>> filter = null, Func<IQueryable<TModel>,
+         IOrderedQueryable<TModel>> orderby = null, string IncludeProperties = null);
+        IEnumerable<TModel> GetAll(Expression<Func<TModel,
+             bool>> filter = null, Func<IQueryable<TModel>,
+         IOrderedQueryable<TModel>> orderby = null, string IncludeProperties = null);
+        TModel GetFirstOrDefault(Expression<Func<TModel, bool>> filter = null, string IncludeProperties = null);
+        Task<TModel> FirstOrDefaultAsync(Expression<Func<TModel, bool>> filter = null, string IncludeProperties = null);
         bool Remove(TId id);
         Task<bool> RemoveAsync(TId id);
-        bool RemoveRange(IEnumerable<TEntity> entities);
-        bool ReomveEntity(TEntity entity);
+        void RemoveRange(IEnumerable<TModel> entities);
+        void ReomveEntity(TModel entity);
 
     }
 }

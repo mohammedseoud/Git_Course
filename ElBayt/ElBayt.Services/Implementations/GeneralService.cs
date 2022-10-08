@@ -5,7 +5,7 @@ using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.Common.Security;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.Contracts;
@@ -14,6 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ElBayt.Core.Models;
+using ElBayt.DTO.ELBayt.DTOs;
+using System.Linq;
 
 namespace ElBayt.Services.Implementations
 {
@@ -49,7 +52,7 @@ namespace ElBayt.Services.Implementations
                 var Size = await _unitOfWork.ColorRepository.GetColorByName(Color.Name.Trim(), Color.Id); ;
                 if (Size == null)
                 {
-                    var Entity = _mapper.Map<ColorDTO, ColorEntity>(Color);
+                    var Entity = _mapper.Map<ColorDTO, ColorModel>(Color);
                     Entity.Id = Guid.NewGuid();
                     await _unitOfWork.ColorRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
@@ -144,7 +147,7 @@ namespace ElBayt.Services.Implementations
 
                 if (_color == null)
                 {
-                    var color = _mapper.Map<ColorDTO, ColorEntity>(Color);
+                    var color = _mapper.Map<ColorDTO, ColorModel>(Color);
                     await _unitOfWork.ColorRepository.UpdateColor(color);
                     await _unitOfWork.SaveAsync();
                     return EnumUpdatingResult.Successed;
@@ -177,7 +180,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ColorRepository.GetAsync(Id);
-                return _mapper.Map<ColorEntity, ColorDTO>(Model);
+                return _mapper.Map<ColorModel, ColorDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -191,7 +194,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetColors()
+        public async Task<List<GetColorDTO>> GetColors()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -202,8 +205,14 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail("GetColors", correlationGuid, nameof(ClothesService), nameof(GetColors), 1, _userIdentity.Name);
 
                 #endregion Logging info
-
-                return  _unitOfWork.ColorRepository.GetAll();
+                var Colors = (await _unitOfWork.ColorRepository.GetAllAsync()).
+                    Select(c => new GetColorDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    });
+               
+                return Colors.ToList();
 
             }
             catch (Exception ex)

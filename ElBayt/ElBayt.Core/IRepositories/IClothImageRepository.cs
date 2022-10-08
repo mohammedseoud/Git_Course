@@ -1,12 +1,13 @@
-﻿using ElBayt.Core.Entities;
+﻿using ElBayt.Infra.Entities;
 using ElBayt.Core.GenericIRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IClothImageRepository : IGenericRepository<ClothImageEntity, Guid>
+    public interface IClothImageRepository : IGenericRepository<ClothImageModel, Guid>
     {
         object GetClothImages(Guid ClothId);
         bool DeleteByURL(string URL);

@@ -6,7 +6,7 @@ using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.Common.Utilities;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Core.Mapping;
 using ElBayt.DTO.ELBayt.DBDTOs;
@@ -17,9 +17,11 @@ using ElBayt.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ElBayt.Core.Models;
 
 namespace ElBayt.Services.Implementations
 {
@@ -100,7 +102,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetClothTypes()
+        public async Task<List<GetClothTypeDTO>> GetClothTypes()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -111,8 +113,14 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail("GetClothTypes", correlationGuid, nameof(ClothesService), nameof(GetClothTypes), 1, _userIdentity.Name);
 
                 #endregion Logging info
+                var types = (await _unitOfWork.ClothTypeRepository.GetAllAsync()).
+                    Select(c => new GetClothTypeDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                    }).ToList();
 
-                return _unitOfWork.ClothTypeRepository.GetAll();
+                return types;
 
             }
             catch (Exception ex)
@@ -242,7 +250,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothTypeRepository.GetAsync(Id);
-                return _mapper.Map<ClothTypeEntity, ClothTypeDTO>(Model);
+                return _mapper.Map<ClothTypeModel, ClothTypeDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -274,7 +282,7 @@ namespace ElBayt.Services.Implementations
                 var Category = await _unitOfWork.ClothCategoryRepository.GetClothCategoryByName(clothCategory.Name.Trim(), clothCategory.Id);;
                 if (Category == null)
                 {
-                    var Entity = _mapper.Map<ClothCategoryDTO, ClothCategoryEntity>(clothCategory);
+                    var Entity = _mapper.Map<ClothCategoryDTO, ClothCategoryModel>(clothCategory);
                     Entity.Id = Guid.NewGuid();
                     await _unitOfWork.ClothCategoryRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
@@ -294,7 +302,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetClothCategories()
+        public async Task<List<GetClothCategoryDTO>> GetClothCategories()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -305,8 +313,15 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail("GetClothCategories", correlationGuid, nameof(ClothesService), nameof(GetClothCategories), 1, _userIdentity.Name);
 
                 #endregion Logging info
+                var Categories = (await _unitOfWork.ClothCategoryRepository.GetAllAsync())
+                    .Select(c =>
+                    new GetClothCategoryDTO {
+                        ClothTypeId = c.ClothTypeId,
+                        Id = c.Id,
+                        Name = c.Name,
+                    });
 
-                return _unitOfWork.ClothCategoryRepository.GetAll();
+                return Categories.ToList();
 
             }
             catch (Exception ex)
@@ -411,7 +426,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothCategoryRepository.GetAsync(Id);
-                return _mapper.Map<ClothCategoryEntity, ClothCategoryDTO>(Model);
+                return _mapper.Map<ClothCategoryModel, ClothCategoryDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -483,7 +498,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetClothDepartments()
+        public async Task<List<GetClothDepartmentDTO>> GetClothDepartments()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -494,8 +509,16 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail("GetClothDepartments", correlationGuid, nameof(ClothesService), nameof(GetClothDepartments), 1, _userIdentity.Name);
 
                 #endregion Logging info
+                var Departments = (await _unitOfWork.ClothDepartmentRepository.GetAllAsync()).
+                    Select(
+                    c => new GetClothDepartmentDTO
+                    {
+                        DepartmentPic = c.DepartmentPic,
+                        Name = c.Name,
+                        Id = c.Id
+                    });
 
-                return _unitOfWork.ClothDepartmentRepository.GetAll();
+                return Departments.ToList();
 
             }
             catch (Exception ex)
@@ -624,7 +647,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothDepartmentRepository.GetAsync(Id);
-                return _mapper.Map<ClothDepartmentEntity, ClothDepartmentDTO>(Model);
+                return _mapper.Map<ClothDepartmentModel, ClothDepartmentDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -746,7 +769,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetClothes()
+        public async Task<List<GetClothInfoDTO>> GetClothesInfo()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -754,18 +777,71 @@ namespace ElBayt.Services.Implementations
             {
                 #region Logging info
 
-                _logger.InfoInDetail("GetClothes", correlationGuid, nameof(ClothesService), nameof(GetClothes), 1, _userIdentity.Name);
+                _logger.InfoInDetail("GetClothes", correlationGuid, nameof(ClothesService), nameof(GetClothesInfo), 1, _userIdentity.Name);
 
                 #endregion Logging info
 
-                return _unitOfWork.ClothRepository.GetAll();
+                var Clothes = (await _unitOfWork.ClothInfoRepository.GetAllAsync()).
+                    Select(c => new GetClothInfoDTO
+                    {
+                        Id = c.Id,
+                        Amount = c.Amount,
+                        BrandId = c.BrandId?.ToString(),
+                        ClothId = c.ClothId,
+                        ColorId = c.ColorId?.ToString(),
+                        Price = c.Price,
+                        PriceAfterDiscount = (decimal)c.PriceAfterDiscount,
+                        SizeId = c.SizeId
+
+                    });
+
+                return Clothes.ToList();
 
             }
             catch (Exception ex)
             {
                 #region Logging info
 
-                _logger.ErrorInDetail("GetClothes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+                _logger.ErrorInDetail("GetClothes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothesInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                throw;
+            }
+        }
+
+        public async Task<List<GetClothDTO>> GetClothes()
+        {
+            var correlationGuid = Guid.NewGuid();
+
+            try
+            {
+                #region Logging info
+
+                _logger.InfoInDetail("GetClothes", correlationGuid, nameof(ClothesService), nameof(GetClothesInfo), 1, _userIdentity.Name);
+
+                #endregion Logging info
+
+                var Clothes = (await _unitOfWork.ClothRepository.GetAllAsync()).
+                    Select(c => new GetClothDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        ClothCategoryId = c.ClothCategoryId,
+                        Description = c.Description,
+                        ProductImageURL1 = c.ProductImageURL1,
+                        ProductImageURL2 = c.ProductImageURL2,
+                       
+                    });
+
+                return Clothes.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                #region Logging info
+
+                _logger.ErrorInDetail("GetClothes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothesInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
 
                 #endregion Logging info
 
@@ -911,7 +987,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothRepository.GetAsync(Id);
-                return _mapper.Map<ClothEntity, NumberClothDTO>(Model);
+                return _mapper.Map<ClothModel, NumberClothDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -994,7 +1070,7 @@ namespace ElBayt.Services.Implementations
 
 
                 var entity = await _unitOfWork.ClothImageRepository.GetAsync(Id);
-                return _mapper.Map<ClothImageEntity, ClothImageDTO>(entity);
+                return _mapper.Map<ClothImageModel, ClothImageDTO>(entity);
             }
             catch (Exception ex)
             {
@@ -1054,10 +1130,10 @@ namespace ElBayt.Services.Implementations
                 if (IsDeleted)
                 {
                     var res = await _unitOfWork.SaveAsync();
-                    return "true";
+                    return CommonMessages.SUCCESSFULLY_DELETING;
 
                 }
-                return "This Image Not Exist";
+                return CommonMessages.ITEM_NOT_EXISTS;
             }
             catch (Exception ex)
             {
@@ -1238,7 +1314,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                var Entity = _mapper.Map<ClothInfoDTO, ClothInfoEntity>(ClothInfo);
+                var Entity = _mapper.Map<ClothInfoDTO, ClothInfoModel>(ClothInfo);
                 if (ClothInfo.Id == Guid.Empty)
                 {
                     Guid? ColorId = null;
@@ -1262,7 +1338,7 @@ namespace ElBayt.Services.Implementations
                     }
                     else
                     {
-                        var Model = _mapper.Map<ClothInfoDTO, ClothInfoEntity>(ClothInfo);
+                        var Model = _mapper.Map<ClothInfoDTO, ClothInfoModel>(ClothInfo);
                         await _unitOfWork.ClothInfoRepository.UpdateInfo(Model);
                         await _unitOfWork.SaveAsync();
                         return CommonMessages.SUCCESSFULLY_UPDATING;
@@ -1290,7 +1366,8 @@ namespace ElBayt.Services.Implementations
                 return ex.Message;
             }
         }
-        public async Task<object> GetClothInfo(Guid ClothId)
+      
+        public async Task<List<ClothInfoDataDTO>> GetClothInfo(Guid ClothId)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -1304,9 +1381,9 @@ namespace ElBayt.Services.Implementations
 
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ClothId", ClothId);
-
-
-                return (await _unitOfWork.SP.ListAsnyc<ClothInfoDataDTO>(StoredProcedure.GETCLOTHINFO, SPParameters)).ToList();
+                var Clothes = (await _unitOfWork.SP.ListAsnyc<ClothInfoDataDTO>(StoredProcedure.GETCLOTHINFO, SPParameters)).ToList();
+                
+                return Clothes;
             }
             catch (Exception ex)
             {
@@ -1319,6 +1396,7 @@ namespace ElBayt.Services.Implementations
                 throw;
             }
         }
+       
         public async Task<string> DeleteClothInfo(Guid Id)
         {
             var correlationGuid = Guid.NewGuid();
@@ -1366,7 +1444,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothInfoRepository.GetAsync(Id);
-                return _mapper.Map<ClothInfoEntity, ClothInfoDTO>(Model);
+                return _mapper.Map<ClothInfoModel, ClothInfoDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -1437,7 +1515,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetClothBrands()
+        public async Task<List<GetClothBrandDTO>> GetClothBrands()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -1449,7 +1527,16 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                return _unitOfWork.ClothBrandRepository.GetAll();
+                var Brands = (await _unitOfWork.ClothBrandRepository.GetAllAsync()).
+                    Select(c => new GetClothBrandDTO
+                    {
+                        BrandPic = c.BrandPic,
+                        Id = c.Id,
+                        Name = c.Name
+                    });
+
+
+                return Brands.ToList();
 
             }
             catch (Exception ex)
@@ -1578,7 +1665,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothBrandRepository.GetAsync(Id);
-                return _mapper.Map<ClothBrandEntity, ClothBrandDTO>(Model);
+                return _mapper.Map<ClothBrandModel, ClothBrandDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -1610,7 +1697,7 @@ namespace ElBayt.Services.Implementations
                 var Size = await _unitOfWork.ClothSizeRepository.GetClothSizeByName(clothSize.Name.Trim(), clothSize.Id); ;
                 if (Size == null)
                 {
-                    var Entity = _mapper.Map<ClothSizeDTO, ClothSizeEntity>(clothSize);
+                    var Entity = _mapper.Map<ClothSizeDTO, ClothSizeModel>(clothSize);
                     Entity.Id = Guid.NewGuid();
                     await _unitOfWork.ClothSizeRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
@@ -1630,7 +1717,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public object GetSizes()
+        public async Task<List<GetClothSizeDTO>> GetSizes()
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -1642,7 +1729,17 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
 
-                return _unitOfWork.ClothSizeRepository.GetAll();
+                var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync()).Select(
+                    c => new GetClothSizeDTO
+                    {
+                        ClothId = c.ClothId,
+                        Name = c.Name,
+                        Id = c.Id,
+                        Height = c.Height,
+                        Width = c.Width
+                    });
+
+                return Sizes.ToList();
 
             }
             catch (Exception ex)
@@ -1705,7 +1802,7 @@ namespace ElBayt.Services.Implementations
 
                 if (Size == null)
                 {
-                    var ClothSize = _mapper.Map<ClothSizeDTO, ClothSizeEntity>(clothSize);
+                    var ClothSize = _mapper.Map<ClothSizeDTO, ClothSizeModel>(clothSize);
                     await _unitOfWork.ClothSizeRepository.UpdateClothSize(ClothSize);
                     await _unitOfWork.SaveAsync();
                     return EnumUpdatingResult.Successed;
@@ -1738,7 +1835,7 @@ namespace ElBayt.Services.Implementations
                 #endregion Logging info
 
                 var Model = await _unitOfWork.ClothSizeRepository.GetAsync(Id);
-                return _mapper.Map<ClothSizeEntity, ClothSizeDTO>(Model);
+                return _mapper.Map<ClothSizeModel, ClothSizeDTO>(Model);
             }
             catch (Exception ex)
             {
@@ -1752,7 +1849,7 @@ namespace ElBayt.Services.Implementations
             }
         }
 
-        public async Task<object> GetClothSizes(Guid ClothId)
+        public async Task<List<GetClothSizeDTO>> GetClothSizes(Guid ClothId)
         {
             var correlationGuid = Guid.NewGuid();
 
@@ -1763,8 +1860,18 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothSizes), 1, _userIdentity.Name);
 
                 #endregion Logging info
-
-                return await _unitOfWork.ClothSizeRepository.GetClothSizes(ClothId);
+                var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync(C => C.ClothId == ClothId)).
+                    ToList();
+                var SizesClothes = Sizes.Select(c=>
+                    new GetClothSizeDTO
+                    {
+                        ClothId = c.ClothId,
+                        Width=c.Width,
+                        Height=c.Height,
+                        Id=c.Id,
+                        Name=c.Name
+                    });
+                return SizesClothes.ToList();
                 
             }
             catch (Exception ex)

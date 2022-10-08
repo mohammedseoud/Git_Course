@@ -4,7 +4,7 @@ using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Security;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.Contracts;
@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ElBayt.Core.Models;
 
 namespace ElBayt.Services.Implementations
 {
@@ -43,7 +44,7 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(correlationGuid, correlationGuid, nameof(Service_Service), nameof(AddNewService), 1, _userIdentity.Name);
 
                 #endregion Logging info
-                var Entity = _mapper.Map<ServiceDTO, ServiceEntity>(service);
+                var Entity = _mapper.Map<ServiceDTO, ServiceModel>(service);
                 Entity.Id = Guid.NewGuid();
                 await _unitOfWork.ServiceRepository.AddAsync(Entity);
                 await _unitOfWork.SaveAsync();
@@ -71,7 +72,7 @@ namespace ElBayt.Services.Implementations
                 _logger.InfoInDetail(serviceDepartment, correlationGuid, nameof(Service_Service), nameof(AddNewServiceDepartment), 1, _userIdentity.Name);
 
                 #endregion Logging info
-                var Entity = _mapper.Map<ServiceDepartmentDTO, ServiceDepartmentEntity>(serviceDepartment);
+                var Entity = _mapper.Map<ServiceDepartmentDTO, ServiceDepartmentModel>(serviceDepartment);
                 Entity.Id = Guid.NewGuid();
                 await _unitOfWork.ServiceDepartmentRepository.AddAsync(Entity);
                 await _unitOfWork.SaveAsync();

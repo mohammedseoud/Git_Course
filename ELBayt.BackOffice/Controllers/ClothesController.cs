@@ -14,13 +14,12 @@ using Microsoft.Extensions.Configuration;
 using ElBayt.Common.Core.SecurityModels;
 using ElBayt.DTO.ELBayt.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using ELBayt.BackOffice.Core;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
-    [EnableCors(CorsOrigin.LOCAL_ORIGIN)]
-    [ApiController]
-    [Route("api/v1.0/ElBayt/Clothes")]
-    public class ClothesController : Controller
+    
+    public class ClothesController : ELBaytController
     {
         private readonly IDepartmentsServices _departmentsServices;
         private readonly ILogger _logger;
@@ -43,6 +42,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothType))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewClothType()
         {
 
@@ -53,11 +53,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             var correlationGuid = Guid.NewGuid();
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(Request.Form, correlationGuid, nameof(ClothesController), nameof(AddNewClothType), 1, User.Identity.Name);
-                #endregion Logging info
-
+          
                 var clothtype = await _departmentsServices.ClothesService.AddNewClothType(Request.Form, _config["FilesInfo:WebFolder"]);
 
                 if (clothtype != null)
@@ -124,9 +120,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothTypes))]
-        public ActionResult GetClothTypes()
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothTypeDTO>>), 200)]
+        public async Task<IActionResult> GetClothTypes()
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothTypeDTO>>
             {
                 Errors = new List<string>()
             };
@@ -138,7 +135,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail("GetAll", correlationGuid, nameof(ClothesController), nameof(GetClothTypes), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Types = _departmentsServices.ClothesService.GetClothTypes();
+                var Types = await _departmentsServices.ClothesService.GetClothTypes();
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Types;
@@ -185,7 +182,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothType))]
-        public async Task<ActionResult> GetClothType(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothTypeDTO>), 200)]
+        public async Task<IActionResult> GetClothType(Guid Id)
         {
             var Response = new ElBaytResponse<ClothTypeDTO>
             {
@@ -246,7 +244,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothType))]
-        public async Task<ActionResult> DeleteClothType(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothType(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -342,7 +341,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothType))]
-        public async Task<ActionResult> UpdateClothType()
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> UpdateClothType()
         {
             var Response = new ElBaytResponse<string>
             {
@@ -416,11 +416,14 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothCategory))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewClothCategory(ClothCategoryDTO ClothCategory)
         {
 
-            var Response = new ElBaytResponse<string>();
-            Response.Errors = new List<string>();
+            var Response = new ElBaytResponse<string>
+            {
+                Errors = new List<string>()
+            };
             var correlationGuid = Guid.NewGuid();
             try
             {
@@ -486,9 +489,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothCategories))]
-        public ActionResult GetClothCategories()
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothCategoryDTO>>), 200)]
+        public async Task<IActionResult> GetClothCategories()
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothCategoryDTO>>
             {
                 Errors = new List<string>()
             };
@@ -500,10 +504,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail("GetClothCategories", correlationGuid, nameof(ClothesController), nameof(GetClothCategories), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Clothes = _departmentsServices.ClothesService.GetClothCategories();
+                var ClothesCategories = await _departmentsServices.ClothesService.GetClothCategories();
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
-                Response.Data = Clothes;
+                Response.Data = ClothesCategories;
                 #endregion
 
                 return Ok(Response);
@@ -547,7 +551,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothCategory))]
-        public async Task<ActionResult> GetClothCategory(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothCategoryDTO>), 200)]
+        public async Task<IActionResult> GetClothCategory(Guid Id)
         {
             var Response = new ElBaytResponse<ClothCategoryDTO>
             {
@@ -608,7 +613,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothCategory))]
-        public async Task<ActionResult> DeleteClothCategory(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothCategory(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -684,7 +690,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothCategory))]
-        public async Task<ActionResult> UpdateClothCategory(ClothCategoryDTO clothCategory)
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> UpdateClothCategory(ClothCategoryDTO clothCategory)
         {
             var Response = new ElBaytResponse<string>
             {
@@ -760,6 +767,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothDepartment))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewClothDepartment()
         {
 
@@ -841,9 +849,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothDepartments))]
-        public ActionResult GetClothDepartments()
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothDepartmentDTO>>), 200)]
+        public async Task<IActionResult> GetClothDepartments()
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothDepartmentDTO>>
             {
                 Errors = new List<string>()
             };
@@ -855,7 +864,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail("GetAll", correlationGuid, nameof(ClothesController), nameof(GetClothDepartments), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Departments = _departmentsServices.ClothesService.GetClothDepartments();
+                var Departments = await _departmentsServices.ClothesService.GetClothDepartments();
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Departments;
@@ -902,7 +911,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothDepartment))]
-        public async Task<ActionResult> GetClothDepartment(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothDepartmentDTO>), 200)]
+        public async Task<IActionResult> GetClothDepartment(Guid Id)
         {
             var Response = new ElBaytResponse<ClothDepartmentDTO>
             {
@@ -963,7 +973,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothDepartment))]
-        public async Task<ActionResult> DeleteClothDepartment(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothDepartment(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -1041,7 +1052,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothDepartment))]
-        public async Task<ActionResult> UpdateClothDepartment()
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> UpdateClothDepartment()
         {
             var Response = new ElBaytResponse<string>
             {
@@ -1111,9 +1123,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         #region Brands
 
-      //  [Authorize]
+        [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothBrand))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewClothBrand()
         {
 
@@ -1195,9 +1208,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothBrands))]
-        public ActionResult GetClothBrands()
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothBrandDTO>>), 200)]
+        public async Task<IActionResult> GetClothBrands()
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothBrandDTO>>
             {
                 Errors = new List<string>()
             };
@@ -1209,7 +1223,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail("GetAll", correlationGuid, nameof(ClothesController), nameof(GetClothBrands), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Brands = _departmentsServices.ClothesService.GetClothBrands();
+                var Brands = await _departmentsServices.ClothesService.GetClothBrands();
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Brands;
@@ -1256,7 +1270,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothBrand))]
-        public async Task<ActionResult> GetClothBrand(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothBrandDTO>), 200)]
+        public async Task<IActionResult> GetClothBrand(Guid Id)
         {
             var Response = new ElBaytResponse<ClothBrandDTO>
             {
@@ -1317,7 +1332,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothBrand))]
-        public async Task<ActionResult> DeleteClothBrand(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothBrand(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -1394,7 +1410,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothBrand))]
-        public async Task<ActionResult> UpdateClothBrand()
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> UpdateClothBrand()
         {
             var Response = new ElBaytResponse<string>
             {
@@ -1467,6 +1484,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddNewClothSize))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewClothSize(ClothSizeDTO ClothSize)
         {
 
@@ -1537,9 +1555,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetSizes))]
-        public ActionResult GetSizes()
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothSizeDTO>>), 200)]
+        public async Task<IActionResult> GetSizes()
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothSizeDTO>>
             {
                 Errors = new List<string>()
             };
@@ -1551,7 +1570,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail("GetSizes", correlationGuid, nameof(ClothesController), nameof(GetSizes), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Clothes = _departmentsServices.ClothesService.GetSizes();
+                var Clothes = await _departmentsServices.ClothesService.GetSizes();
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = Clothes;
@@ -1598,9 +1617,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothSizes))]
-        public async Task<ActionResult> GetClothSizes(Guid ClothId)
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothSizeDTO>>), 200)]
+        public async Task<IActionResult> GetClothSizes(Guid ClothId)
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothSizeDTO>>
             {
                 Errors = new List<string>()
             };
@@ -1659,7 +1679,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothSize))]
-        public async Task<ActionResult> GetClothSize(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothSizeDTO>), 200)]
+        public async Task<IActionResult> GetClothSize(Guid Id)
         {
             var Response = new ElBaytResponse<ClothSizeDTO>
             {
@@ -1720,7 +1741,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothSize))]
-        public async Task<ActionResult> DeleteClothSize(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothSize(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -1793,7 +1815,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateClothSize))]
-        public async Task<ActionResult> UpdateClothSize(ClothSizeDTO clothSize)
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> UpdateClothSize(ClothSizeDTO clothSize)
         {
             var Response = new ElBaytResponse<string>
             {
@@ -1864,11 +1887,12 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
         #endregion
 
-        #region Products
+        #region Clothes
 
         [Authorize]
         [HttpPost]
         [Route(nameof(AddNewCloth))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewCloth()
         {
 
@@ -1969,9 +1993,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothes))]
-        public ActionResult GetClothes()
+        [ProducesResponseType(typeof(ElBaytResponse<List<GetClothDTO>>), 200)]
+        public async Task<IActionResult> GetClothes()
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<GetClothDTO>>
             {
                 Errors = new List<string>()
             };
@@ -1983,10 +2008,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 _logger.InfoInDetail("GetClothes", correlationGuid, nameof(ClothesController), nameof(GetClothes), 1, User.Identity.Name);
                 #endregion Logging info
 
-                var Departments = _departmentsServices.ClothesService.GetClothes();
+                var Clothes = await _departmentsServices.ClothesService.GetClothes();
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
-                Response.Data = Departments;
+                Response.Data = Clothes;
                 #endregion
 
                 return Ok(Response);
@@ -2030,7 +2055,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetCloth))]
-        public async Task<ActionResult> GetCloth(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<NumberClothDTO>), 200)]
+        public async Task<IActionResult> GetCloth(Guid Id)
         {
             var Response = new ElBaytResponse<NumberClothDTO>
             {
@@ -2091,7 +2117,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteCloth))]
-        public async Task<ActionResult> DeleteCloth(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteCloth(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -2166,7 +2193,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateCloth))]
-        public async Task<ActionResult> UpdateCloth()
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> UpdateCloth()
         {
             var Response = new ElBaytResponse<string>
             {
@@ -2266,7 +2294,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(UploadClothImage))]
-        public async Task<ActionResult> UploadClothImage()
+        [ProducesResponseType(typeof(ElBaytResponse<ClothImageDTO>), 200)]
+        public async Task<IActionResult> UploadClothImage()
         {
 
             var Response = new ElBaytResponse<ClothImageDTO>
@@ -2356,7 +2385,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothImages))]
-        public async Task<ActionResult> GetClothImages(Guid clothId)
+        [ProducesResponseType(typeof(ElBaytResponse<List<ClothImageDTO>>), 200)]
+        public async Task<IActionResult> GetClothImages(Guid clothId)
         {
             var Response = new ElBaytResponse<List<ClothImageDTO>>
             {
@@ -2417,7 +2447,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothImage))]
-        public async Task<ActionResult> DeleteClothImage(Guid ImageId)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothImage(Guid ImageId)
         {
 
             var Response = new ElBaytResponse<bool>
@@ -2499,7 +2530,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothImageByURL))]
-        public async Task<ActionResult> DeleteClothImageByURL(string URL)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothImageByURL(string URL)
         {
 
             var Response = new ElBaytResponse<bool>
@@ -2571,7 +2603,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddClothBrands))]
-        public async Task<ActionResult> AddClothBrands(SelectedBrandsDTO SelectedBrands)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> AddClothBrands(SelectedBrandsDTO SelectedBrands)
         {
 
             var Response = new ElBaytResponse<bool>
@@ -2639,7 +2672,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetSelectedClothBrands))]
-        public async Task<ActionResult> GetSelectedClothBrands(Guid clothId)
+        [ProducesResponseType(typeof(ElBaytResponse<List<ClothBrandsDTO>>), 200)]
+        public async Task<IActionResult> GetSelectedClothBrands(Guid clothId)
         {
             var Response = new ElBaytResponse<List<ClothBrandsDTO>>
             {
@@ -2700,7 +2734,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothDBLInfo))]
-        public async Task<ActionResult> GetClothDBLInfo(Guid clothId)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothDBLDataDTO>), 200)]
+        public async Task<IActionResult> GetClothDBLInfo(Guid clothId)
         {
             var Response = new ElBaytResponse<ClothDBLDataDTO>
             {
@@ -2761,7 +2796,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddClothInfo))]
-        public async Task<ActionResult> AddClothInfo(ClothInfoDTO ClothInfo)
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
+        public async Task<IActionResult> AddClothInfo(ClothInfoDTO ClothInfo)
         {
 
             var Response = new ElBaytResponse<string>
@@ -2829,9 +2865,10 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetClothInfo))]
-        public async Task<ActionResult> GetClothInfo(Guid clothId)
+        [ProducesResponseType(typeof(ElBaytResponse<List<ClothInfoDataDTO>>), 200)]
+        public async Task<IActionResult> GetClothInfo(Guid clothId)
         {
-            var Response = new ElBaytResponse<object>
+            var Response = new ElBaytResponse<List<ClothInfoDataDTO>>
             {
                 Errors = new List<string>()
             };
@@ -2890,7 +2927,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpDelete]
         [Route(nameof(DeleteClothInfo))]
-        public async Task<ActionResult> DeleteClothInfo(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
+        public async Task<IActionResult> DeleteClothInfo(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
             {
@@ -2963,7 +3001,8 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetInfo))]
-        public async Task<ActionResult> GetInfo(Guid Id)
+        [ProducesResponseType(typeof(ElBaytResponse<ClothInfoDTO>), 200)]
+        public async Task<IActionResult> GetInfo(Guid Id)
         {
             var Response = new ElBaytResponse<ClothInfoDTO>
             {

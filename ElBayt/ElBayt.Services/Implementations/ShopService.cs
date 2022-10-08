@@ -2,7 +2,7 @@
 using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Core.Mapping;
 using ElBayt.DTO.ELBayt.DBDTOs;

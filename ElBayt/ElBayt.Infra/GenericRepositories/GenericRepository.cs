@@ -15,76 +15,76 @@ using System.Threading.Tasks;
 
 namespace ElBayt.Common.Infra.Common
 {
-    public class GenericRepository<TEntity,TModel, TId> : IGenericRepository<TEntity, TId> 
+    public class GenericRepository<TModel, TId> : IGenericRepository<TModel, TId>
         where TModel : BaseModel
-        where TEntity:BaseEntity
     {
         private readonly DbContext _dbContext;
-        private readonly ITypeMapper _mapper;
         private DbSet<TModel> _set;
 
-        public GenericRepository(DbContext dbContext, ITypeMapper mapper)
+        public GenericRepository(DbContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _set = _dbContext.Set<TModel>();
-            _mapper = mapper;
         }
-        public void Add(TEntity entity)
+        public void Add(TModel model)
         {
-            
-            var model = _mapper.Map<TEntity, TModel>(entity);
-            _set.Add(model);
-        }
-
-        public async Task AddAsync(TEntity entity)
-        {
-            var model = _mapper.Map<TEntity, TModel>(entity);
-            await _set.AddAsync(model);
-        }
-
-        public void AddRange(List<TEntity> entities)
-        {
-            var models = new List<TModel>();
-            foreach (var entity in entities)
+            try
             {
-                var model = _mapper.Map<TEntity, TModel>(entity);
-                models.Add(model);
+                _set.Add(model);
             }
-
-            _dbContext.AddRange(models);
-        }
-
-        public async Task AddRangeAsync(List<TEntity> entities)
-        {
-            var models = new List<TModel>();
-            foreach (var entity in entities)
+            catch (Exception ex)
             {
-                var model = _mapper.Map<TEntity, TModel>(entity);
-                models.Add(model);
+                throw new Exception(ex.Message);
             }
-
-            await _dbContext.AddRangeAsync(models);
         }
 
-        public TEntity Get(TId id)
+        public async Task AddAsync(TModel model)
         {
-            var model = _set.Find(id);
-            var entity = _mapper.Map<TModel, TEntity>(model);
-            return entity;
+            try
+            {
+                await _set.AddAsync(model);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task<TEntity> GetAsync(TId id)
+        public void AddRange(IEnumerable<TModel> models)
         {
-            var model = await _set.FindAsync(id);
-            var entity = _mapper.Map<TModel, TEntity>(model);
-            return entity;
+            try
+            {
+                _dbContext.AddRange(models);
+            }
+            catch (Exception ex) { throw new Exception(ex.Message); }
+
         }
 
-        public IQueryable<BaseModel> GetAll(Expression<Func<BaseModel, bool>> filter = null, Func<IQueryable<BaseModel>,
-            IOrderedQueryable<BaseModel>> orderby = null, string IncludeProperties = null)
+        public async Task AddRangeAsync(IEnumerable<TModel> models)
         {
-            IQueryable<BaseModel> query = _set;
-            if (filter != null) { query = _set.Where(filter).AsNoTracking(); }
+            try
+            {
+                await _dbContext.AddRangeAsync(models);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public TModel Get(TId id) => _set.Find(id);
+
+        public async Task<TModel> GetAsync(TId id) => await _set.FindAsync(id);
+
+        public async Task<IEnumerable<TModel>> GetAllAsync(Expression<Func<TModel, bool>> filter = null,
+                        Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderby = null,
+                        string IncludeProperties = null)
+        {
+            IQueryable<TModel> query = _set;
+            if (filter != null)
+            {
+                query = _set.Where(filter).AsNoTracking();
+            }
             if (IncludeProperties != null)
             {
                 var properties = IncludeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -94,11 +94,35 @@ namespace ElBayt.Common.Infra.Common
                 }
             }
             if (orderby != null) { query = orderby(query); }
-            return query;
+            var result = await query.ToListAsync();
+            return result;
         }
-        public TEntity GetFirstOrDefault(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null)
+
+        public IEnumerable<TModel> GetAll(Expression<Func<TModel, bool>> filter = null,
+            Func<IQueryable<TModel>, IOrderedQueryable<TModel>> orderby = null,
+            string IncludeProperties = null)
         {
-            IQueryable<BaseModel> query = _set;
+            IQueryable<TModel> query = _set;
+            if (filter != null)
+            {
+                query = _set.Where(filter).AsNoTracking();
+            }
+            if (IncludeProperties != null)
+            {
+                var properties = IncludeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var property in properties)
+                {
+                    query = query.Include(property);
+                }
+            }
+            if (orderby != null) { query = orderby(query); }
+            var result = query.ToList();
+            return result;
+        }
+
+        public TModel GetFirstOrDefault(Expression<Func<TModel, bool>> filter = null, string IncludeProperties = null)
+        {
+            IQueryable<TModel> query = _set;
             if (filter != null) { query = _set.Where(filter).AsNoTracking(); }
             if (IncludeProperties != null)
             {
@@ -108,14 +132,12 @@ namespace ElBayt.Common.Infra.Common
                     query = query.Include(property);
                 }
             }
-            var model = query.FirstOrDefault();
-            var entity = _mapper.Map<BaseModel, TEntity>(model);
-            return entity;
+            return query.FirstOrDefault(); ;
         }
 
-        public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<BaseModel, bool>> filter = null, string IncludeProperties = null)
+        public async Task<TModel> FirstOrDefaultAsync(Expression<Func<TModel, bool>> filter = null, string IncludeProperties = null)
         {
-            IQueryable<BaseModel> query = _set;
+            IQueryable<TModel> query = _set;
             if (filter != null) { query = _set.Where(filter).AsNoTracking(); }
             if (IncludeProperties != null)
             {
@@ -126,68 +148,63 @@ namespace ElBayt.Common.Infra.Common
                 }
             }
 
-            var model = await query.FirstOrDefaultAsync();
-            var entity = _mapper.Map<BaseModel, TEntity>(model);
-            return entity;
+            return await query.FirstOrDefaultAsync();
         }
 
         public bool Remove(TId id)
         {
             var entity = _set.Find(id);
+            if (entity == null) { return false; }
             try
             {
                 _set.Remove(entity);
                 return true;
             }
-            catch { return false;   }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> RemoveAsync(TId id)
         {
             var entity = await _set.FindAsync(id);
+            if(entity == null) { return false; }
             try
             {
                 _set.Remove(entity);
                 return true;
             }
-            catch  
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 
-        public bool RemoveRange(IEnumerable<TEntity> entities)
+        public void RemoveRange(IEnumerable<TModel> models)
         {
-            var models = new List<TModel>();
-            foreach (var entity in entities)
-            {
-                var model = _mapper.Map<TEntity, TModel>(entity);
-                models.Add(model);
-            }
 
             try
             {
                 _set.RemoveRange(models);
-                return true;
             }
-            catch 
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 
-        public bool ReomveEntity(TEntity entity)
+        public void ReomveEntity(TModel model)
         {
-            var model = _mapper.Map<TEntity, TModel>(entity);
             try
             {
                 _set.Remove(model);
-                return true;
             }
-            catch 
+            catch (Exception ex)
             {
-                return false;
+                throw new Exception(ex.Message);
             }
         }
+
     }
 }

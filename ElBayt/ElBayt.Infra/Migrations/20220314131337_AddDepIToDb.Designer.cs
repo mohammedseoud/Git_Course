@@ -91,7 +91,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.AreaModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.AreaModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Area", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothBrandModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothBrandModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +160,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothBrand", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothBrandsModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothBrandsModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -200,7 +200,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothBrands", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothCategoryModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothCategoryModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,7 +237,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothCategory", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothColorsModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothColorsModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,7 +274,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothColors", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothDepartmentModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothDepartmentModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -311,7 +311,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothDepartment", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothImageModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothImageModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -348,7 +348,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothImage", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -405,7 +405,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Cloth", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothSizeModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothSizeModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -443,7 +443,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothSize", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothSizesModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothSizesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -483,7 +483,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothSizes", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothTypeModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothTypeModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -525,7 +525,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ClothType", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ColorModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ColorModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -557,7 +557,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Color", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.CountryModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.CountryModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -589,7 +589,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Country", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.GovernorateModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.GovernorateModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -626,7 +626,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Governorate", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ServiceDepartmentModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ServiceDepartmentModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -658,7 +658,7 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("ServiceDepartment", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ServiceModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ServiceModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -829,9 +829,9 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.AreaModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.AreaModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.GovernorateModel", "Governorates")
+                    b.HasOne("ElBayt.Core.Models.GovernorateModel", "Governorates")
                         .WithMany()
                         .HasForeignKey("GovernorateId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -840,15 +840,15 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("Governorates");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothBrandsModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothBrandsModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothBrandModel", "Brands")
+                    b.HasOne("ElBayt.Core.Models.ClothBrandModel", "Brands")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ElBayt.Infra.Models.ClothModel", "Clothes")
+                    b.HasOne("ElBayt.Core.Models.ClothModel", "Clothes")
                         .WithMany()
                         .HasForeignKey("ClothId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -859,9 +859,9 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("Clothes");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothCategoryModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothCategoryModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothTypeModel", "ClothTypes")
+                    b.HasOne("ElBayt.Core.Models.ClothTypeModel", "ClothTypes")
                         .WithMany()
                         .HasForeignKey("ClothTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -870,15 +870,15 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("ClothTypes");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothColorsModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothColorsModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothModel", "Clothes")
+                    b.HasOne("ElBayt.Core.Models.ClothModel", "Clothes")
                         .WithMany()
                         .HasForeignKey("ClothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ElBayt.Infra.Models.ColorModel", "Colors")
+                    b.HasOne("ElBayt.Core.Models.ColorModel", "Colors")
                         .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -889,9 +889,9 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("Colors");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothImageModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothImageModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothModel", "Cloths")
+                    b.HasOne("ElBayt.Core.Models.ClothModel", "Cloths")
                         .WithMany()
                         .HasForeignKey("ClothId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -900,9 +900,9 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("Cloths");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothCategoryModel", "ClothCategories")
+                    b.HasOne("ElBayt.Core.Models.ClothCategoryModel", "ClothCategories")
                         .WithMany()
                         .HasForeignKey("ClothCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -911,15 +911,15 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("ClothCategories");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothSizesModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothSizesModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothModel", "Clothes")
+                    b.HasOne("ElBayt.Core.Models.ClothModel", "Clothes")
                         .WithMany()
                         .HasForeignKey("ClothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ElBayt.Infra.Models.ClothSizeModel", "Sizes")
+                    b.HasOne("ElBayt.Core.Models.ClothSizeModel", "Sizes")
                         .WithMany()
                         .HasForeignKey("SizeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -930,9 +930,9 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("Sizes");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.ClothTypeModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.ClothTypeModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.ClothDepartmentModel", "ClothDepartments")
+                    b.HasOne("ElBayt.Core.Models.ClothDepartmentModel", "ClothDepartments")
                         .WithMany()
                         .HasForeignKey("ClothDepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -941,9 +941,9 @@ namespace ElBayt.Infra.Migrations
                     b.Navigation("ClothDepartments");
                 });
 
-            modelBuilder.Entity("ElBayt.Infra.Models.GovernorateModel", b =>
+            modelBuilder.Entity("ElBayt.Core.Models.GovernorateModel", b =>
                 {
-                    b.HasOne("ElBayt.Infra.Models.CountryModel", "Countries")
+                    b.HasOne("ElBayt.Core.Models.CountryModel", "Countries")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)

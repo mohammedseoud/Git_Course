@@ -2,10 +2,10 @@
 using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Infra.Mapping;
 using ElBayt.Common.Core.Mapping;
-using ElBayt.Core.Entities;
+using ElBayt.Infra.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;
-using ElBayt.Infra.Models;
+using ElBayt.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,27 +15,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothSizeRepository : GenericRepository<ClothSizeEntity, ClothSizeModel, Guid>, IClothSizeRepository
+    public class ClothSizeRepository : GenericRepository<ClothSizeModel, Guid>, IClothSizeRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
         
 
-        public ClothSizeRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext, mapper)
+        public ClothSizeRepository(ElBaytContext dbContext, ITypeMapper mapper) : base(dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
-        public async Task<ClothSizeEntity> GetClothSizeByName(string Name, Guid Id)
+        public async Task<ClothSizeModel> GetClothSizeByName(string Name, Guid Id)
         {
             var size = await _dbContext.ClothSizes
                .Where(c => c.Name.Trim() == Name && c.Id != Id).
                AsNoTracking().FirstOrDefaultAsync();
-            return _mapper.Map<ClothSizeModel, ClothSizeEntity>(size);
+            return size;
         }
 
-        public async Task<object> GetClothSizes(Guid ClothId)
+        public async Task<List<ClothSizeModel>> GetClothSizes(Guid ClothId)
         {
             return await _dbContext.ClothSizes
                           .Where(c =>  c.ClothId == ClothId)
@@ -44,7 +44,7 @@ namespace ElBayt.Infra.Repositories
 
         
 
-        public async Task UpdateClothSize(ClothSizeEntity clothSize)
+        public async Task UpdateClothSize(ClothSizeModel clothSize)
         {
             var Size = await _dbContext.ClothSizes.FindAsync(clothSize.Id);
             if (Size != null)

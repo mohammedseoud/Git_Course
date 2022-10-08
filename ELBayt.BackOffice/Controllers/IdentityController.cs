@@ -6,6 +6,7 @@ using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.Common.Security;
 using ElBayt.DTO.ELBayt.DTOs;
+using ELBayt.BackOffice.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,9 +16,7 @@ using System.Threading.Tasks;
 
 namespace ELBayt.WebAPI.Controllers
 {
-    [ApiController]
-    [Route("api/v1.0/ElBayt/Identity")]
-    public class IdentityController : Controller
+    public class IdentityController : ELBaytController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;

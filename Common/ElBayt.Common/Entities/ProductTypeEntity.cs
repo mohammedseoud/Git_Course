@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ElBayt.Core.Entities
+namespace ElBayt.Infra.Entities
 {
     public class ProductTypeEntity : EnhancedEntity<Guid> , BaseEntity
     {

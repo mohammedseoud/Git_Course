@@ -4,23 +4,18 @@ using ElBayt.Common.Core.SecurityModels;
 using ElBayt.Common.Enums;
 using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.IElBaytServices;
+using ELBayt.BackOffice.Core;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ELBayt.WebAPI.Controllers
 {
-    [EnableCors(CorsOrigin.LOCAL_ORIGIN)]
-    [ApiController]
-    [Authorize]
-    [Route("api/v1.0/ElBayt/General")]
-    public class GeneralController : Controller
+    [Authorize]   
+    public class GeneralController : ELBaytController
     {
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;
@@ -41,6 +36,7 @@ namespace ELBayt.WebAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route(nameof(AddNewColor))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<IActionResult> AddNewColor(ColorDTO Color)
         {
 
@@ -111,6 +107,7 @@ namespace ELBayt.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetColors))]
+        [ProducesResponseType(typeof(ElBaytResponse<object>), 200)]
         public ActionResult GetColors()
         {
             var _user = User.Identity.Name;
@@ -175,6 +172,7 @@ namespace ELBayt.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetColor))]
+        [ProducesResponseType(typeof(ElBaytResponse<ColorDTO>), 200)]
         public async Task<ActionResult> GetColor(Guid Id)
         {
             var Response = new ElBaytResponse<ColorDTO>
@@ -236,6 +234,7 @@ namespace ELBayt.WebAPI.Controllers
 
         [HttpDelete]
         [Route(nameof(DeleteColor))]
+        [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
         public async Task<ActionResult> DeleteColor(Guid Id)
         {
             var Response = new ElBaytResponse<bool>
@@ -309,6 +308,7 @@ namespace ELBayt.WebAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route(nameof(UpdateColor))]
+        [ProducesResponseType(typeof(ElBaytResponse<string>), 200)]
         public async Task<ActionResult> UpdateColor(ColorDTO Color)
         {
            var Response = new ElBaytResponse<string>
