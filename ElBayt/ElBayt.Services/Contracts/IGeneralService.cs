@@ -13,9 +13,9 @@ namespace ElBayt.Services.Contracts
         #region Colors
         public Task<EnumInsertingResult> AddNewColor(ColorDTO Color);
         public Task<List<GetColorDTO>> GetColors();
-        public Task<string> DeleteColor(Guid Id);
+        public Task<string> DeleteColor(int Id);
         public Task<EnumUpdatingResult> UpdateColor(ColorDTO Color);
-        public Task<ColorDTO> GetColor(Guid Id);
+        public Task<ColorDTO> GetColor(int Id);
         #endregion
 
 

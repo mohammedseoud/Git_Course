@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElBayt.Common.Core.Services
 {
-    public class ProductDepartmentDTO : BaseDto<Guid>, IBaseDTO
+    public class ProductDepartmentDTO : BasicDto<int>, IBaseDTO
     { 
         public string Name { get; set; }
         public string DepartmentPic { get; set; }

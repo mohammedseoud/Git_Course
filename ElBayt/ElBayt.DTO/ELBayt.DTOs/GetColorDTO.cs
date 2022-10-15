@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DTOs
 {
-    public class GetColorDTO : BasicDto<Guid>
+    public class GetColorDTO : BasicDto<int>
     {
         public string Name { get; set; }
 

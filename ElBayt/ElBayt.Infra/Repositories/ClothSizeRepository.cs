@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothSizeRepository : GenericRepository<ClothSizeModel, Guid>, IClothSizeRepository
+    public class ClothSizeRepository : GenericRepository<ClothSizeModel, int>, IClothSizeRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
@@ -27,7 +27,7 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<ClothSizeModel> GetClothSizeByName(string Name, Guid Id)
+        public async Task<ClothSizeModel> GetClothSizeByName(string Name, int Id)
         {
             var size = await _dbContext.ClothSizes
                .Where(c => c.Name.Trim() == Name && c.Id != Id).
@@ -35,7 +35,7 @@ namespace ElBayt.Infra.Repositories
             return size;
         }
 
-        public async Task<List<ClothSizeModel>> GetClothSizes(Guid ClothId)
+        public async Task<List<ClothSizeModel>> GetClothSizes(int ClothId)
         {
             return await _dbContext.ClothSizes
                           .Where(c =>  c.ClothId == ClothId)

@@ -9,7 +9,7 @@ using System.Text;
 namespace ElBayt.Core.Models
 {
     [Table("Country", Schema = "dbo")]
-    public class CountryModel : BaseModel<Guid>
+    public class CountryModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

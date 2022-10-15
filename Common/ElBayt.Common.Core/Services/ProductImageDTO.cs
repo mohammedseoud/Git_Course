@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElBayt.Common.Core.Services
 {
-    public class ProductImageDTO : BaseDto<Guid>, IBaseDTO
+    public class ProductImageDTO : BasicDto<Guid>, IBaseDTO
     {
         public string URL { get; set; }
 

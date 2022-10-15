@@ -6,9 +6,9 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IColorRepository : IGenericRepository<ColorModel, Guid>
+    public interface IColorRepository : IGenericRepository<ColorModel, int>
     {
         Task UpdateColor(ColorModel Color);
-        Task<ColorModel> GetColorByName(string Name, Guid Id);
+        Task<ColorModel> GetColorByName(string Name, int Id);
     }
 }

@@ -18,11 +18,8 @@ namespace ElBayt.Common.Infra.Models
     {
         public virtual DateTime CreatedDate { get; set; }
         [Required]
-        [MaxLength(50)]
         public virtual string CreatedBy { get; set; }
-        public virtual DateTime ModifiedDate { get; set; }
-        [Required]
-        [MaxLength(50)]
+        public virtual DateTime? ModifiedDate { get; set; }
         public virtual string ModifiedBy { get; set; }
     }
 }

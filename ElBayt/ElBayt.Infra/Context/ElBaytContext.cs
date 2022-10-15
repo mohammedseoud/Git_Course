@@ -64,7 +64,7 @@ namespace ElBayt.Infra.Context
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedBy = entity.ModifiedBy = identityName;
-                        entity.CreatedDate = entity.ModifiedDate = dateNow;
+                        entity.CreatedDate =  dateNow;
                     }
                     else
                     {
@@ -95,7 +95,7 @@ namespace ElBayt.Infra.Context
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedBy = entity.ModifiedBy = identityName;
-                        entity.CreatedDate = entity.ModifiedDate = dateNow;
+                        entity.CreatedDate = dateNow;
                     }
                     else
                     {
@@ -126,7 +126,7 @@ namespace ElBayt.Infra.Context
                     if (entry.State == EntityState.Added)
                     {
                         entity.CreatedBy = entity.ModifiedBy = identityName;
-                        entity.CreatedDate = entity.ModifiedDate = dateNow;
+                        entity.CreatedDate = dateNow;
                     }
                     else
                     {

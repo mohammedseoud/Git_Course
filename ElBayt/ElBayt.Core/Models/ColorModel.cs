@@ -9,7 +9,7 @@ using System.Text;
 namespace ElBayt.Core.Models
 {
     [Table("Color", Schema = "dbo")]
-    public class ColorModel : BaseModel<Guid>
+    public class ColorModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

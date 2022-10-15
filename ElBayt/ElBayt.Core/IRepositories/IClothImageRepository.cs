@@ -7,9 +7,9 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IClothImageRepository : IGenericRepository<ClothImageModel, Guid>
+    public interface IClothImageRepository : IGenericRepository<ClothImageModel, int>
     {
-        object GetClothImages(Guid ClothId);
+        object GetClothImages(int ClothId);
         bool DeleteByURL(string URL);
     }
 }

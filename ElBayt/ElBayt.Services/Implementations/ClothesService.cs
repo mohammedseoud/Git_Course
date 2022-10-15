@@ -48,32 +48,28 @@ namespace ElBayt.Services.Implementations
 
         public async Task<ClothTypeDTO> AddNewClothType(IFormCollection Form, string DiskDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(AddNewClothType), 1, _userIdentity.Name);
-                #endregion Logging info
-
-                var ClothType = await _unitOfWork.ClothTypeRepository.GetClothTypeByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                var ClothType = await _unitOfWork.ClothTypeRepository.GetClothTypeByName(Form["ClothType.Name"].ToString().Trim(), 0);
                 if (ClothType == null)
                 {
 
                     var identityName = _userIdentity?.Name ?? "Unknown";
+                    var test = Form["ClothType.ClothDepartmentId"];
+                    var test1 = Form["ClothDepartmentId"];
+
 
                     var clothtype = new ClothTypeDTO
                     {
                         Id = Guid.NewGuid(),
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
-                        ClothDepartmentId = Guid.Parse(Form["ClothDepartmentId"].ToString())
+                        ClothDepartmentId = Guid.Parse(Form["ClothType.ClothDepartmentId"].ToString())
                     };
 
                     var clothtypeEntity = _mapper.Map<ClothTypeDTO, UTDClothTypeDTO>(clothtype);
+                    clothtypeEntity.CreatedDate= DateTime.Now;
+                    clothtypeEntity.CreatedBy = identityName;
+
                     var clothtypes = new List<UTDClothTypeDTO>
                         {
                            clothtypeEntity
@@ -92,27 +88,16 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothTypeDTO>> GetClothTypes()
         {
-            var correlationGuid = Guid.NewGuid();
+     
 
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetClothTypes", correlationGuid, nameof(ClothesService), nameof(GetClothTypes), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var types = (await _unitOfWork.ClothTypeRepository.GetAllAsync()).
                     Select(c => new GetClothTypeDTO
                     {
@@ -125,65 +110,42 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothTypes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothTypes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteClothType(Guid Id)
+        public async Task<string> DeleteClothType(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
+     
 
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothType), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@TypeId", Id);
                 return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHTYPE, SPParameters);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<EnumUpdatingResult> UpdateClothType(IFormCollection Form, string DiskDirectory,string machineDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
+     
 
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateClothDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var _clothtype = await _unitOfWork.ClothTypeRepository.GetClothTypeByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                var _clothtype = await _unitOfWork.ClothTypeRepository.GetClothTypeByName(Form["Name"].ToString().Trim(),
+                    Convert.ToInt32(Form["Id"].ToString()));
                 if (_clothtype == null)
                 {
                     var identityName = _userIdentity?.Name ?? "Unknown";
                     var clothtype = new ClothTypeDTO
                     {
                         Id = Guid.Parse(Form["Id"].ToString()),
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                         ClothDepartmentId = Guid.Parse(Form["ClothDepartmentId"].ToString())
                     };
@@ -229,37 +191,19 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-                #endregion Logging info
-
                 return EnumUpdatingResult.Failed;
             }
         }
 
-        public async Task<ClothTypeDTO> GetClothType(Guid Id)
+        public async Task<ClothTypeDTO> GetClothType(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothType), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ClothTypeRepository.GetAsync(Id);
                 return _mapper.Map<ClothTypeModel, ClothTypeDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothType)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
@@ -269,21 +213,12 @@ namespace ElBayt.Services.Implementations
         #region Categories
         public async Task<EnumInsertingResult> AddNewClothCategory(ClothCategoryDTO clothCategory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(clothCategory, correlationGuid, nameof(ClothesService), nameof(AddNewClothCategory), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Category = await _unitOfWork.ClothCategoryRepository.GetClothCategoryByName(clothCategory.Name.Trim(), clothCategory.Id);;
                 if (Category == null)
                 {
                     var Entity = _mapper.Map<ClothCategoryDTO, ClothCategoryModel>(clothCategory);
-                    Entity.Id = Guid.NewGuid();
                     await _unitOfWork.ClothCategoryRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
                     return EnumInsertingResult.Successed;
@@ -292,27 +227,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(clothCategory, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothCategoryDTO>> GetClothCategories()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetClothCategories", correlationGuid, nameof(ClothesService), nameof(GetClothCategories), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var Categories = (await _unitOfWork.ClothCategoryRepository.GetAllAsync())
                     .Select(c =>
                     new GetClothCategoryDTO {
@@ -326,56 +248,28 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothCategories", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothCategories)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteClothCategory(Guid Id)
+        public async Task<string> DeleteClothCategory(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothCategory), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@CategoryId", Id);
                 return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHCATEGORY, SPParameters);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory, string machineDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(clothCategory, correlationGuid, nameof(ClothesService), nameof(UpdateClothCategory), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Category = await _unitOfWork.ClothCategoryRepository.GetClothCategoryByName(clothCategory.Name.Trim(), clothCategory.Id);
 
                 if (Category == null)
@@ -403,39 +297,19 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(clothCategory, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<ClothCategoryDTO> GetClothCategory(Guid Id)
+        public async Task<ClothCategoryDTO> GetClothCategory(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
-            {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothCategory), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
+            {   
                 var Model = await _unitOfWork.ClothCategoryRepository.GetAsync(Id);
                 return _mapper.Map<ClothCategoryModel, ClothCategoryDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothCategory)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
@@ -446,15 +320,9 @@ namespace ElBayt.Services.Implementations
 
         public async Task<ClothDepartmentDTO> AddNewClothDepartment(IFormCollection Form, string DiskDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(AddNewClothDepartment), 1, _userIdentity.Name);
-                #endregion Logging info
-
-                var ClothDepartment = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                var ClothDepartment = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(Form["Name"].ToString().Trim(), 0);
                 if (ClothDepartment == null)
                 {
 
@@ -462,11 +330,10 @@ namespace ElBayt.Services.Implementations
 
                     var clothDepartment = new ClothDepartmentDTO
                     {
-                        Id = Guid.NewGuid(),
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        //CreatedBy = identityName,
+                        //CreatedDate = DateTime.Now,
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                     };
                     var clothDepartmentEntity = _mapper.Map<ClothDepartmentDTO, UTDClothDepartmentDTO>(clothDepartment);
@@ -488,27 +355,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothDepartmentDTO>> GetClothDepartments()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetClothDepartments", correlationGuid, nameof(ClothesService), nameof(GetClothDepartments), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var Departments = (await _unitOfWork.ClothDepartmentRepository.GetAllAsync()).
                     Select(
                     c => new GetClothDepartmentDTO
@@ -523,65 +377,38 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothDepartments", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothDepartments)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteClothDepartment(Guid Id)
+        public async Task<string> DeleteClothDepartment(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@DepartmentId", Id);
                 return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHDEPARTMENT, SPParameters);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<EnumUpdatingResult> UpdateClothDepartment(IFormCollection Form, string DiskDirectory,string machineDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateClothDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var _clothDepartment = await _unitOfWork.ClothDepartmentRepository.GetClothDepartmentByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                var _clothDepartment = await _unitOfWork.ClothDepartmentRepository.
+                    GetClothDepartmentByName(Form["Name"].ToString().Trim(), Convert.ToInt32(Form["Id"].ToString()));
                 if (_clothDepartment == null)
                 {
                     var identityName = _userIdentity?.Name ?? "Unknown";
                     var clothDepartment = new ClothDepartmentDTO
                     {
-                        Id = Guid.Parse(Form["Id"].ToString()),
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        Id = Convert.ToInt32(Form["Id"].ToString()),
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                     };
 
@@ -626,37 +453,19 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-                #endregion Logging info
-
                 return EnumUpdatingResult.Failed;
             }
         }
 
-        public async Task<ClothDepartmentDTO> GetClothDepartment(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
+        public async Task<ClothDepartmentDTO> GetClothDepartment(int Id)
+        {    
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothDepartment), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ClothDepartmentRepository.GetAsync(Id);
                 return _mapper.Map<ClothDepartmentModel, ClothDepartmentDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothDepartment)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
@@ -667,15 +476,11 @@ namespace ElBayt.Services.Implementations
 
         public async Task<NumberClothDTO> AddNewCloth(IFormCollection Form, string DiskDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
 
             try
             {
-                #region Logging info
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(AddNewCloth), 1, _userIdentity.Name);
-                #endregion Logging info
 
-                var Cloth = await _unitOfWork.ClothRepository.GetClothByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                var Cloth = await _unitOfWork.ClothRepository.GetClothByName(Form["Name"].ToString().Trim(), 0);
                 if (Cloth == null)
                 {
 
@@ -684,10 +489,10 @@ namespace ElBayt.Services.Implementations
                     var cloth = new ClothDTO
                     {
                         Id = Guid.NewGuid(),
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        //CreatedBy = identityName,
+                        //CreatedDate = DateTime.Now,
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                         Description = Form["Description"].ToString(),
                         ClothCategoryId = Guid.Parse(Form["ClothCategoryId"].ToString())
@@ -759,28 +564,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewCloth)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothInfoDTO>> GetClothesInfo()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetClothes", correlationGuid, nameof(ClothesService), nameof(GetClothesInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Clothes = (await _unitOfWork.ClothInfoRepository.GetAllAsync()).
                     Select(c => new GetClothInfoDTO
                     {
@@ -800,28 +591,16 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothesInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothDTO>> GetClothes()
         {
-            var correlationGuid = Guid.NewGuid();
+     
 
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetClothes", correlationGuid, nameof(ClothesService), nameof(GetClothesInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Clothes = (await _unitOfWork.ClothRepository.GetAllAsync()).
                     Select(c => new GetClothDTO
                     {
@@ -839,59 +618,30 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothesInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteCloth(Guid Id)
+        public async Task<string> DeleteCloth(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteCloth), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ClothId", Id);
                 return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTH, SPParameters);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteCloth)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<List<string>> UpdateCloth(IFormCollection Form, string DiskDirectory,string MachineDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateCloth), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-
-
-                var cloth = await _unitOfWork.ClothRepository.GetClothByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                var cloth = await _unitOfWork.ClothRepository.
+                    GetClothByName(Form["Name"].ToString().Trim(), Convert.ToInt32(Form["Id"].ToString()));
 
                 if (cloth == null)
                 {
@@ -900,8 +650,8 @@ namespace ElBayt.Services.Implementations
                     var Newcloth = new ClothDTO
                     {
                         Id = Guid.Parse(Form["Id"].ToString()),
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                         Description = Form["Description"].ToString(),
                         ClothCategoryId = Guid.Parse(Form["ClothCategoryId"].ToString())
@@ -964,55 +714,27 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateCloth)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<NumberClothDTO> GetCloth(Guid Id)
-        {
-            var correlationGuid = Guid.NewGuid();
-
+        public async Task<NumberClothDTO> GetCloth(int Id)
+        {    
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetCloth), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ClothRepository.GetAsync(Id);
                 return _mapper.Map<ClothModel, NumberClothDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetCloth)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<ClothImageDTO> SaveClothImage(string ClothId, IFormFile file, string DiskDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(file, correlationGuid, nameof(ClothesService), nameof(SaveClothImage), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var identityName = _userIdentity?.Name ?? "Unknown";
 
                 var image = new ClothImageDTO
@@ -1046,56 +768,27 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(file, correlationGuid, $"{nameof(ClothesService)}_{nameof(SaveClothImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<ClothImageDTO> GetClothImage(Guid Id)
+        public async Task<ClothImageDTO> GetClothImage(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothImage), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-
                 var entity = await _unitOfWork.ClothImageRepository.GetAsync(Id);
                 return _mapper.Map<ClothImageModel, ClothImageDTO>(entity);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<List<ClothImageDTO>> GetClothImages(Guid ClothId)
+        public async Task<List<ClothImageDTO>> GetClothImages(int ClothId)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothImages), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ClothId", ClothId);
 
@@ -1104,28 +797,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothImages)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteClothImage(Guid ImageId)
+        public async Task<string> DeleteClothImage(int ImageId)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ImageId, correlationGuid, nameof(ClothesService), nameof(DeleteClothImage), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var IsDeleted = await _unitOfWork.ClothImageRepository.RemoveAsync(ImageId);
                 if (IsDeleted)
                 {
@@ -1137,28 +816,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ImageId, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothImage)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<string> DeleteClothImageByURL(string URL)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(URL, correlationGuid, nameof(ClothesService), nameof(DeleteClothImageByURL), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var IsDeleted = _unitOfWork.ClothImageRepository.DeleteByURL(URL);
                 if (IsDeleted)
                 {
@@ -1170,29 +835,15 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(URL, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothImageByURL)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
 
         }
 
         public async Task<string> AddClothBrands(SelectedBrandsDTO selectedBrands)
-        {
-            var correlationGuid = Guid.NewGuid();
-
+        {     
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(selectedBrands, correlationGuid, nameof(ClothesService), nameof(AddClothBrands), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var identityName = _userIdentity?.Name ?? "Unknown";
                 var clothBrands = new List<UTDClothBrandDTO>();
 
@@ -1201,11 +852,10 @@ namespace ElBayt.Services.Implementations
 
                     var clothBrand = new ClothBrandDTO
                     {
-                        Id = brand,
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                       //CreatedBy = identityName,
+                        //CreatedDate = DateTime.Now,
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                     };
                     var clothBrandEntity = _mapper.Map<ClothBrandDTO, UTDClothBrandDTO>(clothBrand);
                     clothBrands.Add(clothBrandEntity);
@@ -1222,29 +872,15 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(selectedBrands, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddClothBrands)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
 
         }
 
-        public async Task<List<ClothBrandsDTO>> GetClothBrands(Guid ClothId)
-        {
-            var correlationGuid = Guid.NewGuid();
-
+        public async Task<List<ClothBrandsDTO>> GetClothBrands(int ClothId)
+        {    
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothBrands), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ClothId", ClothId);
 
@@ -1253,28 +889,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrands)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<ClothDBLDataDTO> GetClothDBLInfo(Guid ClothId)
+        public async Task<ClothDBLDataDTO> GetClothDBLInfo(int ClothId)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothDBLInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ClothId", ClothId);
 
@@ -1292,46 +914,31 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothDBLInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<string> AddClothInfo(ClothInfoDTO ClothInfo)
-        {
-            var correlationGuid = Guid.NewGuid();
-
+        {     
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ClothInfo, correlationGuid, nameof(ClothesService), nameof(AddClothInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Entity = _mapper.Map<ClothInfoDTO, ClothInfoModel>(ClothInfo);
-                if (ClothInfo.Id == Guid.Empty)
+                if (ClothInfo.Id == 0)
                 {
-                    Guid? ColorId = null;
-                    Guid? BrandId = null ;
+                    int? ColorId = null;
+                    int? BrandId = null ;
 
-                    if (ClothInfo.BrandId != null)
-                        BrandId = Guid.Parse(ClothInfo.BrandId);
+                    if (ClothInfo.BrandId != 0)
+                        BrandId = ClothInfo.BrandId;
 
 
-                    if (ClothInfo.ColorId != null)
-                        ColorId = Guid.Parse(ClothInfo.ColorId);
+                    if (ClothInfo.ColorId != 0)
+                        ColorId = ClothInfo.ColorId;
 
                     var _info = await _unitOfWork.ClothInfoRepository.GetClothInfo(ClothInfo.SizeId, ColorId, BrandId);
 
                     if (_info == null)
                     {
-                        Entity.Id = Guid.NewGuid();
                         await _unitOfWork.ClothInfoRepository.AddAsync(Entity);
                         await _unitOfWork.SaveAsync();
                         return CommonMessages.SUCCESSFULLY_ADDING;
@@ -1357,28 +964,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ClothInfo, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddClothInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
       
-        public async Task<List<ClothInfoDataDTO>> GetClothInfo(Guid ClothId)
+        public async Task<List<ClothInfoDataDTO>> GetClothInfo(int ClothId)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@ClothId", ClothId);
                 var Clothes = (await _unitOfWork.SP.ListAsnyc<ClothInfoDataDTO>(StoredProcedure.GETCLOTHINFO, SPParameters)).ToList();
@@ -1387,28 +980,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
        
-        public async Task<string> DeleteClothInfo(Guid Id)
+        public async Task<string> DeleteClothInfo(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var IsDeleted =await _unitOfWork.ClothInfoRepository.RemoveAsync(Id);
                 if (IsDeleted)
                 {
@@ -1420,40 +999,20 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothInfo)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
 
         }
 
-        public async Task<ClothInfoDTO> GetInfo(Guid Id)
+        public async Task<ClothInfoDTO> GetInfo(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetInfo), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ClothInfoRepository.GetAsync(Id);
                 return _mapper.Map<ClothInfoModel, ClothInfoDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
@@ -1463,15 +1022,9 @@ namespace ElBayt.Services.Implementations
 
         public async Task<ClothBrandDTO> AddNewClothBrand(IFormCollection Form, string DiskDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(AddNewClothBrand), 1, _userIdentity.Name);
-                #endregion Logging info
-
-                var ClothBrand = await _unitOfWork.ClothBrandRepository.GetClothBrandByName(Form["Name"].ToString().Trim(), Guid.NewGuid());
+                var ClothBrand = await _unitOfWork.ClothBrandRepository.GetClothBrandByName(Form["Name"].ToString().Trim(), 0);
                 if (ClothBrand == null)
                 {
 
@@ -1479,11 +1032,10 @@ namespace ElBayt.Services.Implementations
 
                     var clothBrand = new ClothBrandDTO
                     {
-                        Id = Guid.NewGuid(),
-                        CreatedBy = identityName,
-                        CreatedDate = DateTime.Now,
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        //CreatedBy = identityName,
+                        //CreatedDate = DateTime.Now,
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                     };
                     var clothBrandEntity = _mapper.Map<ClothBrandDTO, UTDClothBrandDTO>(clothBrand);
@@ -1505,28 +1057,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothBrandDTO>> GetClothBrands()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetClothBrands", correlationGuid, nameof(ClothesService), nameof(GetClothBrands), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Brands = (await _unitOfWork.ClothBrandRepository.GetAllAsync()).
                     Select(c => new GetClothBrandDTO
                     {
@@ -1541,65 +1079,38 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothBrands", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrands)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteClothBrand(Guid Id)
+        public async Task<string> DeleteClothBrand(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothBrand), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var SPParameters = new DynamicParameters();
                 SPParameters.Add("@BrandId", Id);
                 return await _unitOfWork.SP.OneRecordAsnyc<string>(StoredProcedure.DELETECLOTHBRAND, SPParameters);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<EnumUpdatingResult> UpdateClothBrand(IFormCollection Form, string DiskDirectory, string machineDirectory)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Form, correlationGuid, nameof(ClothesService), nameof(UpdateClothBrand), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
-                var _clothBrand = await _unitOfWork.ClothBrandRepository.GetClothBrandByName(Form["Name"].ToString().Trim(), Guid.Parse(Form["Id"].ToString()));
+                var _clothBrand = await _unitOfWork.ClothBrandRepository.
+                    GetClothBrandByName(Form["Name"].ToString().Trim(), Convert.ToInt32(Form["Id"].ToString()));
                 if (_clothBrand == null)
                 {
                     var identityName = _userIdentity?.Name ?? "Unknown";
                     var clothBrand = new ClothBrandDTO
                     {
-                        Id = Guid.Parse(Form["Id"].ToString()),
-                        ModifiedBy = identityName,
-                        ModifiedDate = DateTime.Now,
+                        Id = Convert.ToInt32(Form["Id"].ToString()),
+                        //ModifiedBy = identityName,
+                        //ModifiedDate = DateTime.Now,
                         Name = Form["Name"].ToString(),
                     };
 
@@ -1644,37 +1155,19 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-                _logger.ErrorInDetail(Form, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-                #endregion Logging info
-
                 return EnumUpdatingResult.Failed;
             }
         }
 
-        public async Task<ClothBrandDTO> GetClothBrand(Guid Id)
+        public async Task<ClothBrandDTO> GetClothBrand(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothBrand), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ClothBrandRepository.GetAsync(Id);
                 return _mapper.Map<ClothBrandModel, ClothBrandDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothBrand)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
@@ -1684,21 +1177,12 @@ namespace ElBayt.Services.Implementations
         #region Sizes
         public async Task<EnumInsertingResult> AddNewClothSize(ClothSizeDTO clothSize)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(clothSize, correlationGuid, nameof(ClothesService), nameof(AddNewClothSize), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Size = await _unitOfWork.ClothSizeRepository.GetClothSizeByName(clothSize.Name.Trim(), clothSize.Id); ;
                 if (Size == null)
                 {
                     var Entity = _mapper.Map<ClothSizeDTO, ClothSizeModel>(clothSize);
-                    Entity.Id = Guid.NewGuid();
                     await _unitOfWork.ClothSizeRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
                     return EnumInsertingResult.Successed;
@@ -1707,28 +1191,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(clothSize, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetClothSizeDTO>> GetSizes()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetSizes", correlationGuid, nameof(ClothesService), nameof(GetSizes), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync()).Select(
                     c => new GetClothSizeDTO
                     {
@@ -1744,28 +1214,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetClothSizes", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetSizes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteClothSize(Guid Id)
+        public async Task<string> DeleteClothSize(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteClothSize), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var IsDeleted =await _unitOfWork.ClothSizeRepository.RemoveAsync(Id);
                 if (IsDeleted)
                 {
@@ -1776,28 +1232,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<EnumUpdatingResult> UpdateClothSize(ClothSizeDTO clothSize)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(clothSize, correlationGuid, nameof(ClothesService), nameof(UpdateClothSize), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Size = await _unitOfWork.ClothSizeRepository.GetClothSizeByName(clothSize.Name.Trim(), clothSize.Id);
 
                 if (Size == null)
@@ -1812,54 +1254,27 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(clothSize, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<ClothSizeDTO> GetClothSize(Guid Id)
+        public async Task<ClothSizeDTO> GetClothSize(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetClothSize), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ClothSizeRepository.GetAsync(Id);
                 return _mapper.Map<ClothSizeModel, ClothSizeDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothSize)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<List<GetClothSizeDTO>> GetClothSizes(Guid ClothId)
+        public async Task<List<GetClothSizeDTO>> GetClothSizes(int ClothId)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ClothId, correlationGuid, nameof(ClothesService), nameof(GetClothSizes), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync(C => C.ClothId == ClothId)).
                     ToList();
                 var SizesClothes = Sizes.Select(c=>
@@ -1876,12 +1291,6 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ClothId, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetClothSizes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }

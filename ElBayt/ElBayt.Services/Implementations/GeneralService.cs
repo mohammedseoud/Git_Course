@@ -36,24 +36,16 @@ namespace ElBayt.Services.Implementations
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        #region Sizes
+        #region Colors
         public async Task<EnumInsertingResult> AddNewColor(ColorDTO Color)
         {
-            var correlationGuid = Guid.NewGuid();
-
+    
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Color, correlationGuid, nameof(ClothesService), nameof(AddNewColor), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Size = await _unitOfWork.ColorRepository.GetColorByName(Color.Name.Trim(), Color.Id); ;
                 if (Size == null)
                 {
                     var Entity = _mapper.Map<ColorDTO, ColorModel>(Color);
-                    Entity.Id = Guid.NewGuid();
                     await _unitOfWork.ColorRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
                     return EnumInsertingResult.Successed;
@@ -62,55 +54,26 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Color, correlationGuid, $"{nameof(ClothesService)}_{nameof(AddNewColor)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public object GetSizes()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetSizes", correlationGuid, nameof(ClothesService), nameof(GetSizes), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return _unitOfWork.ColorRepository.GetAll();
-
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetColors", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetSizes)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<string> DeleteColor(Guid Id)
+        public async Task<string> DeleteColor(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(DeleteColor), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var IsDeleted = await _unitOfWork.ColorRepository.RemoveAsync(Id);
                 if (IsDeleted)
                 {
@@ -121,28 +84,14 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(DeleteColor)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 return ex.Message;
             }
         }
 
         public async Task<EnumUpdatingResult> UpdateColor(ColorDTO Color)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Color, correlationGuid, nameof(ClothesService), nameof(UpdateColor), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var _color = await _unitOfWork.ColorRepository.GetColorByName(Color.Name.Trim(), Color.Id);
 
                 if (_color == null)
@@ -157,54 +106,27 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Color, correlationGuid, $"{nameof(ClothesService)}_{nameof(UpdateColor)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
-        public async Task<ColorDTO> GetColor(Guid Id)
+        public async Task<ColorDTO> GetColor(int Id)
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(Id, correlationGuid, nameof(ClothesService), nameof(GetColor), 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 var Model = await _unitOfWork.ColorRepository.GetAsync(Id);
                 return _mapper.Map<ColorModel, ColorDTO>(Model);
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(Id, correlationGuid, $"{nameof(ClothesService)}_{nameof(GetColor)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<List<GetColorDTO>> GetColors()
         {
-            var correlationGuid = Guid.NewGuid();
-
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail("GetColors", correlationGuid, nameof(ClothesService), nameof(GetColors), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var Colors = (await _unitOfWork.ColorRepository.GetAllAsync()).
                     Select(c => new GetColorDTO
                     {
@@ -217,12 +139,6 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail("GetColors", correlationGuid, $"{nameof(ClothesService)}_{nameof(GetColors)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }

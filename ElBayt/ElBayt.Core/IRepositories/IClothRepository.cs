@@ -6,11 +6,11 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IClothRepository : IGenericRepository<ClothModel, Guid>
+    public interface IClothRepository : IGenericRepository<ClothModel, int>
     {
         public Task UpdateCloth(ClothModel cloth);
         public Task AddClothImage(ClothImageModel Image);
-        public Task<ClothModel> GetClothByName(string Name, Guid Id);
+        public Task<ClothModel> GetClothByName(string Name, int Id);
 
     }
 }

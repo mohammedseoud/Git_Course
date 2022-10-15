@@ -40,15 +40,13 @@ namespace ELBayt.WebAPI.Controllers
         public async Task<IActionResult> AddNewColor(ColorDTO Color)
         {
 
-            var Response = new ElBaytResponse<string>();
-            Response.Errors = new List<string>();
-            var correlationGuid = Guid.NewGuid();
+            var Response = new ElBaytResponse<string>
+            {
+                Errors = new List<string>()
+            };
+            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(Color, correlationGuid, nameof(GeneralController), nameof(AddNewColor), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var res = await _elBaytServices.GeneralService.AddNewColor(Color);
 
@@ -69,13 +67,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Color}", correlationGuid, $"{nameof(GeneralController)}_{nameof(AddNewColor)}_{nameof(NotFoundException)}", ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-
-
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = CommonMessages.FAILED_ADDING;
@@ -86,13 +77,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Color}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(AddNewColor)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = CommonMessages.FAILED_ADDING;
@@ -117,13 +101,9 @@ namespace ELBayt.WebAPI.Controllers
             {
                 Errors = new List<string>()
             };
-            var correlationGuid = Guid.NewGuid();
+            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail("GetColors", correlationGuid, nameof(GeneralController), nameof(GetColors), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var Clothes = _elBaytServices.GeneralService.GetColors();
                 #region Result
@@ -135,13 +115,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException GetColors", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(GetColors)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = null;
@@ -152,12 +125,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException GetColors", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(GetColors)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = null;
@@ -173,19 +140,15 @@ namespace ELBayt.WebAPI.Controllers
         [HttpGet]
         [Route(nameof(GetColor))]
         [ProducesResponseType(typeof(ElBaytResponse<ColorDTO>), 200)]
-        public async Task<ActionResult> GetColor(Guid Id)
+        public async Task<ActionResult> GetColor(int Id)
         {
             var Response = new ElBaytResponse<ColorDTO>
             {
                 Errors = new List<string>()
             };
-            var correlationGuid = Guid.NewGuid();
+            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(Id, correlationGuid, nameof(GeneralController), nameof(GetColor), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var Size = await _elBaytServices.GeneralService.GetColor(Id);
                 #region Result
@@ -197,13 +160,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(GetColor)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = null;
@@ -214,12 +170,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(GetColor)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = null;
@@ -235,19 +185,15 @@ namespace ELBayt.WebAPI.Controllers
         [HttpDelete]
         [Route(nameof(DeleteColor))]
         [ProducesResponseType(typeof(ElBaytResponse<bool>), 200)]
-        public async Task<ActionResult> DeleteColor(Guid Id)
+        public async Task<ActionResult> DeleteColor(int Id)
         {
             var Response = new ElBaytResponse<bool>
             {
                 Errors = new List<string>()
             };
-            var correlationGuid = Guid.NewGuid();
+            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(Id, correlationGuid, nameof(GeneralController), nameof(DeleteColor), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var Result = await _elBaytServices.GeneralService.DeleteColor(Id);
 
@@ -271,13 +217,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(DeleteColor)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = false;
@@ -288,12 +227,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Id}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(DeleteColor)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = false;
@@ -315,13 +248,9 @@ namespace ELBayt.WebAPI.Controllers
             {
                 Errors = new List<string>()
             };
-            var correlationGuid = Guid.NewGuid();
+            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(Color, correlationGuid, nameof(GeneralController), nameof(UpdateColor), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var res = await _elBaytServices.GeneralService.UpdateColor(Color);
 
@@ -344,13 +273,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Color}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(UpdateColor)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = CommonMessages.FAILED_UPDATING;
@@ -361,12 +283,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {Color}", correlationGuid,
-                    $"{nameof(GeneralController)}_{nameof(UpdateColor)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
-
-                #endregion Logging info
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = CommonMessages.FAILED_UPDATING;

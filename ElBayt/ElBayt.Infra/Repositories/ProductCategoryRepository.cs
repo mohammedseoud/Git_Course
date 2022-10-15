@@ -17,7 +17,7 @@ using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ProductCategoryRepository : GenericRepository<ProductCategoryModel, Guid>, IProductCategoryRepository
+    public class ProductCategoryRepository : GenericRepository<ProductCategoryModel, int>, IProductCategoryRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;

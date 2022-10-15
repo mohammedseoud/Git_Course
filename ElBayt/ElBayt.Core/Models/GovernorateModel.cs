@@ -9,13 +9,13 @@ using System.Text;
 namespace ElBayt.Core.Models
 {
     [Table("Governorate", Schema = "dbo")]
-    public class GovernorateModel : BaseModel<Guid>
+    public class GovernorateModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
         [ForeignKey(nameof(Countries))]
-        public Guid CountryId { get; set; }
+        public int CountryId { get; set; }
 
         public virtual CountryModel Countries { get; set; }
     }

@@ -5,7 +5,7 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IAreaRepository : IGenericRepository<AreaModel, Guid>
+    public interface IAreaRepository : IGenericRepository<AreaModel, int>
     {
     }
 }

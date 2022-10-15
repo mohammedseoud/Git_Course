@@ -17,7 +17,7 @@ using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ProductImageRepository : GenericRepository<ProductImageModel, Guid>, IProductImageRepository   
+    public class ProductImageRepository : GenericRepository<ProductImageModel, int>, IProductImageRepository   
     { 
        
         private readonly ElBaytContext _dbContext;

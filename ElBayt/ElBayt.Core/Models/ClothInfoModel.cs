@@ -9,25 +9,25 @@ using System.Text;
 namespace ElBayt.Core.Models
 {
     [Table("ClothInfo", Schema = "dbo")]
-    public class ClothInfoModel : BaseModel<Guid>
+    public class ClothInfoModel : BaseModel<int>
     {
         [Required]
         [ForeignKey(nameof(Clothes))]
-        public Guid ClothId { get; set; }
+        public int ClothId { get; set; }
         [Required]
         public decimal Price { get; set; }
         public decimal? PriceAfterDiscount { get; set; }
         [Required]
         [ForeignKey(nameof(Sizes))]
-        public Guid SizeId { get; set; }
+        public int SizeId { get; set; }
      
         [ForeignKey(nameof(Colors))]
-        public Guid? ColorId { get; set; }
+        public int? ColorId { get; set; }
 
         [Required]
         public int Amount { get; set; }
         [ForeignKey(nameof(Brands))]
-        public Guid? BrandId { get; set; }
+        public int? BrandId { get; set; }
 
       
         public virtual ClothBrandModel Brands { get; set; }

@@ -10,7 +10,7 @@ using System.Text;
 namespace ElBayt.Core.Models
 {
     [Table("UserProfilePic", Schema = "dbo")]
-    public class UserProfilePicModel : BaseModel<Guid>
+    public class UserProfilePicModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.MULTIPLE_LINE_MAX_LENGTH)]

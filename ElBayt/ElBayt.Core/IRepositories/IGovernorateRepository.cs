@@ -5,7 +5,7 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IGovernorateRepository : IGenericRepository<GovernorateModel, Guid>
+    public interface IGovernorateRepository : IGenericRepository<GovernorateModel, int>
     {
     }
 }

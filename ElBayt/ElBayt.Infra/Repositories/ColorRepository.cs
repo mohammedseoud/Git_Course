@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ColorRepository : GenericRepository< ColorModel, Guid>, IColorRepository
+    public class ColorRepository : GenericRepository< ColorModel, int>, IColorRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
@@ -27,7 +27,7 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<ColorModel> GetColorByName(string Name, Guid Id)
+        public async Task<ColorModel> GetColorByName(string Name, int Id)
         {
             var Color = await _dbContext.Colors.Value
                .Where(c => c.Name.Trim() == Name && c.Id != Id).

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ElBayt.Common.Infra.Models
 {
-    public class ProductDepartmentModel : BaseModel<Guid>
+    public class ProductDepartmentModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

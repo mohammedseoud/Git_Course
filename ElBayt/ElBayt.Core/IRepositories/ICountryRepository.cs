@@ -5,7 +5,7 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface ICountryRepository : IGenericRepository<CountryModel, Guid>
+    public interface ICountryRepository : IGenericRepository<CountryModel, int>
     {
     }
 }

@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DTOs
 {
-    public class GetClothSizeDTO : BasicDto<Guid>
+    public class GetClothSizeDTO : BasicDto<int>
     {
-        public Guid ClothId { get; set; }
+        public int ClothId { get; set; }
         public string Name { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }

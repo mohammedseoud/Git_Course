@@ -15,7 +15,7 @@ using System.Data.Entity;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothImageRepository : GenericRepository<ClothImageModel, Guid>, IClothImageRepository   
+    public class ClothImageRepository : GenericRepository<ClothImageModel, int>, IClothImageRepository   
     { 
        
         private readonly ElBaytContext _dbContext;
@@ -28,7 +28,7 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public object GetClothImages(Guid ClothId)
+        public object GetClothImages(int ClothId)
         {
             var models = _dbContext.Set<ClothImageModel>().
                 Where(c => c.ClothId == ClothId);

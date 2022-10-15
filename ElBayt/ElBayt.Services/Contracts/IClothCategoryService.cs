@@ -11,8 +11,8 @@ namespace ElBayt.Services.Contracts
     {
         public Task<EnumInsertingResult> AddNewClothCategory(ClothCategoryDTO clothCategory);
         public Task<List<GetClothCategoryDTO>> GetClothCategories();
-        public Task<string> DeleteClothCategory(Guid Id);
+        public Task<string> DeleteClothCategory(int Id);
         public Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory, string machineDirectory);
-        public Task<ClothCategoryDTO> GetClothCategory(Guid Id);
+        public Task<ClothCategoryDTO> GetClothCategory(int Id);
     }
 }

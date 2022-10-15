@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothRepository: GenericRepository<ClothModel, Guid>, IClothRepository
+    public class ClothRepository: GenericRepository<ClothModel, int>, IClothRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
@@ -39,7 +39,7 @@ namespace ElBayt.Infra.Repositories
             }          
         }
 
-        public async Task<ClothModel> GetClothByName(string Name, Guid Id)
+        public async Task<ClothModel> GetClothByName(string Name, int Id)
         {
             var cloth = await _dbContext.Clothes
                 .Where(c => c.Name.Trim() == Name && c.Id != Id).

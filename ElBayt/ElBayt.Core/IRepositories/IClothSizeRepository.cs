@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IClothSizeRepository : IGenericRepository<ClothSizeModel, Guid>
+    public interface IClothSizeRepository : IGenericRepository<ClothSizeModel, int>
     {
         Task UpdateClothSize(ClothSizeModel clothSize);
-        Task<ClothSizeModel> GetClothSizeByName(string Name, Guid Id);
-        Task<List<ClothSizeModel>> GetClothSizes(Guid ClothId);
+        Task<ClothSizeModel> GetClothSizeByName(string Name, int Id);
+        Task<List<ClothSizeModel>> GetClothSizes(int ClothId);
     }
 }

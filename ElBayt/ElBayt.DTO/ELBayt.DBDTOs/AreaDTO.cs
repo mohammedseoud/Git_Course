@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DBDTOs
 {
-    public class AreaDTO : BaseDto<Guid>, IBaseDTO
+    public class AreaDTO : BaseDto<int>, IBaseDTO
     { 
         public string Name { get; set; }
-        public Guid GovernorateId { get; set; }
+        public int GovernorateId { get; set; }
 
         public GovernorateDTO Governorates { get; set; }
     }

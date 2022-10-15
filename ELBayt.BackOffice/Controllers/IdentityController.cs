@@ -43,13 +43,9 @@ namespace ELBayt.WebAPI.Controllers
             {
                 Errors = new List<string>()
             };
-            var correlationGuid = Guid.NewGuid();
+            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(LoginModel, correlationGuid, nameof(IdentityController), nameof(Login), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var userFromDB = await _userManager.FindByEmailAsync(LoginModel.UserName);
 
@@ -84,14 +80,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {LoginModel}", correlationGuid,
-                    $"{nameof(IdentityController)}_{nameof(Login)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-
 
                 #region Result
                 Response.Result = EnumResponseResult.UnAuthenicated;
@@ -103,14 +91,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {LoginModel}", correlationGuid,
-                    $"{nameof(IdentityController)}_{nameof(Login)}_{nameof(Exception)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-
                 #region Result
                 Response.Result = EnumResponseResult.UnAuthenicated;
                 Response.Data = null;
@@ -132,14 +112,9 @@ namespace ELBayt.WebAPI.Controllers
             var Response = new ElBaytResponse<string>
             {
                 Errors = new List<string>()
-            };
-            var correlationGuid = Guid.NewGuid();
+            };            
             try
             {
-
-                #region Logging info
-                _logger.InfoInDetail(_user, correlationGuid, nameof(IdentityController), nameof(Register), 1, User.Identity.Name);
-                #endregion Logging info
 
                 var Existeduser = await _userManager.FindByEmailAsync(user.Email);
 
@@ -182,14 +157,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (NotFoundException ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {_user}", correlationGuid,
-                    $"{nameof(IdentityController)}_{nameof(Register)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-
 
                 #region Result
                 Response.Result = EnumResponseResult.UnAuthenicated;
@@ -201,13 +168,6 @@ namespace ELBayt.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {_user}", correlationGuid,
-                    $"{nameof(IdentityController)}_{nameof(Register)}_{nameof(Exception)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
 
                 #region Result
                 Response.Result = EnumResponseResult.UnAuthenicated;

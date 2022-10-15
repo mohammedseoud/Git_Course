@@ -6,9 +6,9 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IClothBrandRepository : IGenericRepository<ClothBrandModel, Guid>
+    public interface IClothBrandRepository : IGenericRepository<ClothBrandModel, int>
     {
         Task UpdateClothBrand(ClothBrandModel clothBrand);
-        Task<ClothBrandModel> GetClothBrandByName(string Name, Guid Id);
+        Task<ClothBrandModel> GetClothBrandByName(string Name, int Id);
     }
 }

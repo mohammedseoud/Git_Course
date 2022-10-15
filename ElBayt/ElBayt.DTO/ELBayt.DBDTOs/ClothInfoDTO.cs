@@ -5,15 +5,15 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DBDTOs
 {
-    public class ClothInfoDTO : BaseDto<Guid>, IBaseDTO
+    public class ClothInfoDTO : BaseDto<int>, IBaseDTO
     {
-        public Guid ClothId { get; set; }
+        public int ClothId { get; set; }
         public string Price { get; set; }
         public string PriceAfterDiscount { get; set; }
-        public Guid SizeId { get; set; }
-        public string ColorId { get; set; }
+        public int SizeId { get; set; }
+        public int ColorId { get; set; }
         public string Amount { get; set; }
-        public string BrandId { get; set; }
+        public int BrandId { get; set; }
 
 
         public virtual ClothBrandDTO Brands { get; set; }

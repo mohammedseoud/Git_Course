@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElBayt.Common.Core.Services
 {
-    public class ProductTypeDTO : BaseDto<Guid>, IBaseDTO
+    public class ProductTypeDTO : BasicDto<Guid>, IBaseDTO
     {
         public string Name { get; set; }
         public string TypePic { get; set; }

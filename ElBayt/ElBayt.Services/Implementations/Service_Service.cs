@@ -45,7 +45,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ServiceDTO, ServiceModel>(service);
-                Entity.Id = Guid.NewGuid();
+               
                 await _unitOfWork.ServiceRepository.AddAsync(Entity);
                 await _unitOfWork.SaveAsync();
             }
@@ -73,7 +73,7 @@ namespace ElBayt.Services.Implementations
 
                 #endregion Logging info
                 var Entity = _mapper.Map<ServiceDepartmentDTO, ServiceDepartmentModel>(serviceDepartment);
-                Entity.Id = Guid.NewGuid();
+                //Entity.Id = Guid.NewGuid();
                 await _unitOfWork.ServiceDepartmentRepository.AddAsync(Entity);
                 await _unitOfWork.SaveAsync();
             }

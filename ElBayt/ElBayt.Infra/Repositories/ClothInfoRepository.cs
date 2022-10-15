@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothInfoRepository : GenericRepository<ClothInfoModel, Guid>, IClothInfoRepository
+    public class ClothInfoRepository : GenericRepository<ClothInfoModel, int>, IClothInfoRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
@@ -25,12 +25,12 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<List<ClothInfoModel>> GetClothInfo(Guid ClothId)
+        public async Task<List<ClothInfoModel>> GetClothInfo(int ClothId)
         {
             return await _dbContext.ClothInfo.Where(c => c.ClothId == ClothId).ToListAsync();
         }
 
-        public async Task<List<ClothInfoModel>> GetClothInfo(Guid SizeId, Guid? ColorId, Guid? BrandId)
+        public async Task<List<ClothInfoModel>> GetClothInfo(int SizeId, int? ColorId, int? BrandId)
         {
             return await _dbContext.ClothInfo.Where(c => c.SizeId == SizeId
             && c.BrandId == BrandId && c.ColorId == ColorId).ToListAsync();

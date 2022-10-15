@@ -5,7 +5,7 @@ using ElBayt.Core.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IServiceDepartmentRepository : IGenericRepository<ServiceDepartmentModel,Guid>
+    public interface IServiceDepartmentRepository : IGenericRepository<ServiceDepartmentModel,int>
     {
     }
 }

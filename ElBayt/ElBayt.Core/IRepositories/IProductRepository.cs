@@ -7,7 +7,7 @@ using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Core.IRepositories
 {
-    public interface IProductRepository : IGenericRepository<ProductModel, Guid>
+    public interface IProductRepository : IGenericRepository<ProductModel, int>
     {
         //public Task UpdateProduct(ProductEntity product);
         //public Task AddProductImage(ProductImageEntity Image);

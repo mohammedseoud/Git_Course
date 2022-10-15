@@ -13,7 +13,7 @@ namespace ElBayt.Core.Models
     {
         [Required]
         [ForeignKey(nameof(ClothDepartments))]
-        public Guid ClothDepartmentId { get; set; }
+        public int ClothDepartmentId { get; set; }
         public virtual ClothDepartmentModel ClothDepartments { get; set; }
     }
 }

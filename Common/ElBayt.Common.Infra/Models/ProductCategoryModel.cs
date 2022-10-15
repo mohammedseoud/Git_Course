@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ElBayt.Common.Infra.Models
 {
-    public class ProductCategoryModel : BaseModel<Guid>
+    public class ProductCategoryModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

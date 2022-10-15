@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ElBayt.Common.Infra.Models
 {
-    public class ProductBrandModel : BaseModel<Guid>
+    public class ProductBrandModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]

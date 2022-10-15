@@ -16,7 +16,7 @@ using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ClothDepartmentRepository : GenericRepository<ClothDepartmentModel, Guid>, IClothDepartmentRepository
+    public class ClothDepartmentRepository : GenericRepository<ClothDepartmentModel, int>, IClothDepartmentRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;
@@ -28,7 +28,7 @@ namespace ElBayt.Infra.Repositories
             _mapper = mapper;
         }
 
-        public async Task<ClothDepartmentModel> GetClothDepartmentByName(string Name, Guid Id)
+        public async Task<ClothDepartmentModel> GetClothDepartmentByName(string Name, int Id)
         {
             var department = await _dbContext.ClothDepartments
                .Where(c => c.Name.Trim() == Name && c.Id != Id).

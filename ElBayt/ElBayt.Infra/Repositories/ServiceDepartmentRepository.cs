@@ -12,7 +12,7 @@ using System.Text;
 
 namespace ElBayt.Infra.Repositories
 {
-    public class ServiceDepartmentRepository : GenericRepository<ServiceDepartmentModel, Guid>, IServiceDepartmentRepository
+    public class ServiceDepartmentRepository : GenericRepository<ServiceDepartmentModel, int>, IServiceDepartmentRepository
     {
         private readonly ElBaytContext _dbContext;
         private readonly ITypeMapper _mapper;

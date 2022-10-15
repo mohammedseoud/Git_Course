@@ -13,9 +13,9 @@ namespace ElBayt.Services.Contracts
     {
         public Task<EnumInsertingResult> AddNewClothSize(ClothSizeDTO clothSize);
         public Task<List<GetClothSizeDTO>> GetSizes();
-        public Task<List<GetClothSizeDTO>> GetClothSizes(Guid ClothID);
-        public Task<string> DeleteClothSize(Guid Id);
+        public Task<List<GetClothSizeDTO>> GetClothSizes(int ClothID);
+        public Task<string> DeleteClothSize(int Id);
         public Task<EnumUpdatingResult> UpdateClothSize(ClothSizeDTO clothSize);
-        public Task<ClothSizeDTO> GetClothSize(Guid Id);
+        public Task<ClothSizeDTO> GetClothSize(int Id);
     }
 }

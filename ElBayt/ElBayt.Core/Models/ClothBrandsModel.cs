@@ -9,14 +9,14 @@ using System.Text;
 namespace ElBayt.Core.Models
 {
     [Table("ClothBrands", Schema = "dbo")]
-    public class ClothBrandsModel :  BaseModel<Guid>
+    public class ClothBrandsModel :  BaseModel<int>
     {
         [Required]
         [ForeignKey(nameof(Clothes))]
-        public Guid ClothId { get; set; }
+        public int ClothId { get; set; }
         [Required]
         [ForeignKey(nameof(ClothBrands))]
-        public Guid BrandId { get; set; }
+        public int BrandId { get; set; }
         public virtual ClothBrandModel ClothBrands { get; set; }
         public virtual ClothModel Clothes { get; set; }
 

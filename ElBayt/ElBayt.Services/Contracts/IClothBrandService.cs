@@ -12,8 +12,8 @@ namespace ElBayt.Services.Contracts
     {
         public Task<ClothBrandDTO> AddNewClothBrand(IFormCollection Form, string DiskDirectory);
         public Task<List<GetClothBrandDTO>> GetClothBrands();
-        public Task<string> DeleteClothBrand(Guid Id);
+        public Task<string> DeleteClothBrand(int Id);
         public Task<EnumUpdatingResult> UpdateClothBrand(IFormCollection Form, string DiskDirectory, string MachineDirectory);
-        public Task<ClothBrandDTO> GetClothBrand(Guid Id);
+        public Task<ClothBrandDTO> GetClothBrand(int Id);
     }
 }
