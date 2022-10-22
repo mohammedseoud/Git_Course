@@ -13,5 +13,6 @@ namespace ElBayt.Common.Common
         public const string FAILED_UPDATING = "Error In Updating";
         public const string NAME_EXISTS = "Name Is Already Exists";
         public const string ITEM_NOT_EXISTS = "This Item Is Not Exists";
+        public const string ZERO_FILE_SIZE = "File Size Is Zero";
     }
 }

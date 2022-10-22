@@ -1,11 +1,9 @@
 ﻿using ElBayt.Common.Common;
 using ElBayt.Common.Core.Logging;
-using ElBayt.Common.Enums;
 using ElBayt.Services.IElBaytServices;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {

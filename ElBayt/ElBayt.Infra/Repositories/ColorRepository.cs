@@ -29,7 +29,7 @@ namespace ElBayt.Infra.Repositories
 
         public async Task<ColorModel> GetColorByName(string Name, int Id)
         {
-            var Color = await _dbContext.Colors.Value
+            var Color = await _dbContext.Colors
                .Where(c => c.Name.Trim() == Name && c.Id != Id).
                AsNoTracking().FirstOrDefaultAsync();
             return Color;
@@ -40,7 +40,7 @@ namespace ElBayt.Infra.Repositories
 
         public async Task UpdateColor(ColorModel Color)
         {
-            var color = await _dbContext.Colors.Value.FindAsync(Color.Id);
+            var color = await _dbContext.Colors.FindAsync(Color.Id);
            
             if (color != null)
             {

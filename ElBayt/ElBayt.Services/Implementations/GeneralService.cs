@@ -42,10 +42,13 @@ namespace ElBayt.Services.Implementations
     
             try
             {
-                var Size = await _unitOfWork.ColorRepository.GetColorByName(Color.Name.Trim(), Color.Id); ;
-                if (Size == null)
+                var identityName = _userIdentity?.Name ?? "Unknown";
+                var _color = await _unitOfWork.ColorRepository.GetColorByName(Color.Name.Trim(), Color.Id); ;
+                if (_color == null)
                 {
                     var Entity = _mapper.Map<ColorDTO, ColorModel>(Color);
+                    Entity.CreatedDate = DateTime.Now;
+                    Entity.CreatedBy = identityName;
                     await _unitOfWork.ColorRepository.AddAsync(Entity);
                     await _unitOfWork.SaveAsync();
                     return EnumInsertingResult.Successed;
@@ -96,7 +99,10 @@ namespace ElBayt.Services.Implementations
 
                 if (_color == null)
                 {
+                    var identityName = _userIdentity?.Name ?? "Unknown";
                     var color = _mapper.Map<ColorDTO, ColorModel>(Color);
+                    color.ModifiedDate = DateTime.Now;
+                    color.ModifiedBy = identityName;
                     await _unitOfWork.ColorRepository.UpdateColor(color);
                     await _unitOfWork.SaveAsync();
                     return EnumUpdatingResult.Successed;
@@ -127,14 +133,14 @@ namespace ElBayt.Services.Implementations
         {
             try
             {
-                var Colors = (await _unitOfWork.ColorRepository.GetAllAsync()).
+                var Colors = (await _unitOfWork.ColorRepository.GetAllAsync()).ToList().
                     Select(c => new GetColorDTO
                     {
                         Id = c.Id,
                         Name = c.Name
                     });
                
-                return Colors.ToList();
+                return  Colors.ToList();
 
             }
             catch (Exception ex)

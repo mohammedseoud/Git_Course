@@ -10,7 +10,7 @@ namespace ElBayt.Services.Contracts
 {
     public interface IClothBrandService
     {
-        public Task<ClothBrandDTO> AddNewClothBrand(IFormCollection Form, string DiskDirectory);
+        public Task<string> AddNewClothBrand(IFormCollection Form, string DiskDirectory);
         public Task<List<GetClothBrandDTO>> GetClothBrands();
         public Task<string> DeleteClothBrand(int Id);
         public Task<EnumUpdatingResult> UpdateClothBrand(IFormCollection Form, string DiskDirectory, string MachineDirectory);

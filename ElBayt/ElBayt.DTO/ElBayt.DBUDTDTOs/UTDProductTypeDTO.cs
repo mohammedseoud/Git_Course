@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DBUDTDTOs
 {
-    public class UTDProductTypeDTO : BaseDto<Guid>, IBaseDTO
+    public class UTDProductTypeDTO : BaseDto<int>, IBaseDTO
     {
         public string Name { get; set; }
         public string TypePic { get; set; }

@@ -6,7 +6,7 @@ namespace ElBayt.DTO.ELBayt.DTOs
 {
     public class SelectedBrandsDTO
     {
-        public List<Guid> Brands { set; get; }
-        public Guid ClothId { set; get; }
+        public List<int> Brands { set; get; }
+        public int ClothId { set; get; }
     }
 }

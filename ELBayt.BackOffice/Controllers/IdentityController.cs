@@ -9,6 +9,7 @@ using ElBayt.DTO.ELBayt.DTOs;
 using ELBayt.BackOffice.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace ELBayt.WebAPI.Controllers
         private readonly ITypeMapper _mapper;
 
         public IdentityController(UserManager<AppUser> userManager, ILogger logger,
-            SignInManager<AppUser> signInManager, IJWTTokenGenerator jwttokenGenerator, ITypeMapper mapper)
+            IConfiguration config, SignInManager<AppUser> signInManager,
+            IJWTTokenGenerator jwttokenGenerator, ITypeMapper mapper) : base(config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,6 +39,7 @@ namespace ELBayt.WebAPI.Controllers
         
         [HttpPost]
         [Route(nameof(Login))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<AppUserDataDTO>))]
         public async Task<IActionResult> Login(LoginModel LoginModel)
         {
             var Response = new ElBaytResponse<AppUserDataDTO>
@@ -78,17 +81,6 @@ namespace ELBayt.WebAPI.Controllers
 
                 return Ok(Response);
             }
-            catch (NotFoundException ex)
-            {
-
-                #region Result
-                Response.Result = EnumResponseResult.UnAuthenicated;
-                Response.Data = null;
-                Response.Errors.Add(ex.Message);
-                #endregion
-
-                return NotFound(Response);
-            }
             catch (Exception ex)
             {
                 #region Result
@@ -105,6 +97,7 @@ namespace ELBayt.WebAPI.Controllers
         //[Authorize]
         [HttpPost]
         [Route(nameof(Register))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<string>))]
         public async Task<IActionResult> Register(AppUserDTO _user)
         {
             AppUser user = _mapper.Map<AppUserDTO, AppUser>(_user);
@@ -154,17 +147,6 @@ namespace ELBayt.WebAPI.Controllers
 
 
                 return Ok(Response);
-            }
-            catch (NotFoundException ex)
-            {
-
-                #region Result
-                Response.Result = EnumResponseResult.UnAuthenicated;
-                Response.Data = "Failed in Adding";
-                Response.Errors.Add(ex.Message);
-                #endregion
-
-                return NotFound(Response);
             }
             catch (Exception ex)
             {

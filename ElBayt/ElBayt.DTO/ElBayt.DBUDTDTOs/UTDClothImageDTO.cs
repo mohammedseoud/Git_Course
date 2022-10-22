@@ -7,6 +7,6 @@ namespace ElBayt.DTO.ELBayt.DBUDTDTOs
 {
     public class UTDClothImageDTO : UTDProductImageDTO
     {
-        public Guid ClothId { get; set; }
+        public int ClothId { get; set; }
     }
 }

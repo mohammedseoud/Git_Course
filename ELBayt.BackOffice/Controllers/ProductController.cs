@@ -11,15 +11,13 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
     {
         private readonly IElBaytServices _elBaytServices;
         private readonly ILogger _logger;
-        private readonly IConfiguration _config;
         private readonly IUserIdentity _userIdentity;
 
         public ProductController(IElBaytServices elBaytServices, ILogger logger, IConfiguration config
-            , IUserIdentity userIdentity)
+            , IUserIdentity userIdentity) : base(config)
         {
             _elBaytServices = elBaytServices ?? throw new ArgumentNullException(nameof(elBaytServices));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _config= config ?? throw new ArgumentNullException(nameof(config));
             _userIdentity = userIdentity ?? throw new ArgumentNullException(nameof(userIdentity));
         }
 

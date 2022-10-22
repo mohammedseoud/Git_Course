@@ -25,7 +25,7 @@ namespace ElBayt.Infra.Context
         public virtual DbSet<GovernorateModel> Governorates { get; set; }
         public virtual DbSet<ServiceModel> Services { get; set; }
         public virtual DbSet<ServiceDepartmentModel> ServiceDepartments { get; set; }
-        public virtual Lazy<DbSet<ColorModel>> Colors { get; set; }
+        public virtual DbSet<ColorModel> Colors { get; set; }
         public virtual DbSet<ClothSizeModel> ClothSizes { get; set; }
         public virtual DbSet<ClothBrandModel> ClothBrands { get; set; }
         public virtual DbSet<ClothModel> Clothes { get; set; }

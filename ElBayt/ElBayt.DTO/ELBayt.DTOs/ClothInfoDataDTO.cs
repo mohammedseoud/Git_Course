@@ -7,7 +7,7 @@ namespace ElBayt.DTO.ELBayt.DBDTOs
 {
     public class ClothInfoDataDTO 
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Price { get; set; }
         public string PriceAfterDiscount { get; set; }
         public string Size { get; set; }

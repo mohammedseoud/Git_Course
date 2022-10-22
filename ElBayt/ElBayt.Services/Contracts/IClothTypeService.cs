@@ -11,7 +11,7 @@ namespace ElBayt.Services.Contracts
 {
     public interface IClothTypeService
     {
-        public Task<ClothTypeDTO> AddNewClothType(IFormCollection Form, string DiskDirectory);
+        public Task<string> AddNewClothType(IFormCollection Form, string DiskDirectory);
         public Task<List<GetClothTypeDTO>> GetClothTypes();
         public Task<string> DeleteClothType(int Id);
         public Task<EnumUpdatingResult> UpdateClothType(IFormCollection Form, string DiskDirectory, string machineDirectory);

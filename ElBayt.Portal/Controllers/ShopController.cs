@@ -611,23 +611,6 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
 
                 return Ok(Response);
             }
-            catch (NotFoundException ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {DepartmentName}", correlationGuid,
-                    $"{nameof(ShopController)}_{nameof(GetShopData)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-                #region Result
-                Response.Result = EnumResponseResult.Failed;
-                Response.Data = null;
-                Response.Errors.Add(ex.Message);
-                #endregion
-
-                return NotFound(Response);
-            }
             catch (Exception ex)
             {
                 #region Logging info
@@ -671,23 +654,6 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #endregion
 
                 return Ok(Response);
-            }
-            catch (NotFoundException ex)
-            {
-                #region Logging info
-
-                _logger.ErrorInDetail($"newException {ProductName}", correlationGuid,
-                    $"{nameof(ShopController)}_{nameof(GetProductData)}_{nameof(NotFoundException)}",
-                    ex, 1, User.Identity.Name);
-
-                #endregion Logging info
-                #region Result
-                Response.Result = EnumResponseResult.Failed;
-                Response.Data = null;
-                Response.Errors.Add(ex.Message);
-                #endregion
-
-                return NotFound(Response);
             }
             catch (Exception ex)
             {
