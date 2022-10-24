@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ElBayt.DTO.ELBayt.DTOs
 {
-    public class SelectedBrandsDTO
+    public class SelectedCategoryBrandsDTO
     {
         public List<int> Brands { set; get; }
-        public int ClothId { set; get; }
+        public int ClothCategoryId { set; get; }
     }
 }

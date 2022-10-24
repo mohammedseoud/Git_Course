@@ -1,7 +1,4 @@
-﻿using ElBayt.Infra.Entities;
-using ElBayt.Core.GenericIRepository;
-using System;
-using System.Threading.Tasks;
+﻿using ElBayt.Core.GenericIRepository;
 using ElBayt.Common.Infra.Models;
 
 namespace ElBayt.Core.IRepositories

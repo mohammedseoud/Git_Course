@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ElBayt.Core.Models;
+using ElBayt.DTO.ELBayt.DTOs;
+using ElBayt.Common.Common;
 
 namespace ElBayt.Services.Implementations
 {
@@ -116,6 +118,58 @@ namespace ElBayt.Services.Implementations
             {   
                 var Model = await _unitOfWork.ClothCategoryRepository.GetAsync(Id);
                 return _mapper.Map<ClothCategoryModel, ClothCategoryDTO>(Model);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> AddClothCategoryBrands(SelectedCategoryBrandsDTO selectedCategoryBrands)
+        {
+            try
+            {
+                var identityName = _userIdentity?.Name ?? "Unknown";
+                var clothBrands = new List<UTDClothBrandDTO>();
+
+                foreach (var brand in selectedCategoryBrands.Brands)
+                {
+
+                    var clothBrand = new ClothBrandDTO
+                    {
+                        Id = brand
+                    };
+                    var clothBrandEntity = _mapper.Map<ClothBrandDTO, UTDClothBrandDTO>(clothBrand);
+                    clothBrandEntity.CreatedDate = DateTime.Now;
+                    clothBrandEntity.CreatedBy = identityName;
+                    clothBrands.Add(clothBrandEntity);
+                }
+
+                var clothDepartmenttable = ObjectDatatableConverter.ToDataTable(clothBrands);
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@UDTClothBrand", clothDepartmenttable.AsTableValuedParameter(UDT.UDTCLOTHBRAND));
+                SPParameters.Add("@ClothId", selectedCategoryBrands.ClothCategoryId);
+
+                await _unitOfWork.SP.ExecuteAsnyc<ClothBrandDTO>(StoredProcedure.ADDCLOTHCATEGORORYBRANDS, SPParameters);
+                return CommonMessages.SUCCESSFULLY_ADDING;
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+        }
+
+        public async Task<List<ClothCategoryBrandsDTO>> GetClothCategoryBrands(int ClothCategoryId)
+        {
+            try
+            {
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ClothCategoryId", ClothCategoryId);
+
+
+                return (await _unitOfWork.SP.ListAsnyc<ClothCategoryBrandsDTO>(StoredProcedure.GETCLOTHCATEGORORYBRANDS, SPParameters)).ToList();
             }
             catch (Exception ex)
             {

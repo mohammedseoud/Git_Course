@@ -1,7 +1,6 @@
 ﻿
 using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Core.Mapping;
-using ElBayt.Infra.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;
 using ElBayt.Core.Models;

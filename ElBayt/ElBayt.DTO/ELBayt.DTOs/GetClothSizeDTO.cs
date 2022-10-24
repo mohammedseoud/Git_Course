@@ -7,7 +7,7 @@ namespace ElBayt.DTO.ELBayt.DTOs
 {
     public class GetClothSizeDTO : BasicDto<int>
     {
-        public int ClothId { get; set; }
+        public int ClothCategoryId { get; set; }
         public string Name { get; set; }
         public int Height { get; set; }
         public int Width { get; set; }

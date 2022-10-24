@@ -2,7 +2,7 @@
 
 namespace ElBayt.DTO.ELBayt.DTOs
 {
-    public class ClothBrandsDTO
+    public class ClothCategoryBrandsDTO
     {
         public int Id { set; get; }
         public string Name { set; get; }

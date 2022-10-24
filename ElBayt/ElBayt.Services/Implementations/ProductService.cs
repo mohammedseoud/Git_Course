@@ -1,22 +1,9 @@
-﻿using Dapper;
-using ElBayt.Common.Common;
-using ElBayt.Common.Core.Logging;
+﻿using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
-using ElBayt.Common.Enums;
-using ElBayt.Common.Utilities;
-using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
-using ElBayt.DTO.ELBayt.DBDTOs;
-using ElBayt.DTO.ELBayt.DTOs;
-using ElBayt.Infra.SPs;
 using ElBayt.Services.Contracts;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ElBayt.Services.Implementations
 {

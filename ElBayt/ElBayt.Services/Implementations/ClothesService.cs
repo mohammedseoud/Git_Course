@@ -390,58 +390,6 @@ namespace ElBayt.Services.Implementations
 
         }
 
-        public async Task<string> AddClothBrands(SelectedBrandsDTO selectedBrands)
-        {     
-            try
-            {
-                var identityName = _userIdentity?.Name ?? "Unknown";
-                var clothBrands = new List<UTDClothBrandDTO>();
-
-                foreach (var brand in selectedBrands.Brands)
-                {
-
-                    var clothBrand = new ClothBrandDTO
-                    {
-                        Id = brand
-                    };
-                    var clothBrandEntity = _mapper.Map<ClothBrandDTO, UTDClothBrandDTO>(clothBrand);
-                    clothBrandEntity.CreatedDate = DateTime.Now;
-                    clothBrandEntity.CreatedBy= identityName;
-                    clothBrands.Add(clothBrandEntity);
-                }
-               
-                var clothDepartmenttable = ObjectDatatableConverter.ToDataTable(clothBrands);
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@UDTClothBrand", clothDepartmenttable.AsTableValuedParameter(UDT.UDTCLOTHBRAND));
-                SPParameters.Add("@ClothId", selectedBrands.ClothId);
-              
-                 await _unitOfWork.SP.ExecuteAsnyc<ClothBrandDTO>(StoredProcedure.ADDCLOTHBRANDS, SPParameters);
-                return CommonMessages.SUCCESSFULLY_ADDING;
- 
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-
-        }
-
-        public async Task<List<ClothBrandsDTO>> GetClothBrands(int ClothId)
-        {    
-            try
-            {
-                var SPParameters = new DynamicParameters();
-                SPParameters.Add("@ClothId", ClothId);
-
-
-                return (await _unitOfWork.SP.ListAsnyc<ClothBrandsDTO>(StoredProcedure.GETCLOTHBRANDS, SPParameters)).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
         public async Task<ClothDBLDataDTO> GetClothDBLInfo(int ClothId)
         {
             try
@@ -475,19 +423,10 @@ namespace ElBayt.Services.Implementations
                 var Entity = _mapper.Map<ClothInfoDTO, ClothInfoModel>(ClothInfo);
                 if (ClothInfo.Id == 0)
                 {
-                    int? ColorId = null;
-                    int? BrandId = null ;
+   
+                    var IsExisted = (await _unitOfWork.ClothInfoRepository.GetClothInfo(ClothInfo.SizeId, ClothInfo.ColorId, ClothInfo.BrandId)).Any();
 
-                    if (ClothInfo.BrandId != 0)
-                        BrandId = ClothInfo.BrandId;
-
-
-                    if (ClothInfo.ColorId != 0)
-                        ColorId = ClothInfo.ColorId;
-
-                    var _info = await _unitOfWork.ClothInfoRepository.GetClothInfo(ClothInfo.SizeId, ColorId, BrandId);
-
-                    if (_info == null)
+                    if (!IsExisted)
                     {
                         await _unitOfWork.ClothInfoRepository.AddAsync(Entity);
                         await _unitOfWork.SaveAsync();

@@ -45,7 +45,7 @@ namespace ElBayt.Services.Implementations
                 var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync()).Select(
                     c => new GetClothSizeDTO
                     {
-                        ClothId = c.ClothId,
+                        //ClothCategoryId = c.ClothCategoryId,
                         Name = c.Name,
                         Id = c.Id,
                         Height = c.Height,
@@ -120,12 +120,12 @@ namespace ElBayt.Services.Implementations
         {
             try
             {
-                var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync(C => C.ClothId == ClothId)).
+                var Sizes = (await _unitOfWork.ClothSizeRepository.GetAllAsync()).
                     ToList();
                 var SizesClothes = Sizes.Select(c =>
                     new GetClothSizeDTO
                     {
-                        ClothId = c.ClothId,
+                        //ClothCategoryId = c.ClothCategoryId,
                         Width = c.Width,
                         Height = c.Height,
                         Id = c.Id,

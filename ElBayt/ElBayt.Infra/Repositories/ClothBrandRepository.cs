@@ -1,17 +1,11 @@
-﻿using AutoMapper;
-using ElBayt.Common.Infra.Common;
-using ElBayt.Common.Infra.Mapping;
+﻿using ElBayt.Common.Infra.Common;
 using ElBayt.Common.Core.Mapping;
-using ElBayt.Infra.Entities;
 using ElBayt.Core.IRepositories;
 using ElBayt.Infra.Context;
 using ElBayt.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using ElBayt.Common.Infra.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElBayt.Infra.Repositories

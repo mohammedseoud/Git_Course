@@ -1,17 +1,10 @@
-﻿using AutoMapper;
-using ElBayt.Common.Common;
-using ElBayt.Common.Core.Logging;
+﻿using ElBayt.Common.Core.Logging;
 using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
-using ElBayt.Common.Security;
-using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.Services.Contracts;
-using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ElBayt.Core.Models;
 

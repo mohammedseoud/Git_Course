@@ -13,7 +13,6 @@ using ElBayt.Common.Core.SecurityModels;
 using ElBayt.DTO.ELBayt.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using ELBayt.BackOffice.Core;
-using Microsoft.AspNetCore.Http;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -473,7 +472,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [HttpPost]
         [Route(nameof(AddClothBrands))]
         [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<bool>))]
-        public async Task<IActionResult> AddClothBrands(SelectedBrandsDTO SelectedBrands)
+        public async Task<IActionResult> AddClothBrands(SelectedCategoryBrandsDTO SelectedBrands)
         {
 
             var Response = new ElBaytResponse<bool>
@@ -483,7 +482,7 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
             try
             {
 
-                var res = await _departmentsServices.ClothesService.AddClothBrands(SelectedBrands);
+                var res = await _departmentsServices.ClothesService.AddClothCategoryBrands(SelectedBrands);
                 if (res == CommonMessages.SUCCESSFULLY_ADDING)
                 {
                     Response.Result = EnumResponseResult.Successed;
@@ -511,17 +510,17 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route(nameof(GetSelectedClothBrands))]
-        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<List<ClothBrandsDTO>>))]
-        public async Task<IActionResult> GetSelectedClothBrands(int clothId)
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<List<ClothCategoryBrandsDTO>>))]
+        public async Task<IActionResult> GetSelectedClothBrands(int clothcategoryId)
         {
-            var Response = new ElBaytResponse<List<ClothBrandsDTO>>
+            var Response = new ElBaytResponse<List<ClothCategoryBrandsDTO>>
             {
                 Errors = new List<string>()
             };
            
             try
             {
-                var brands = await _departmentsServices.ClothesService.GetClothBrands(clothId);
+                var brands = await _departmentsServices.ClothesService.GetClothCategoryBrands(clothcategoryId);
                 #region Result
                 Response.Result = EnumResponseResult.Successed;
                 Response.Data = brands;

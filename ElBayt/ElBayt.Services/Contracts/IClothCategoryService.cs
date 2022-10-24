@@ -1,5 +1,6 @@
 ﻿using ElBayt.Common.Enums;
 using ElBayt.DTO.ELBayt.DBDTOs;
+using ElBayt.DTO.ELBayt.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,5 +15,7 @@ namespace ElBayt.Services.Contracts
         public Task<string> DeleteClothCategory(int Id);
         public Task<EnumUpdatingResult> UpdateClothCategory(ClothCategoryDTO clothCategory, string machineDirectory);
         public Task<ClothCategoryDTO> GetClothCategory(int Id);
+        public Task<string> AddClothCategoryBrands(SelectedCategoryBrandsDTO selectedCategoryBrands);
+        public Task<List<ClothCategoryBrandsDTO>> GetClothCategoryBrands(int ClothCategoryId);
     }
 }

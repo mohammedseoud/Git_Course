@@ -11,8 +11,8 @@ namespace ElBayt.DTO.ELBayt.DBDTOs
         public string Price { get; set; }
         public string PriceAfterDiscount { get; set; }
         public int SizeId { get; set; }
-        public int ColorId { get; set; }
+        public int? ColorId { get; set; }
         public string Amount { get; set; }
-        public int BrandId { get; set; }
+        public int? BrandId { get; set; }
     }
 }

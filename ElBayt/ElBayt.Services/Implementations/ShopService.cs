@@ -1,16 +1,12 @@
 ﻿using Dapper;
 using ElBayt.Common.Core.Logging;
-using ElBayt.Common.Core.Mapping;
 using ElBayt.Common.Core.SecurityModels;
-using ElBayt.Infra.Entities;
 using ElBayt.Core.IUnitOfWork;
 using ElBayt.Core.Mapping;
-using ElBayt.DTO.ELBayt.DBDTOs;
 using ElBayt.DTO.ELBayt.DTOs;
 using ElBayt.Infra.SPs;
 using ElBayt.Services.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 

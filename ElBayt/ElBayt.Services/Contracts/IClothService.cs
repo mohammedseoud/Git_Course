@@ -22,8 +22,6 @@ namespace ElBayt.Services.Contracts
         public Task<List<ClothImageDTO>> GetClothImages(int ProductId);
         public Task<string> DeleteClothImage(int ImageId);
         public Task<string> DeleteClothImageByURL(string URL);
-        public Task<string> AddClothBrands(SelectedBrandsDTO selectedBrands);
-        public Task<List<ClothBrandsDTO>> GetClothBrands(int ClothId);
         public Task<ClothDBLDataDTO> GetClothDBLInfo(int ClothId);
         public Task<string> AddClothInfo(ClothInfoDTO ClothInfo);
         public Task<List<ClothInfoDataDTO>> GetClothInfo(int ClothId);
