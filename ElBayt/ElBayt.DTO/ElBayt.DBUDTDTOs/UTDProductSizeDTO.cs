@@ -1,13 +1,12 @@
 ﻿using ElBayt.Common.Core.Services;
 
-namespace ElBayt.DTO.ELBayt.DTOs
+namespace ElBayt.DTO.ELBayt.DBUDTDTOs
 {
-    public class GetClothSizeDTO : BasicDto<int>
+    public class UTDProductSizeDTO : BaseDto<int>, IBaseDTO
     {
         public string Name { get; set; }
         public int? Height { get; set; }
         public int? Width { get; set; }
-        public string Abbreviation { get; set; }
 
     }
 }

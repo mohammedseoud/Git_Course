@@ -8,8 +8,8 @@ namespace ElBayt.Common.Infra.Models
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
-        public int Height { get; set; }
-        public int Width { get; set; }
+        public int? Height { get; set; }
+        public int? Width { get; set; }
        
     }
 }

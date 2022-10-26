@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using ElBayt.Common.Core.SecurityModels;
 using Microsoft.AspNetCore.Authorization;
 using ELBayt.BackOffice.Core;
+using ElBayt.DTO.ELBayt.DTOs;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -224,6 +225,152 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
                 #region Result
                 Response.Result = EnumResponseResult.Failed;
                 Response.Data = CommonMessages.FAILED_UPDATING;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route(nameof(AddClothCategoryBrands))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<bool>))]
+        public async Task<IActionResult> AddClothCategoryBrands(SelectedCategoryBrandsDTO SelectedBrands)
+        {
+
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+            try
+            {
+
+                var res = await _departmentsServices.ClothesService.AddClothCategoryBrands(SelectedBrands);
+                if (res == CommonMessages.SUCCESSFULLY_ADDING)
+                {
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = true;
+                    return Ok(Response);
+                }
+                Response.Errors.Add(res);
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                return Ok(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route(nameof(GetSelectedClothCategoryBrands))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<List<ClothCategoryBrandsDTO>>))]
+        public async Task<IActionResult> GetSelectedClothCategoryBrands(int clothcategoryId)
+        {
+            var Response = new ElBaytResponse<List<ClothCategoryBrandsDTO>>
+            {
+                Errors = new List<string>()
+            };
+
+            try
+            {
+                var brands = await _departmentsServices.ClothesService.GetClothCategoryBrands(clothcategoryId);
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = brands;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route(nameof(AddClothCategorySizes))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<bool>))]
+        public async Task<IActionResult> AddClothCategorySizes(SelectedCategorySizesDTO SelectedSizes)
+        {
+
+            var Response = new ElBaytResponse<bool>
+            {
+                Errors = new List<string>()
+            };
+            try
+            {
+
+                var res = await _departmentsServices.ClothesService.AddClothCategorySizes(SelectedSizes);
+                if (res == CommonMessages.SUCCESSFULLY_ADDING)
+                {
+                    Response.Result = EnumResponseResult.Successed;
+                    Response.Data = true;
+                    return Ok(Response);
+                }
+                Response.Errors.Add(res);
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+                return Ok(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = false;
+
+                Response.Errors.Add(ex.Message);
+                #endregion
+
+                return BadRequest(Response);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route(nameof(GetSelectedClothCategorySizes))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<List<ClothCategorySizesDTO>>))]
+        public async Task<IActionResult> GetSelectedClothCategorySizes(int clothcategoryId)
+        {
+            var Response = new ElBaytResponse<List<ClothCategorySizesDTO>>
+            {
+                Errors = new List<string>()
+            };
+
+            try
+            {
+                var sizes = await _departmentsServices.ClothesService.GetClothCategorySizes(clothcategoryId);
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = sizes;
+                #endregion
+
+                return Ok(Response);
+            }
+            catch (Exception ex)
+            {
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
 
                 Response.Errors.Add(ex.Message);
                 #endregion

@@ -423,8 +423,10 @@ namespace ElBayt.Services.Implementations
                 var Entity = _mapper.Map<ClothInfoDTO, ClothInfoModel>(ClothInfo);
                 if (ClothInfo.Id == 0)
                 {
-   
-                    var IsExisted = (await _unitOfWork.ClothInfoRepository.GetClothInfo(ClothInfo.SizeId, ClothInfo.ColorId, ClothInfo.BrandId)).Any();
+
+                    var IsExisted = (await _unitOfWork.ClothInfoRepository.
+                        GetClothInfo(ClothInfo.SizeId, ClothInfo.ColorId, 
+                        ClothInfo.BrandId, ClothInfo.ClothId)).Any();
 
                     if (!IsExisted)
                     {

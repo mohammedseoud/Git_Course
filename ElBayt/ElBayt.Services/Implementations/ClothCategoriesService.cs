@@ -145,10 +145,10 @@ namespace ElBayt.Services.Implementations
                     clothBrands.Add(clothBrandEntity);
                 }
 
-                var clothDepartmenttable = ObjectDatatableConverter.ToDataTable(clothBrands);
+                var clothBrandtable = ObjectDatatableConverter.ToDataTable(clothBrands);
                 var SPParameters = new DynamicParameters();
-                SPParameters.Add("@UDTClothBrand", clothDepartmenttable.AsTableValuedParameter(UDT.UDTCLOTHBRAND));
-                SPParameters.Add("@ClothId", selectedCategoryBrands.ClothCategoryId);
+                SPParameters.Add("@UDTClothBrand", clothBrandtable.AsTableValuedParameter(UDT.UDTCLOTHBRAND));
+                SPParameters.Add("@ClothCategoryId", selectedCategoryBrands.ClothCategoryId);
 
                 await _unitOfWork.SP.ExecuteAsnyc<ClothBrandDTO>(StoredProcedure.ADDCLOTHCATEGORORYBRANDS, SPParameters);
                 return CommonMessages.SUCCESSFULLY_ADDING;
@@ -170,6 +170,58 @@ namespace ElBayt.Services.Implementations
 
 
                 return (await _unitOfWork.SP.ListAsnyc<ClothCategoryBrandsDTO>(StoredProcedure.GETCLOTHCATEGORORYBRANDS, SPParameters)).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> AddClothCategorySizes(SelectedCategorySizesDTO selectedCategorySizes)
+        {
+            try
+            {
+                var identityName = _userIdentity?.Name ?? "Unknown";
+                var clothSizes = new List<UTDClothSizeDTO>();
+
+                foreach (var size in selectedCategorySizes.Sizes)
+                {
+
+                    var clothSize = new ClothSizeDTO
+                    {
+                        Id = size
+                    };
+                    var clothSizeEntity = _mapper.Map<ClothSizeDTO, UTDClothSizeDTO>(clothSize);
+                    clothSizeEntity.CreatedDate = DateTime.Now;
+                    clothSizeEntity.CreatedBy = identityName;
+                    clothSizes.Add(clothSizeEntity);
+                }
+
+                var clothSizetable = ObjectDatatableConverter.ToDataTable(clothSizes);
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@UDTClothSize", clothSizetable.AsTableValuedParameter(UDT.UDTCLOTHSIZE));
+                SPParameters.Add("@ClothCategoryId", selectedCategorySizes.ClothCategoryId);
+
+                await _unitOfWork.SP.ExecuteAsnyc<ClothSizeDTO>(StoredProcedure.ADDCLOTHCATEGORORYSIZES, SPParameters);
+                return CommonMessages.SUCCESSFULLY_ADDING;
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+        }
+
+        public async Task<List<ClothCategorySizesDTO>> GetClothCategorySizes(int ClothCategoryId)
+        {
+            try
+            {
+                var SPParameters = new DynamicParameters();
+                SPParameters.Add("@ClothCategoryId", ClothCategoryId);
+
+
+                return (await _unitOfWork.SP.ListAsnyc<ClothCategorySizesDTO>(StoredProcedure.GETCLOTHCATEGORORYSIZES, SPParameters)).ToList();
             }
             catch (Exception ex)
             {

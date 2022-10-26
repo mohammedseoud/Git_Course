@@ -9,6 +9,6 @@ namespace ElBayt.Core.IRepositories
     {
         public Task UpdateInfo(ClothInfoModel cloth);
         public Task<List<ClothInfoModel>> GetClothInfo(int ClothId);
-        public Task<List<ClothInfoModel>> GetClothInfo(int SizeId, int? ColorId, int? BrandId);
+        public Task<List<ClothInfoModel>> GetClothInfo(int SizeId, int? ColorId, int? BrandId, int ClothId);
     }
 }

@@ -29,10 +29,10 @@ namespace ElBayt.Infra.Repositories
             return await _dbContext.ClothInfo.Where(c => c.ClothId == ClothId).ToListAsync();
         }
 
-        public async Task<List<ClothInfoModel>> GetClothInfo(int SizeId, int? ColorId, int? BrandId)
+        public async Task<List<ClothInfoModel>> GetClothInfo(int SizeId, int? ColorId, int? BrandId,int ClothId)
         {
             return await _dbContext.ClothInfo.Where(c => c.SizeId == SizeId
-            && c.BrandId == BrandId && c.ColorId == ColorId).ToListAsync();
+            && c.BrandId == BrandId && c.ColorId == ColorId && c.ClothId == ClothId).ToListAsync();
         }
 
         public async Task UpdateInfo(ClothInfoModel Info)
@@ -43,6 +43,9 @@ namespace ElBayt.Infra.Repositories
                 _Info.Amount = Info.Amount;
                 _Info.Price = Info.Price;
                 _Info.PriceAfterDiscount = Info.PriceAfterDiscount;
+                _Info.BrandId = Info.BrandId;
+                _Info.SizeId = Info.SizeId;
+                _Info.ColorId = Info.ColorId;
             }
         }
 

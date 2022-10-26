@@ -17,5 +17,7 @@ namespace ElBayt.Services.Contracts
         public Task<ClothCategoryDTO> GetClothCategory(int Id);
         public Task<string> AddClothCategoryBrands(SelectedCategoryBrandsDTO selectedCategoryBrands);
         public Task<List<ClothCategoryBrandsDTO>> GetClothCategoryBrands(int ClothCategoryId);
+        public Task<string> AddClothCategorySizes(SelectedCategorySizesDTO selectedCategorySizes);
+        public Task<List<ClothCategorySizesDTO>> GetClothCategorySizes(int ClothCategoryId);
     }
 }

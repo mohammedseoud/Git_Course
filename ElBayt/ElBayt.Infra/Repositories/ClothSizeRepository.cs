@@ -31,15 +31,6 @@ namespace ElBayt.Infra.Repositories
             return size;
         }
 
-        public async Task<List<ClothSizesModel>> GetClothSizes(int ClothId)
-        {
-            return await _dbContext.ClothesSizes
-                          .Where(c =>  c.ClothId == ClothId)
-                          .ToListAsync();  
-        }
-
-        
-
         public async Task UpdateClothSize(ClothSizeModel clothSize)
         {
             var Size = await _dbContext.ClothSizes.FindAsync(clothSize.Id);
@@ -48,6 +39,7 @@ namespace ElBayt.Infra.Repositories
                 Size.Name = clothSize.Name;
                 Size.Width = clothSize.Width;
                 Size.Height = clothSize.Height;
+                Size.Abbreviation = clothSize.Abbreviation;
             }
         }
     }

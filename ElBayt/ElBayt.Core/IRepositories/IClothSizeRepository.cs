@@ -9,6 +9,5 @@ namespace ElBayt.Core.IRepositories
     {
         Task UpdateClothSize(ClothSizeModel clothSize);
         Task<ClothSizeModel> GetClothSizeByName(string Name, int Id);
-        Task<List<ClothSizesModel>> GetClothSizes(int ClothId);
     }
 }

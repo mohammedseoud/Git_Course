@@ -7,5 +7,6 @@ namespace ElBayt.Core.Models
     [Table("ClothSize", Schema = "dbo")]
     public class ClothSizeModel : ProductSizeModel
     {
+        public string Abbreviation { set; get; }
     }
 }

@@ -15,6 +15,7 @@ namespace ElBayt.Infra.SPs
         public const string UDTCLOTHCATEGORY = "[dbo].[UDTClothCategory]";
         public const string UDTCLOTHDEPARTMENT = "[dbo].[UDTClothDepartment]";
         public const string UDTCLOTHBRAND = "[dbo].[UDTClothBrand]";
+        public const string UDTCLOTHSIZE = "[dbo].[UDTClothSize]";
         public const string UDTCLOTH = "[dbo].[UDTCloth]";
     }
 }

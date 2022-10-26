@@ -33,6 +33,7 @@ namespace ElBayt.Infra.SPs
         public const string GETPRODUCTIMAGES = "GetProductImages";
         public const string GETCLOTHIMAGES = "GetClothImages";
         public const string GETCLOTHCATEGORORYBRANDS = "GetClothCategoryBrands";
+        public const string GETCLOTHCATEGORORYSIZES = "GetClothCategorySizes";
         public const string GETCLOTHINFO = "GetClothInfo";
         public const string GETCLOTHDBLDATA = "GetClothDBLData";
         public const string GETPRODUCTDATA = "GetProductData";
@@ -40,6 +41,7 @@ namespace ElBayt.Infra.SPs
         public const string ADDCLOTHDEPARTMENT = "AddClothDepartment";
         public const string ADDCLOTHBRAND = "AddClothBrand";
         public const string ADDCLOTHCATEGORORYBRANDS = "AddClothCategoryBrands";
+        public const string ADDCLOTHCATEGORORYSIZES = "AddClothCategorySizes";
         public const string ADDCLOTHIMAGE = "AddClothImage";
     }
 }
