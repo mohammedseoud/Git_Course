@@ -1,9 +1,14 @@
 ﻿using ElBayt.Common.Common;
 using ElBayt.Common.Core.Logging;
+using ElBayt.Common.Enums;
+using ElBayt.DTO.ELBayt.DBDTOs;
+using ElBayt.DTO.ELBayt.DTOs;
 using ElBayt.Services.IElBaytServices;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ElBayt_ECommerce.WebAPI.Controllers
 {
@@ -12,133 +17,120 @@ namespace ElBayt_ECommerce.WebAPI.Controllers
     [Route("api/v1.0/ElBaytECommerce/Master")]
     public class MasterController : Controller
     {
-        private readonly IElBaytServices _elBaytServices;
+        private readonly IDepartmentsServices _departmentServices;
         private readonly ILogger _logger;
 
-        public MasterController(IElBaytServices elBaytServices, ILogger logger)
+        public MasterController(IDepartmentsServices departmentServices, ILogger logger)
         {
-            _elBaytServices = elBaytServices ?? throw new ArgumentNullException(nameof(elBaytServices));
+            _departmentServices = departmentServices ?? throw new ArgumentNullException(nameof(departmentServices));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        //[HttpGet]
-        //[Route(nameof(GetProductDepartments))]
-        //public ActionResult GetProductDepartments()
-        //{
-        //    var Response = new ElBaytResponse<object>
-        //    {
-        //        Errors = new List<string>()
-        //    };
-        //    var correlationGuid = Guid.NewGuid();
-        //    try
-        //    {
+        [HttpGet]
+        [Route(nameof(GetClothDepartments))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<List<GetClothDepartmentDTO>>))]
+        public async Task<ActionResult> GetClothDepartments()
+        {
+            var Response = new ElBaytResponse<List<GetClothDepartmentDTO>>
+            {
+                Errors = new List<string>()
+            };
+            try
+            {
 
-        //        #region Logging info
-        //        _logger.InfoInDetail("GetProductDepartments", correlationGuid, nameof(MasterController), nameof(GetProductDepartments), 1, User.Identity.Name);
-        //        #endregion Logging info
+                var Departments = await _departmentServices.ClothesService.GetClothDepartments();
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = Departments;
+                #endregion
 
-        //        var Departments = _elBaytServices.ProductService.GetProductDepartments();
-        //        #region Result
-        //        Response.Result = EnumResponseResult.Successed;
-        //        Response.Data = Departments;
-        //        #endregion
+                return Ok(Response);
+            }
+            //catch (NotFoundException ex)
+            //{
+            //    #region Logging info
 
-        //        return Ok(Response);
-        //    }
-        //    catch (NotFoundException ex)
-        //    {
-        //        #region Logging info
+            //    _logger.ErrorInDetail($"newException GetProductDepartments", correlationGuid,
+            //        $"{nameof(MasterController)}_{nameof(GetProductDepartments)}_{nameof(NotFoundException)}",
+            //        ex, 1, User.Identity.Name);
 
-        //        _logger.ErrorInDetail($"newException GetProductDepartments", correlationGuid,
-        //            $"{nameof(MasterController)}_{nameof(GetProductDepartments)}_{nameof(NotFoundException)}",
-        //            ex, 1, User.Identity.Name);
+            //    #endregion Logging info
+            //    #region Result
+            //    Response.Result = EnumResponseResult.Failed;
+            //    Response.Data = null;
+            //    Response.Errors.Add(ex.Message);
+            //    #endregion
 
-        //        #endregion Logging info
-        //        #region Result
-        //        Response.Result = EnumResponseResult.Failed;
-        //        Response.Data = null;
-        //        Response.Errors.Add(ex.Message);
-        //        #endregion
+            //    return NotFound(Response);
+            //}
+            catch (Exception ex)
+            {
 
-        //        return NotFound(Response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        #region Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
 
-        //        _logger.ErrorInDetail($"newException GetProductDepartments", correlationGuid,
-        //            $"{nameof(MasterController)}_{nameof(GetProductDepartments)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
+                Response.Errors.Add(ex.Message);
+                #endregion
 
-        //        #endregion Logging info
-        //        #region Result
-        //        Response.Result = EnumResponseResult.Failed;
-        //        Response.Data = null;
+                return BadRequest(Response);
+            }
+        }
 
-        //        Response.Errors.Add(ex.Message);
-        //        #endregion
+        [HttpGet]
+        [Route(nameof(GetClothTypes))]
+        [Produces(General.JSONCONTENTTYPE, Type = typeof(ElBaytResponse<List<GetClothTypeDTO>>))]
+        public async Task< ActionResult> GetClothTypes()
+        {
+            var Response = new ElBaytResponse<List<GetClothTypeDTO>>
+            {
+                Errors = new List<string>()
+            };
+            try
+            {
 
-        //        return BadRequest(Response);
-        //    }
-        //}
+                var Types = await _departmentServices.ClothesService.GetClothTypes();
+                #region Result
+                Response.Result = EnumResponseResult.Successed;
+                Response.Data = Types;
+                #endregion
 
-        //[HttpGet]
-        //[Route(nameof(GetProductTypes))]
-        //public ActionResult GetProductTypes()
-        //{
-        //    var Response = new ElBaytResponse<object>
-        //    {
-        //        Errors = new List<string>()
-        //    };
-        //    var correlationGuid = Guid.NewGuid();
-        //    try
-        //    {
+                return Ok(Response);
+            }
+            //catch (NotFoundException ex)
+            //{
+            //    #region Logging info
 
-        //        #region Logging info
-        //        _logger.InfoInDetail("GetProductTypes", correlationGuid, nameof(MasterController), nameof(GetProductTypes), 1, User.Identity.Name);
-        //        #endregion Logging info
+            //    _logger.ErrorInDetail($"newException GetProductTypes", correlationGuid,
+            //        $"{nameof(MasterController)}_{nameof(GetProductTypes)}_{nameof(NotFoundException)}",
+            //        ex, 1, User.Identity.Name);
 
-        //        var Departments = _elBaytServices.ProductService.GetProductTypes();
-        //        #region Result
-        //        Response.Result = EnumResponseResult.Successed;
-        //        Response.Data = Departments;
-        //        #endregion
+            //    #endregion Logging info
+            //    #region Result
+            //    Response.Result = EnumResponseResult.Failed;
+            //    Response.Data = null;
+            //    Response.Errors.Add(ex.Message);
+            //    #endregion
 
-        //        return Ok(Response);
-        //    }
-        //    catch (NotFoundException ex)
-        //    {
-        //        #region Logging info
+            //    return NotFound(Response);
+            //}
+            catch (Exception ex)
+            {
+                #region Logging info
 
-        //        _logger.ErrorInDetail($"newException GetProductTypes", correlationGuid,
-        //            $"{nameof(MasterController)}_{nameof(GetProductTypes)}_{nameof(NotFoundException)}",
-        //            ex, 1, User.Identity.Name);
+                //_logger.ErrorInDetail($"newException GetProductTypes", correlationGuid,
+                //    $"{nameof(MasterController)}_{nameof(GetProductTypes)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
 
-        //        #endregion Logging info
-        //        #region Result
-        //        Response.Result = EnumResponseResult.Failed;
-        //        Response.Data = null;
-        //        Response.Errors.Add(ex.Message);
-        //        #endregion
+                #endregion Logging info
+                #region Result
+                Response.Result = EnumResponseResult.Failed;
+                Response.Data = null;
 
-        //        return NotFound(Response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        #region Logging info
+                Response.Errors.Add(ex.Message);
+                #endregion
 
-        //        _logger.ErrorInDetail($"newException GetProductTypes", correlationGuid,
-        //            $"{nameof(MasterController)}_{nameof(GetProductTypes)}_{nameof(Exception)}", ex, 1, User.Identity.Name);
-
-        //        #endregion Logging info
-        //        #region Result
-        //        Response.Result = EnumResponseResult.Failed;
-        //        Response.Data = null;
-
-        //        Response.Errors.Add(ex.Message);
-        //        #endregion
-
-        //        return BadRequest(Response);
-        //    }
-        //}
+                return BadRequest(Response);
+            }
+        }
     }
 }

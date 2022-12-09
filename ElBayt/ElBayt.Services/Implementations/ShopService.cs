@@ -7,6 +7,7 @@ using ElBayt.DTO.ELBayt.DTOs;
 using ElBayt.Infra.SPs;
 using ElBayt.Services.Contracts;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,34 +31,30 @@ namespace ElBayt.Services.Implementations
 
         public async Task<ShopProductInfoDTO> GetProductData(string ProductName)
         {
-            var correlationGuid = Guid.NewGuid();
 
             try
             {
-                #region Logging info
-
-                _logger.InfoInDetail(ProductName, correlationGuid, nameof(ShopService), nameof(GetProductData), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var ProductInfo = new ShopProductInfoDTO();
 
                 var SPParameters = new DynamicParameters();
-                SPParameters.Add("@ProductName", ProductName);
+                SPParameters.Add("@ClothName", ProductName);
 
-                var AllShopData = await _unitOfWork.SP.FourListAsnyc<NumberProductDTO,string, NumberProductDTO, ProductDataDTO>(StoredProcedure.GETPRODUCTDATA, SPParameters);
-                var currentproduct = _shopmapper.MapNoProductToShopProduct(AllShopData.Item1.ToList().FirstOrDefault());
+                var AllShopData = await _unitOfWork.SP.FourListAsnyc<NumberProductDTO, string, NumberProductDTO, ProductDataDTO>(StoredProcedure.GETPRODUCTDATA, SPParameters);
+                var currentproduct = _shopmapper.MapNoProductToShopProduct(AllShopData.Item1.ToList());
 
 
                 ProductInfo.current = currentproduct.Item2;
+                ProductInfo.current.pictures = new List<ShopProductImageDTO>();
+                ProductInfo.current.sm_pictures = new List<ShopProductImageDTO>();
                 foreach (var url in AllShopData.Item2)
                 {
                     ProductInfo.current.pictures.Add(new ShopProductImageDTO { url = url });
                     ProductInfo.current.sm_pictures.Add(new ShopProductImageDTO { url = url });
                 }
-                
+
                 if (AllShopData.Item3.ToList().Count == 1)
                 {
-                    var _product = _shopmapper.MapNoProductToShopProduct(AllShopData.Item3.ToList().FirstOrDefault());
+                    var _product = _shopmapper.MapNoProductToShopProduct(AllShopData.Item3.ToList());
                     if (_product.Item1 > currentproduct.Item1)
                         ProductInfo.next = _product.Item2;
                     else
@@ -77,31 +74,20 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(ProductName, correlationGuid, $"{nameof(ShopService)}_{nameof(GetProductData)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }
 
         public async Task<ShopDataDTO> GetShopData(string DepartmentName)
         {
-            var correlationGuid = Guid.NewGuid();
 
             try
             {
-                #region Logging info
 
-                _logger.InfoInDetail(DepartmentName, correlationGuid, nameof(ShopService), nameof(GetShopData), 1, _userIdentity.Name);
-
-                #endregion Logging info
                 var ShopData = new ShopDataDTO();
 
                 var SPParameters = new DynamicParameters();
-                SPParameters.Add("@ProductDepartmentName", DepartmentName);
+                SPParameters.Add("@ClothDepartmentName", DepartmentName);
 
                 var AllShopData = await _unitOfWork.SP.ThreeListAsnyc<ProductTypesDataDTO, ShopCategoryDTO, ProductDataDTO>(StoredProcedure.GETSHOPDATA, SPParameters);
                 ShopData.ProductTypes = AllShopData.Item1.ToList();
@@ -112,12 +98,6 @@ namespace ElBayt.Services.Implementations
             }
             catch (Exception ex)
             {
-                #region Logging info
-
-                _logger.ErrorInDetail(DepartmentName, correlationGuid, $"{nameof(ShopService)}_{nameof(GetShopData)}_{nameof(Exception)}", ex, 1, _userIdentity.Name);
-
-                #endregion Logging info
-
                 throw;
             }
         }

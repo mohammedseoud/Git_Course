@@ -5,15 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ElBayt.Core.Models
 {
-    [Table("Client", Schema = "dbo")]
-    public class ClientModel : BaseModel<int>
+    [Table("State", Schema = "dbo")]
+    public class StateModel : BaseModel<int>
     {
         [Required]
         [StringLength(General.SINGLE_LINE_MAX_LENGTH)]
         public string Name { get; set; }
-        [Required]
-        public string Password { get; set; }
+        [ForeignKey(nameof(States))]
+        public int CityId { get; set; }
 
-    
+        public virtual CityModel States { get; set; }
     }
 }

@@ -59,7 +59,7 @@ namespace ElBayt_ECommerce.WebAPI
 
 
             services.AddAutoMapper(typeof(TypeMapper));
-          
+            services.AddSwaggerGen();
 
 
             services.AddScoped<IUserIdentity>();       
@@ -69,7 +69,7 @@ namespace ElBayt_ECommerce.WebAPI
 
             services.AddSingleton<ILogger, Logger>();
             services.AddScoped<IELBaytUnitOfWork, ELBaytUnitOfWork>();
-            //services.AddScoped<IElBaytServices, ElBaytServices>();
+            services.AddScoped<IElBaytServices, ElBaytServices>();
             services.AddScoped<IDepartmentsServices, DepartmentsServices>();
             services.AddCors(opt => {
                 opt.AddPolicy(CorsOrigin.LOCAL_ORIGIN, builder =>
@@ -99,6 +99,11 @@ namespace ElBayt_ECommerce.WebAPI
                 RequestPath = new PathString(Configuration["FilesInfo:Folder"])
             });
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ELBayt.BackOffice");
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

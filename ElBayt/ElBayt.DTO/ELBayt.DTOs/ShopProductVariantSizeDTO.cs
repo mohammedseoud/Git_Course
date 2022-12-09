@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ElBayt.DTO.ELBayt.DTOs
+﻿namespace ElBayt.DTO.ELBayt.DTOs
 {
     public class ShopProductVariantSizeDTO
     {

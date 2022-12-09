@@ -20,7 +20,7 @@ namespace ElBayt.DTO.ELBayt.DTOs
         public decimal? sale_price { set; get; }
         public string until { set; get; }
         public bool short_desc { set; get; }
-        public List<ShopProductVariantSizeDTO> variants{ set; get; }
+        public List<ShopProductVariantDTO> variants{ set; get; }
         public List<ShopProductCategoryDTO> category { set; get; }
         public List<ShopProductImageDTO> pictures { set; get; }
         public List<ShopProductImageDTO> sm_pictures { set; get; }

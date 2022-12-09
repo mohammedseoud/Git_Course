@@ -28,7 +28,6 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
 using ElBayt.Infra.Mapping;
 using ElBayt.Core.Mapping;
-using Microsoft.OpenApi.Models;
 
 namespace ELBayt.WebAPI
 {

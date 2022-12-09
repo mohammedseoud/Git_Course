@@ -4,14 +4,16 @@ using ElBayt.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElBayt.Infra.Migrations
 {
     [DbContext(typeof(ElBaytContext))]
-    partial class ElBaytContextModelSnapshot : ModelSnapshot
+    [Migration("20221101150729_AddOrderDetailsToDb4")]
+    partial class AddOrderDetailsToDb4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -603,75 +605,12 @@ namespace ElBayt.Infra.Migrations
                     b.ToTable("Cloth", "dbo");
                 });
 
-            modelBuilder.Entity("ElBayt.Core.Models.ClothOrderDetailsModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClothtId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ColorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("NoteOnProduct")
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("ClothtId");
-
-                    b.HasIndex("ColorId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("SizeId");
-
-                    b.ToTable("ClothOrderDetails", "dbo");
-                });
-
             modelBuilder.Entity("ElBayt.Core.Models.ClothOrderModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -692,8 +631,6 @@ namespace ElBayt.Infra.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
 
                     b.ToTable("ClothOrder", "dbo");
                 });
@@ -1282,60 +1219,6 @@ namespace ElBayt.Infra.Migrations
                         .IsRequired();
 
                     b.Navigation("ClothCategories");
-                });
-
-            modelBuilder.Entity("ElBayt.Core.Models.ClothOrderDetailsModel", b =>
-                {
-                    b.HasOne("ElBayt.Core.Models.ClothBrandModel", "Brands")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ElBayt.Core.Models.ClothModel", "Clothes")
-                        .WithMany()
-                        .HasForeignKey("ClothtId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ElBayt.Core.Models.ColorModel", "Colors")
-                        .WithMany()
-                        .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ElBayt.Core.Models.ClothOrderModel", "Orders")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ElBayt.Core.Models.ClothSizeModel", "ClothSizes")
-                        .WithMany()
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Brands");
-
-                    b.Navigation("Clothes");
-
-                    b.Navigation("ClothSizes");
-
-                    b.Navigation("Colors");
-
-                    b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("ElBayt.Core.Models.ClothOrderModel", b =>
-                {
-                    b.HasOne("ElBayt.Core.Models.ClientModel", "Clients")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Clients");
                 });
 
             modelBuilder.Entity("ElBayt.Core.Models.ClothTypeModel", b =>

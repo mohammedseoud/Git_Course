@@ -2,7 +2,7 @@
 using ElBayt.DTO.ELBayt.DTOs;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace ElBayt.Infra.Mapping
 {
@@ -30,7 +30,7 @@ namespace ElBayt.Infra.Mapping
                     sale_price = Convert.ToDecimal(product.PriceAfterDiscount),
                     pictures = new List<ShopProductImageDTO> { new ShopProductImageDTO { url = product.ProductImageURL1 }, new ShopProductImageDTO { url = product.ProductImageURL2 } },
                     sm_pictures = new List<ShopProductImageDTO> { new ShopProductImageDTO { url = product.ProductImageURL1 }, new ShopProductImageDTO { url = product.ProductImageURL2 } },
-                    variants = new List<ShopProductVariantSizeDTO>(),
+                    variants = new List<ShopProductVariantDTO>(),
                     ratings = product.Ratings,
                     stock = product.Quantity,
                 }; ;
@@ -40,25 +40,49 @@ namespace ElBayt.Infra.Mapping
             return new Tuple<List<int>, List<ShopProductDTO>>(Rows, Shopproducts);
         }
 
-        public Tuple<int, ShopProductDTO> MapNoProductToShopProduct(NumberProductDTO product)
+        public Tuple<int, ShopProductDTO> MapNoProductToShopProduct(List<NumberProductDTO> products)
         {
-             
-            var Rownumber = product.RowNum;
-            var _product= new ShopProductDTO
+
+
+            var Rownumber = products[0].RowNum;
+            var _product = new ShopProductDTO
             {
-                Id = product.Id.ToString(),
-                Name = product.Name,
-                Description = product.Description,
-                Price = Convert.ToDecimal(product.Price),
-                ProductCategoryId = product.ProductCategoryId.ToString(),
-                category = new List<ShopProductCategoryDTO> { new ShopProductCategoryDTO { name = product.ProductCategoryName } },
-                sale_price = Convert.ToDecimal(product.PriceAfterDiscount),
-                pictures = new List<ShopProductImageDTO> { new ShopProductImageDTO { url = product.ProductImageURL1 }, new ShopProductImageDTO { url = product.ProductImageURL2 } },
-                sm_pictures = new List<ShopProductImageDTO> { new ShopProductImageDTO { url = product.ProductImageURL1 }, new ShopProductImageDTO { url = product.ProductImageURL2 } },
-                variants = new List<ShopProductVariantSizeDTO>(),
-                ratings = product.Ratings,
-                stock = product.Quantity,
+                Id = products[0].Id.ToString(),
+                Name = products[0].Name,
+                Description = products[0].Description,
+                Price = Convert.ToDecimal(products[0].Price),
+                ProductCategoryId = products[0].ProductCategoryId.ToString(),
+                category = new List<ShopProductCategoryDTO> { new ShopProductCategoryDTO { name = products[0].ProductCategoryName } },
+                sale_price = Convert.ToDecimal(products[0].PriceAfterDiscount),
+                variants = new List<ShopProductVariantDTO>(),
+                ratings = products[0].Ratings,
+                stock = products[0].Quantity,                
             };
+            _product.variants = new List<ShopProductVariantDTO>();
+            _product.category = new List<ShopProductCategoryDTO>
+            {
+                new ShopProductCategoryDTO { name = products[0].ProductCategoryName }
+            };
+            var Colors = products.Select(c => c.ColorName).Distinct();
+           
+            foreach (var Color in Colors) 
+            {
+                var variant = new ShopProductVariantDTO
+                {
+                    color= "#669933",
+                    color_name = Color,
+                    price = Convert.ToDecimal(products[0].Price),
+                };
+                var Sizes = new List<ShopProductVariantSizeDTO>();
+                var ColorProducts = products.Where(c => c.ColorName == Color.ToString());
+                foreach (var ColorProduct in ColorProducts) 
+                {
+                    Sizes.Add(new ShopProductVariantSizeDTO { name= ColorProduct.SizeName });
+                }
+                variant.size = Sizes;
+                _product.variants.Add(variant);
+            }
+
             return new Tuple<int, ShopProductDTO>(Rownumber, _product);
         }
 
@@ -86,7 +110,7 @@ namespace ElBayt.Infra.Mapping
                 sale_price = Convert.ToDecimal(product.PriceAfterDiscount),
                 pictures = new List<ShopProductImageDTO> { new ShopProductImageDTO { url = product.ProductImageURL1 }, new ShopProductImageDTO { url = product.ProductImageURL2 } },
                 sm_pictures = new List<ShopProductImageDTO> { new ShopProductImageDTO { url = product.ProductImageURL1 }, new ShopProductImageDTO { url = product.ProductImageURL2 } },
-                variants = new List<ShopProductVariantSizeDTO>(),
+                variants = new List<ShopProductVariantDTO>(),
                 ratings = product.Ratings,
                 stock = product.Quantity,
             };
